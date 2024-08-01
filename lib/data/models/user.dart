@@ -1,0 +1,25 @@
+import 'dart:convert';
+
+import 'package:easy_localization/easy_localization.dart';
+import 'package:isar/isar.dart';
+
+import 'm3u_playlist.dart';
+
+part 'user.g.dart';
+
+@collection
+class User {
+  Id? id;
+
+  String? deviceId;
+
+  @ignore
+  final Map<String, int> currentChannelIndex = {};
+  String get isarCurrentChannelIndex => jsonEncode(currentChannelIndex);
+  set isarCurrentChannelIndex(String j) {
+    currentChannelIndex.clear();
+    currentChannelIndex.addAllRecursive(jsonDecode(j));
+  }
+
+  final selectedPlaylist = IsarLink<M3UPlaylist>();
+}
