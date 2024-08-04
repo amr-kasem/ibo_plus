@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../providers/home_state.dart';
+import '../providers/app_state.dart';
 import '../widgets/custom_tab_bar.dart';
+import 'home/home_tabview.dart';
 import 'live/live_tabview.dart';
 import 'settings/settings_tabview.dart';
-import 'home/home_tabview.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -92,7 +92,7 @@ class _HomePageState extends State<HomePage> {
                       return AnimatedSwitcher(
                         duration: Durations.medium1,
                         child: getHeader(
-                          ref.watch(HomeState.homeIndex),
+                          ref.watch(AppState.homeIndex),
                         ),
                       );
                     },
@@ -116,27 +116,19 @@ class _HomePageState extends State<HomePage> {
                               child: AnimatedSwitcher(
                                 duration: Durations.medium1,
                                 child: getBody(
-                                  ref.watch(HomeState.homeIndex),
+                                  ref.watch(AppState.homeIndex),
                                 ),
                               ),
                             );
                           },
                         ),
                       ),
-                      Positioned(
-                        top: 8,
+                      const Positioned(
+                        top: 0,
                         left: 0,
                         right: 0,
-                        child: Container(
-                          height: 40,
-                          clipBehavior: Clip.antiAlias,
-                          margin: const EdgeInsets.symmetric(horizontal: 16),
-                          decoration: BoxDecoration(
-                            color: Colors.white30,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: const CustomTabBar(),
-                        ),
+                        height: 80,
+                        child: CustomTabBar(),
                       ),
                     ],
                   ),

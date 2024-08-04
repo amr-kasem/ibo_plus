@@ -1,9 +1,11 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../providers/live_state.dart';
+import '../../widgets/player_widget.dart';
 import 'live_info.dart';
-import 'live_player.dart';
 
 class LiveTabView extends ConsumerStatefulWidget {
   const LiveTabView({super.key});
@@ -13,35 +15,38 @@ class LiveTabView extends ConsumerStatefulWidget {
 }
 
 class _LiveTabViewState extends ConsumerState<LiveTabView> {
-  bool showInfo = false;
+  late final VoidCallback play;
+  late final VoidCallback stop;
+  @override
+  void initState() {
+    log('play');
+    ref.read(LiveState.openCurrentChannel.future).then((p) {
+      play = p;
+      ref.read(LiveState.stop.future).then((s) {
+        stop = s;
+        play();
+      });
+    });
+    super.initState();
+  }
 
   @override
   void dispose() {
+    log('stop');
+    stop();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
+    return const Stack(
       children: [
         Positioned.fill(
-          child: Focus(
-            onKeyEvent: (node, event) {
-              if (event is KeyUpEvent) {}
-              return KeyEventResult.handled;
-            },
-            child: const LivePlayerConsumer(),
-          ),
+          child: PlayerWidget(),
         ),
-        if (showInfo)
-          Positioned.directional(
-            textDirection: Directionality.of(context),
-            start: 0,
-            top: 0,
-            bottom: 0,
-            end: 0,
-            child: const LiveInfo(),
-          ),
+        Positioned.fill(
+          child: LiveInfo(),
+        ),
       ],
     );
   }

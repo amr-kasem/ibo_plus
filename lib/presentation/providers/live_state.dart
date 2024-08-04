@@ -1,10 +1,11 @@
-import 'dart:developer';
-
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fvp/mdk.dart';
 
 import '../../data/models/category.dart';
 import '../../data/models/live_channel.dart';
 import '../../services/live_services.dart';
+import 'player_state.dart';
 import 'playlist_providers.dart';
 
 class LiveState {
@@ -16,15 +17,30 @@ class LiveState {
   static final liveCategories = FutureProvider<List<Category>>(
     (_) async => await LiveServices.getLiveCategories(),
   );
-  static final liveUrl = FutureProvider<String?>(
+  static final openCurrentChannel = FutureProvider<VoidCallback>(
     (ref) async {
-      final c = await ref.watch(currentChannel.future);
+      final player = ref.read(PlayerState.player);
+      final c = await ref.read(currentChannel.future);
       final playlist =
           await ref.read(PlaylistProviders.selectedPlaylist.future);
-      if (c == null) return null;
-      log("${playlist?.url}${playlist?.username}/${playlist?.password}/${c.streamId}");
-      return "${playlist?.url}${playlist?.username}/${playlist?.password}/${c.streamId}";
+      if (c == null) return Future.error('no channel selected');
+      player.media =
+          "${playlist?.url}${playlist?.username}/${playlist?.password}/${c.streamId}";
+      player.loop = -1;
+      return () {
+        player.state = PlaybackState.playing;
+      };
+    },
+  );
+  static final stop = FutureProvider<VoidCallback>(
+    (ref) async {
+      final player = ref.read(PlayerState.player);
+
+      return () {
+        player.state = PlaybackState.stopped;
+      };
     },
   );
   static final search = StateProvider((_) => '');
+  static final visibleInfo = Provider((ref) => FocusNode());
 }

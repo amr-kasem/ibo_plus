@@ -21,13 +21,13 @@ class RouterInitializationListenable with ChangeNotifier {
   Future<void> init() async {
     try {
       final appStateNotifier =
-          AppUtils.providerContainer.read(appStateProvider.notifier);
-      appStateNotifier.update((s) => AppState.initPlaylistsMetadata);
+          AppUtils.providerContainer.read(AppState.appStateProvider.notifier);
+      appStateNotifier.update((s) => AppStates.initPlaylistsMetadata);
       notifyListeners();
       await UserRepository.initialize();
       await PlaylistServices.initialize();
       await LiveServices.initialize();
-      appStateNotifier.update((s) => AppState.initialized);
+      appStateNotifier.update((s) => AppStates.initialized);
       notifyListeners();
     } catch (_) {}
   }

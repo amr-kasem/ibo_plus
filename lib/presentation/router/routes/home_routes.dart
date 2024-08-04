@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../providers/home_state.dart';
+import '../../providers/app_state.dart';
 import '../../views/app.dart';
 import '../router_utils.dart';
 
@@ -10,10 +10,10 @@ final homeRoutes = [
     path: AppPages.home.toPath,
     name: AppPages.home.toName,
     onExit: (context, state) {
-      if (HomeState.navBar.hasFocus) {
+      if (AppState.navBar.hasFocus) {
         return true;
       } else {
-        HomeState.navBar.requestFocus();
+        AppState.navBar.requestFocus();
         return false;
       }
     },

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../providers/home_state.dart';
+import '../providers/app_state.dart';
 
 class CustomTabBar extends ConsumerStatefulWidget {
   const CustomTabBar({
@@ -60,7 +60,7 @@ class _CustomTabBarState extends ConsumerState<CustomTabBar> {
   var children = <RenderBox>[];
   @override
   void initState() {
-    indexNotifier = ref.read(HomeState.homeIndex.notifier);
+    indexNotifier = ref.read(AppState.homeIndex.notifier);
     Future.delayed(Duration.zero).then((_) {
       if (mounted) {
         children = findRenderBoxesByType<CustomTab>(context);
@@ -79,165 +79,192 @@ class _CustomTabBarState extends ConsumerState<CustomTabBar> {
       children = findRenderBoxesByType<CustomTab>(context);
       renderBox = context.findRenderObject() as RenderBox;
     });
-    final index = ref.watch(HomeState.homeIndex);
-    final traversalBar = ref.watch(HomeState.traversalBar);
+    final index = ref.watch(AppState.homeIndex);
+    final traversalBar = ref.watch(AppState.traversalBar);
 
-    return Focus(
-      focusNode: HomeState.navBar,
-      skipTraversal: !traversalBar,
-      onFocusChange: (v) {
-        setState(() {
-          focused = v;
-        });
-      },
-      onKeyEvent: (fn, k) {
-        final step = Directionality.of(context) == TextDirection.ltr ? 1 : -1;
+    return AnimatedOpacity(
+      opacity: traversalBar ? 1 : 0,
+      duration: Durations.medium1,
+      child: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.black87, Colors.transparent],
+            stops: [0.0, 2],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: Focus(
+          focusNode: AppState.navBar,
+          skipTraversal: !traversalBar,
+          onFocusChange: (v) {
+            setState(() {
+              focused = v;
+            });
+          },
+          onKeyEvent: (fn, k) {
+            final step =
+                Directionality.of(context) == TextDirection.ltr ? 1 : -1;
 
-        if (fn.hasPrimaryFocus) {
-          if (k is KeyDownEvent) {
-            switch (k.logicalKey) {
-              case LogicalKeyboardKey.arrowLeft:
-                var nextStep = index - step;
-                nextStep = nextStep < length ? nextStep : length - 1;
-                nextStep = nextStep < 0 ? 0 : nextStep;
+            if (fn.hasPrimaryFocus) {
+              if (k is KeyDownEvent) {
+                switch (k.logicalKey) {
+                  case LogicalKeyboardKey.arrowLeft:
+                    var nextStep = index - step;
+                    nextStep = nextStep < length ? nextStep : length - 1;
+                    nextStep = nextStep < 0 ? 0 : nextStep;
 
-                moveIndicator(nextStep);
-                return KeyEventResult.handled;
-              case LogicalKeyboardKey.arrowRight:
-                var nextStep = index + step;
-                nextStep = nextStep < length ? nextStep : length - 1;
-                nextStep = nextStep < 0 ? 0 : nextStep;
+                    moveIndicator(nextStep);
+                    return KeyEventResult.handled;
+                  case LogicalKeyboardKey.arrowRight:
+                    var nextStep = index + step;
+                    nextStep = nextStep < length ? nextStep : length - 1;
+                    nextStep = nextStep < 0 ? 0 : nextStep;
 
-                moveIndicator(nextStep);
-                return KeyEventResult.handled;
+                    moveIndicator(nextStep);
+                    return KeyEventResult.handled;
+                  case LogicalKeyboardKey.select:
+                    fn.focusInDirection(TraversalDirection.down);
+                    return KeyEventResult.handled;
+                }
+              }
             }
-          }
-        }
-        return KeyEventResult.ignored;
-      },
-      child: Stack(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            return KeyEventResult.ignored;
+          },
+          child: Stack(
             children: [
-              Row(
-                children: [
-                  CustomTab(
-                    onTap: () {
-                      moveIndicator(0);
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        const Icon(Icons.home),
-                        const Text('home').tr(),
-                      ],
-                    ),
+              AnimatedPositioned(
+                duration: Durations.medium1,
+                left: indStart,
+                right: indEnd,
+                height: 40,
+                top: 0,
+                child: AnimatedContainer(
+                  duration: Durations.short3,
+                  width: double.infinity,
+                  height: double.infinity,
+                  decoration: BoxDecoration(
+                    gradient: AppState.navBar.hasFocus
+                        ? LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            stops: const [0, 1],
+                            colors: [
+                              Colors.amber.withOpacity(0.15),
+                              Colors.transparent
+                            ],
+                          )
+                        : null,
                   ),
-                  CustomTab(
-                    onTap: () {
-                      moveIndicator(1);
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        const Icon(Icons.tv),
-                        const Text('live_tv').tr(),
-                      ],
-                    ),
-                  ),
-                  CustomTab(
-                    onTap: () {
-                      moveIndicator(2);
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        const Icon(Icons.movie),
-                        const Text('movies').tr(),
-                      ],
-                    ),
-                  ),
-                  CustomTab(
-                    onTap: () {
-                      moveIndicator(3);
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        const Icon(Icons.video_collection),
-                        const Text('series').tr()
-                      ],
-                    ),
-                  )
-                ],
+                ),
               ),
-              Row(
-                children: [
-                  CustomTab(
-                    onTap: () {
-                      moveIndicator(4);
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              AnimatedPositioned(
+                duration: Durations.medium1,
+                left: indStart,
+                right: indEnd,
+                top: 0,
+                child: Container(
+                  height: 3,
+                  width: double.infinity,
+                  decoration: const BoxDecoration(
+                    color: Colors.amber,
+                  ),
+                ),
+              ),
+              Positioned(
+                top: 8,
+                left: 0,
+                right: 0,
+                height: 40,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
                       children: [
-                        const Icon(Icons.search),
-                        const Text('search').tr()
+                        CustomTab(
+                          onTap: () {
+                            moveIndicator(0);
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              const Icon(Icons.home),
+                              const Text('home').tr(),
+                            ],
+                          ),
+                        ),
+                        CustomTab(
+                          onTap: () {
+                            moveIndicator(1);
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              const Icon(Icons.tv),
+                              const Text('live_tv').tr(),
+                            ],
+                          ),
+                        ),
+                        CustomTab(
+                          onTap: () {
+                            moveIndicator(2);
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              const Icon(Icons.movie),
+                              const Text('movies').tr(),
+                            ],
+                          ),
+                        ),
+                        CustomTab(
+                          onTap: () {
+                            moveIndicator(3);
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              const Icon(Icons.video_collection),
+                              const Text('series').tr()
+                            ],
+                          ),
+                        )
                       ],
                     ),
-                  ),
-                  CustomTab(
-                    onTap: () {
-                      moveIndicator(5);
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    Row(
                       children: [
-                        const Icon(Icons.settings),
-                        const Text('settings').tr()
+                        CustomTab(
+                          onTap: () {
+                            moveIndicator(4);
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              const Icon(Icons.search),
+                              const Text('search').tr()
+                            ],
+                          ),
+                        ),
+                        CustomTab(
+                          onTap: () {
+                            moveIndicator(5);
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              const Icon(Icons.settings),
+                              const Text('settings').tr()
+                            ],
+                          ),
+                        ),
                       ],
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ],
           ),
-          AnimatedPositioned(
-            duration: Durations.medium1,
-            left: indStart,
-            right: indEnd,
-            bottom: 0,
-            top: 0,
-            child: AnimatedContainer(
-              duration: Durations.short3,
-              width: double.infinity,
-              height: double.infinity,
-              decoration: BoxDecoration(
-                gradient: HomeState.navBar.hasFocus
-                    ? const LinearGradient(
-                        begin: Alignment.bottomCenter,
-                        end: Alignment.topCenter,
-                        stops: [0, 1],
-                        colors: [Colors.white54, Colors.transparent],
-                      )
-                    : null,
-              ),
-            ),
-          ),
-          AnimatedPositioned(
-            duration: Durations.medium1,
-            left: indStart,
-            right: indEnd,
-            bottom: 0,
-            child: Container(
-              height: 3,
-              width: double.infinity,
-              decoration: const BoxDecoration(
-                color: Colors.white,
-              ),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

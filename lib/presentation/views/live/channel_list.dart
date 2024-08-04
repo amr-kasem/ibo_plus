@@ -17,9 +17,11 @@ class ChannelList extends ConsumerWidget {
   const ChannelList({
     super.key,
     required this.showEPG,
+    required this.onSelect,
   });
 
   final bool showEPG;
+  final VoidCallback onSelect;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -63,9 +65,11 @@ class _ChannelsListViewState extends ConsumerState<ChannelsListView> {
   @override
   void initState() {
     epgTimer = Timer(const Duration(seconds: 1), () {
-      setState(() {
-        epgVisible = true;
-      });
+      if (mounted) {
+        setState(() {
+          epgVisible = true;
+        });
+      }
     });
     super.initState();
   }
