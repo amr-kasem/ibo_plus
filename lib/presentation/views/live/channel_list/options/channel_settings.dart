@@ -2,19 +2,19 @@ import 'package:fading_edge_scrollview/fading_edge_scrollview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../../../utils/app_utils.dart';
+import '../../../../../utils/app_utils.dart';
 
-class CategorySettings extends StatefulWidget {
-  const CategorySettings({
+class ChannelSettings extends StatefulWidget {
+  const ChannelSettings({
     super.key,
     required this.focused,
   });
   final bool focused;
   @override
-  State<CategorySettings> createState() => _CategorySettingsState();
+  State<ChannelSettings> createState() => _ChannelSettingsState();
 }
 
-class _CategorySettingsState extends State<CategorySettings> {
+class _ChannelSettingsState extends State<ChannelSettings> {
   final horizontalController = FixedExtentScrollController();
   final fn = FocusNode();
   bool moving = false;

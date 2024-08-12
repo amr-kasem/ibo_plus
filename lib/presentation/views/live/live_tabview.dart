@@ -1,10 +1,9 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../providers/live_state.dart';
+import '../../providers/player_state.dart';
 import '../../widgets/player_widget.dart';
 import 'live_info.dart';
 
@@ -16,27 +15,27 @@ class LiveTabView extends ConsumerStatefulWidget {
 }
 
 class _LiveTabViewState extends ConsumerState<LiveTabView> {
-  VoidCallback? play;
-  VoidCallback? stop;
+  late final liveNotifier = ref.read(liveControllerProvider.notifier);
+  late final playerNotifier = ref.read(playerControllerProvider.notifier);
 
   @override
   void initState() {
-    play = ref.read(LiveState.openCurrentChannel);
-    stop = ref.read(LiveState.stop);
+    Future.delayed(Duration.zero).then((_) {
+      liveNotifier.init();
+      playerNotifier.play();
+    });
     super.initState();
   }
 
   @override
   void dispose() {
-    log('stop');
-    Future.delayed(Duration.zero).then((_) => stop?.call());
+    Future.delayed(Duration.zero).then((_) => playerNotifier.stop());
+
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    ref.watch(LiveState.currentChannel);
-    play?.call();
     return const Stack(
       children: [
         Positioned.fill(

@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'search_categories.dart';
 import 'category_options.dart';
 import 'category_settings.dart';
+import 'search_categories.dart';
 
 class CategoryOptionsParent extends StatefulWidget {
   const CategoryOptionsParent({
     super.key,
     required this.focused,
     required this.focusable,
-    required this.currentcategory,
   });
   final bool focused;
   final bool focusable;
-  final bool currentcategory;
   @override
   State<CategoryOptionsParent> createState() => _CategoryOptionsState();
 }
@@ -35,7 +33,6 @@ class _CategoryOptionsState extends State<CategoryOptionsParent> {
       CategoryOptions(
         focused: widget.focused,
         updateViewIndex: updateState,
-        currentCategory: widget.currentcategory,
       ),
       CategorySettings(focused: widget.focused)
     ];

@@ -1,74 +1,41 @@
 import 'dart:async';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fading_edge_scrollview/fading_edge_scrollview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gradient_borders/gradient_borders.dart';
 import 'package:intl/intl.dart' as intl;
 
-import '../../../../data/models/live_channel.dart';
 import '../../../../utils/app_utils.dart';
 import '../../../providers/live_state.dart';
-import 'channel_options_parent.dart';
+import 'options/channel_options_parent.dart';
+import 'channel_tile.dart';
 
-class ChannelList extends ConsumerWidget {
+class ChannelList extends ConsumerStatefulWidget {
   const ChannelList({
-    super.key,
-    required this.showEPG,
-    required this.onSelect,
-    required this.visible,
-  });
-  final bool visible;
-  final bool showEPG;
-  final VoidCallback onSelect;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final channelList = ref.watch(LiveState.liveChannels);
-
-    return channelList.when(
-      data: (channels) => ChannelsListView(
-        channels: channels,
-        showEPG: showEPG,
-        visible: visible,
-        onSelect: onSelect,
-      ),
-      error: (e, s) => Center(
-        child: Text('$e,$s'),
-      ),
-      loading: () => const Center(
-        child: CircularProgressIndicator(),
-      ),
-    );
-  }
-}
-
-class ChannelsListView extends ConsumerStatefulWidget {
-  const ChannelsListView({
-    required this.channels,
     required this.showEPG,
     required this.visible,
     required this.onSelect,
     super.key,
   });
-  final List<LiveChannel> channels;
   final bool showEPG;
   final bool visible;
   final VoidCallback onSelect;
 
   @override
-  ConsumerState<ChannelsListView> createState() => _ChannelsListViewState();
+  ConsumerState<ChannelList> createState() => _ChannelListState();
 }
 
-class _ChannelsListViewState extends ConsumerState<ChannelsListView> {
-  final verticalScrollController = FixedExtentScrollController();
+class _ChannelListState extends ConsumerState<ChannelList> {
+  late final liveNotifier = ref.read(liveControllerProvider.notifier);
+
+  late final FixedExtentScrollController verticalScrollController;
   bool focued = false;
   final fn = FocusNode();
   bool epgVisible = false;
   Timer? epgTimer;
   bool moving = false;
+  // late final catId = ref.read(LiveState.hoverCategory)?.categoryId;
   @override
   void initState() {
     epgTimer = Timer(Durations.short2, () {
@@ -78,36 +45,33 @@ class _ChannelsListViewState extends ConsumerState<ChannelsListView> {
         });
       }
     });
-    ref.read(LiveState.currentChannelIndex.future).then((i) async {
-      final cha = await ref.read(LiveState.currentChannel.future);
-      final catId = ref.read(LiveState.hoverCategory)?.categoryId;
-      final chaId = int.tryParse(cha?.categoryId ?? '');
-      if (catId == chaId || // this is when channel belongs to category
-              catId == null || // this is when category is all channels
-              (catId == -1 &&
-                  (cha?.isFavorite ??
-                      false)) // this is when cat is favorite and channel is favorite
+    int x = 0;
+    late final chaI = liveNotifier.stateSnapshot.selectedChannelIndex;
+    late final catId = liveNotifier.stateSnapshot.selectedCategory?.categoryId;
+    late final cha = liveNotifier.stateSnapshot.selectedChannel;
+    late final chaId = int.tryParse(cha?.categoryId ?? '');
+    if (catId == chaId || // this is when channel belongs to category
+            catId == null || // this is when category is all channels
+            (catId == -1 &&
+                (cha?.isFavorite ??
+                    false)) // this is when cat is favorite and channel is favorite
 
-          ) {
-        verticalScrollController.jumpToItem(i);
-      }
-    });
+        ) {
+      x = chaI;
+    }
+    verticalScrollController = FixedExtentScrollController(initialItem: x);
     super.initState();
   }
 
-  late final changeChannel = ref.read(LiveState.selectChannel);
-
   @override
   Widget build(BuildContext context) {
+    final channelList =
+        ref.watch(liveControllerProvider.select((l) => l.channels));
     intl.NumberFormat formatter = intl.NumberFormat(
-        List.filled(widget.channels.length.toString().length, '0').join());
+        List.filled(channelList.length.toString().length, '0').join());
 
-    final channelList = widget.channels
-        .where((element) => element.name.contains(ref.watch(LiveState.search)))
-        .toList();
-    final currentChannelIndex = ref
-        .watch(LiveState.currentChannelIndex)
-        .when(data: (d) => d, error: (_, __) => null, loading: () => null);
+    final currentChannelIndex =
+        ref.watch(liveControllerProvider.select((l) => l.selectedChannelIndex));
     return Focus(
       autofocus: true,
       focusNode: fn,
@@ -123,36 +87,12 @@ class _ChannelsListViewState extends ConsumerState<ChannelsListView> {
           switch (event.logicalKey) {
             case LogicalKeyboardKey.arrowUp:
               // fn.requestFocus();
-              if (!moving) {
-                verticalScrollController
-                    .animateToItem(
-                      AppUtils.clamp(
-                        itemIndex - 1,
-                        widget.channels.length,
-                      ),
-                      duration: Durations.short2,
-                      curve: Curves.easeInOut,
-                    )
-                    .then((_) => moving = false);
-              }
-              moving = true;
+              moveCursor(itemIndex - 1, channelList);
               break;
             case LogicalKeyboardKey.arrowDown:
 
               // fn.requestFocus();
-              if (!moving) {
-                verticalScrollController
-                    .animateToItem(
-                      AppUtils.clamp(
-                        itemIndex + 1,
-                        widget.channels.length,
-                      ),
-                      duration: Durations.short2,
-                      curve: Curves.easeInOut,
-                    )
-                    .then((_) => moving = false);
-              }
-              moving = true;
+              moveCursor(itemIndex + 1, channelList);
               break;
 
             case LogicalKeyboardKey.arrowRight:
@@ -169,7 +109,7 @@ class _ChannelsListViewState extends ConsumerState<ChannelsListView> {
                 return KeyEventResult.handled;
               } else {
                 if (currentChannelIndex != itemIndex) {
-                  verticalScrollController.jumpToItem(currentChannelIndex ?? 0);
+                  verticalScrollController.jumpToItem(currentChannelIndex);
                   return KeyEventResult.handled;
                 }
               }
@@ -179,13 +119,13 @@ class _ChannelsListViewState extends ConsumerState<ChannelsListView> {
             case LogicalKeyboardKey.space:
               if (widget.visible) {
                 if (currentChannelIndex != itemIndex) {
-                  changeChannel(channelList[itemIndex]);
+                  liveNotifier.selectChannel(channelList[itemIndex]);
                 } else {
                   widget.onSelect();
                   return KeyEventResult.handled;
                 }
               } else {
-                verticalScrollController.jumpToItem(currentChannelIndex ?? 0);
+                verticalScrollController.jumpToItem(currentChannelIndex);
               }
 
             default:
@@ -205,78 +145,23 @@ class _ChannelsListViewState extends ConsumerState<ChannelsListView> {
                 squeeze: 0.8,
                 offAxisFraction: 1.5,
                 itemExtent: 40,
-                onSelectedItemChanged: (_) => setState(() {}),
+                onSelectedItemChanged: (value) {
+                  setState(() {});
+                },
                 childDelegate: ListWheelChildBuilderDelegate(
                   builder: (context, index) {
                     final hovered =
                         verticalScrollController.selectedItem == index;
-                    final selected = currentChannelIndex == index;
 
-                    return Container(
-                      margin: const EdgeInsetsDirectional.only(start: 20),
-                      decoration: hovered && focued || selected
-                          ? BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: [
-                                  fn.hasPrimaryFocus || selected
-                                      ? selected
-                                          ? Colors.orange.withOpacity(0.5)
-                                          : Colors.amber.withOpacity(0.15)
-                                      : Colors.amber.withOpacity(0.07),
-                                  Colors.transparent,
-                                ],
-                                stops: [0, selected ? 0.6 : 0.35],
-                              ),
-                              border: GradientBoxBorder(
-                                width: 3,
-                                gradient: LinearGradient(
-                                  colors: [
-                                    (fn.hasPrimaryFocus && hovered) || selected
-                                        ? !hovered
-                                            ? Colors.orange.withOpacity(0.3)
-                                            : Colors.amber
-                                        : Colors.amber.withOpacity(0.3),
-                                    Colors.transparent,
-                                  ],
-                                  stops: const [0, 0.5],
-                                ),
-                              ),
-                            )
-                          : null,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          const SizedBox(width: 8),
-                          Text(
-                            formatter.format(index + 1),
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          CachedNetworkImage(
-                            imageUrl: channelList[index].streamIcon ?? '',
-                            errorWidget: (context, url, error) =>
-                                const SizedBox.shrink(),
-                            height: 30,
-                            width: 30,
-                          ),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: Text(
-                              channelList[index].name,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 25),
-                        ],
-                      ),
+                    final selected = currentChannelIndex == index;
+                    return ChannelTile(
+                      hovered: hovered,
+                      focued: focued,
+                      selected: selected,
+                      fn: fn,
+                      formatter: formatter,
+                      channelList: channelList,
+                      index: index,
                     );
                   },
                   childCount: channelList.length,
@@ -298,5 +183,21 @@ class _ChannelsListViewState extends ConsumerState<ChannelsListView> {
         ],
       ),
     );
+  }
+
+  void moveCursor(int itemIndex, channelList) {
+    if (!moving) {
+      verticalScrollController
+          .animateToItem(
+            AppUtils.clamp(
+              itemIndex,
+              channelList.length,
+            ),
+            duration: Durations.short2,
+            curve: Curves.easeInOut,
+          )
+          .then((_) => moving = false);
+    }
+    moving = true;
   }
 }

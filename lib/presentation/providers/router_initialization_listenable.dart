@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -24,11 +26,14 @@ class RouterInitializationListenable with ChangeNotifier {
           AppUtils.providerContainer.read(AppState.appStateProvider.notifier);
       appStateNotifier.update((s) => AppStates.initPlaylistsMetadata);
       notifyListeners();
-      await UserRepository.initialize();
-      await PlaylistServices.initialize();
-      await LiveServices.initialize();
-      appStateNotifier.update((s) => AppStates.initialized);
-      notifyListeners();
+      if (appStateNotifier.state != AppStates.initialized) {
+        log('app initialized');
+        await UserRepository.initialize();
+        await PlaylistServices.initialize();
+        await LiveServices.initialize();
+        appStateNotifier.update((s) => AppStates.initialized);
+        notifyListeners();
+      }
     } catch (_) {}
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:easy_localization/easy_localization.dart' as e;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -6,7 +8,7 @@ import 'package:go_router/go_router.dart';
 import '../../../data/repositories/user_repository.dart';
 import '../../../services/playlist_services.dart';
 import '../../../utils/duration_utils.dart';
-import '../../providers/playlist_providers.dart';
+import '../../providers/playlist_state.dart';
 import '../../widgets/loading_indicator.dart';
 
 class SettingsUtils {
@@ -41,64 +43,56 @@ class SettingsUtils {
       context: context,
       builder: (BuildContext context) => Consumer(
         builder: (context, ref, child) {
-          final selectedPlaylist =
-              ref.watch(PlaylistProviders.selectedPlaylist);
+          final playlistState = ref.watch(m3UPlaylistControllerProvider);
+          log(playlistState.toString());
           return SimpleDialog(
             clipBehavior: Clip.antiAlias,
             title: const Text('change_playlist').tr(),
-            children: ref.watch(PlaylistProviders.playlists).when(
-                  data: (p) => p.map(
-                    (playlist) {
-                      final selected = selectedPlaylist.when(
-                              data: (data) => data,
-                              error: (error, stackTrace) => null,
-                              loading: () => null) ==
-                          playlist;
-                      return ListTile(
-                        selectedTileColor: Colors.white10,
-                        autofocus: selected,
-                        selected: selected,
-                        onTap: playlist.active && playlist.connected
-                            ? () async {
-                                showDialog(
-                                    context: context,
-                                    builder: (c) {
-                                      PlaylistServices.selectPlaylist(playlist)
-                                          .then((_) {
-                                        try {
-                                          c.pop();
-                                        } catch (_) {}
-                                      });
-                                      return const LoadingIndicator(size: 48);
-                                    });
-                              }
-                            : null,
-                        title: Text(
-                          playlist.playlistName,
-                          style: const TextStyle(fontSize: 18),
-                        ).tr(),
-                        leading: Icon(
-                          Icons.circle,
-                          color: playlist.connected
-                              ? playlist.active
-                                  ? Colors.green
-                                  : Colors.amber
-                              : Colors.red,
-                          size: 8,
-                        ),
-                        subtitle: Text(
-                          playlist.connected
-                              ? playlist.active
-                                  ? '${DurationUtils.formatYMD(playlist.expiray)} remaining.'
-                                  : 'Expired'
-                              : 'Not available',
-                        ),
-                      );
-                    },
-                  ).toList(),
-                  error: (e, _) => [],
-                  loading: () => [],
-                ),
+            children: playlistState.playlists.map(
+              (playlist) {
+                final selected = playlistState.selectedPlaylist == playlist;
+                return ListTile(
+                  selectedTileColor: Colors.white10,
+                  autofocus: selected,
+                  selected: selected,
+                  onTap: playlist.active && playlist.connected
+                      ? () async {
+                          showDialog(
+                              context: context,
+                              builder: (c) {
+                                PlaylistServices.selectPlaylist(playlist)
+                                    .then((_) {
+                                  try {
+                                    c.pop();
+                                  } catch (_) {}
+                                });
+                                return const LoadingIndicator(size: 48);
+                              });
+                        }
+                      : null,
+                  title: Text(
+                    playlist.playlistName,
+                    style: const TextStyle(fontSize: 18),
+                  ).tr(),
+                  leading: Icon(
+                    Icons.circle,
+                    color: playlist.connected
+                        ? playlist.active
+                            ? Colors.green
+                            : Colors.amber
+                        : Colors.red,
+                    size: 8,
+                  ),
+                  subtitle: Text(
+                    playlist.connected
+                        ? playlist.active
+                            ? '${DurationUtils.formatYMD(playlist.expiray)} remaining.'
+                            : 'Expired'
+                        : 'Not available',
+                  ),
+                );
+              },
+            ).toList(),
           );
         },
       ),

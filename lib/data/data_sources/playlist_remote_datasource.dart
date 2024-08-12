@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 
 import '../../services/external_services.dart';
@@ -38,15 +40,18 @@ class PlaylistRemoteDatasource {
         playlist.connected = true;
         playlist.active = (jsonData['user_info']?['auth'] ?? 0) == 1;
         playlist.expiray = _getRemainingSubscriptionDuration(jsonData);
+        log('workin playlist ${playlist.playlistName}');
       } else {
         playlist.connected = false;
         playlist.active = false;
         playlist.expiray = Duration.zero;
+        log('not workin playlist ${playlist.playlistName}');
       }
     } catch (e) {
       playlist.connected = false;
       playlist.active = false;
       playlist.expiray = Duration.zero;
+      log('not workin playlist ${playlist.playlistName}');
     }
     return playlist;
   }

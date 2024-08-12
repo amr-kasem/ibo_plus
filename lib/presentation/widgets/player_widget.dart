@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../providers/live_state.dart';
-import 'exo_player_widget.dart';
 import 'fvp_player_widget.dart';
 
 class PlayerWidget extends StatelessWidget {
@@ -9,6 +7,6 @@ class PlayerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LiveState.fvp ? const FvpPlayerWidget() : const ExoPlayerWidget();
+    return const FvpPlayerWidget(); //: const ExoPlayerWidget();
   }
 }

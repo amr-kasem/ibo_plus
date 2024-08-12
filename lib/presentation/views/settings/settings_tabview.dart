@@ -2,7 +2,7 @@ import 'package:easy_localization/easy_localization.dart' as e;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../providers/playlist_providers.dart';
+import '../../providers/playlist_state.dart';
 import 'settings_tile.dart';
 import 'settings_utils.dart';
 
@@ -38,11 +38,11 @@ class SettingsTabView extends StatelessWidget {
                 Icons.playlist_play,
                 size: 96,
               ),
-              value: ref.watch(PlaylistProviders.selectedPlaylist).when(
-                    data: (n) => n!.playlistName,
-                    error: (error, stackTrace) => '',
-                    loading: () => 'loading',
-                  ),
+              value: ref
+                      .watch(m3UPlaylistControllerProvider
+                          .select((s) => s.selectedPlaylist))
+                      ?.playlistName ??
+                  'No Playlist Found',
               onPressed: () {
                 SettingsUtils.showPlaylistDialog(context);
               },

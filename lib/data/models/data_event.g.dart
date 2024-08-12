@@ -103,6 +103,7 @@ const _DataEventdataEventTypeEnumValueMap = {
   'recentlyVisitedSeriesChange': 5,
   'playlistsChanged': 6,
   'currentChannelChanged': 7,
+  'currentLiveCategoryChanged': 8,
 };
 const _DataEventdataEventTypeValueEnumMap = {
   0: DataEventType.liveChannelsChange,
@@ -113,6 +114,7 @@ const _DataEventdataEventTypeValueEnumMap = {
   5: DataEventType.recentlyVisitedSeriesChange,
   6: DataEventType.playlistsChanged,
   7: DataEventType.currentChannelChanged,
+  8: DataEventType.currentLiveCategoryChanged,
 };
 
 Id _dataEventGetId(DataEvent object) {

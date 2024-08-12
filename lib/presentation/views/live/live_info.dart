@@ -19,6 +19,7 @@ class _LiveInfoState extends ConsumerState<LiveInfo> {
   bool categories = false;
   bool visible = false;
   bool shouldExit = false;
+
   Timer? infoTimer;
   final fn = FocusNode();
   @override

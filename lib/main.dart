@@ -10,7 +10,7 @@ import 'services/external_services.dart';
 import 'utils/app_utils.dart';
 
 void main() async {
-  Logger.root.level = Level.INFO;
+  Logger.root.level = Level.WARNING;
   final df = DateFormat("HH:mm:ss.SSS");
   Logger.root.onRecord.listen((record) {
     log('${record.loggerName}.${record.level.name}: ${df.format(record.time)}: ${record.message}');

@@ -2,23 +2,21 @@ import '../data/models/category.dart';
 import '../data/models/live_channel.dart';
 import '../data/repositories/playlist_repository.dart';
 import '../data/repositories/user_repository.dart';
-import '../presentation/providers/live_state.dart';
-import '../utils/app_utils.dart';
 import '../utils/category_type.dart';
 
 class LiveServices {
   static Future<void> initialize() async {
     PlaylistRepository.refreshCategories(CategoryType.liveChannels);
     PlaylistRepository.refreshLiveChannels();
-    PlaylistRepository.liveChannelsNotifier.listen((e) {
-      AppUtils.providerContainer.invalidate(LiveState.liveChannels);
-    });
-    UserRepository.currentChannelNotifier.listen((e) {
-      AppUtils.providerContainer.invalidate(LiveState.currentChannel);
-    });
-    UserRepository.currentLiveCategoryNotifier.listen((e) {
-      AppUtils.providerContainer.invalidate(LiveState.currentCategory);
-    });
+    // PlaylistRepository.liveChannelsNotifier.listen((e) {
+    //   AppUtils.providerContainer.invalidate(LiveState.liveChannels);
+    // });
+    // UserRepository.currentChannelNotifier.listen((e) {
+    //   AppUtils.providerContainer.invalidate(LiveState.currentChannel);
+    // });
+    // UserRepository.currentLiveCategoryNotifier.listen((e) {
+    //   AppUtils.providerContainer.invalidate(LiveState.currentCategory);
+    // });
   }
 
   static void changeCurrentChannel(LiveChannel channel) async {

@@ -2,20 +2,19 @@ import 'package:fading_edge_scrollview/fading_edge_scrollview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../../../utils/app_utils.dart';
+import '../../../../../utils/app_utils.dart';
 
-class EpgList extends StatefulWidget {
-  const EpgList({
+class CategorySettings extends StatefulWidget {
+  const CategorySettings({
     super.key,
-    required this.focued,
+    required this.focused,
   });
-
-  final bool focued;
+  final bool focused;
   @override
-  State<EpgList> createState() => _EpgListState();
+  State<CategorySettings> createState() => _CategorySettingsState();
 }
 
-class _EpgListState extends State<EpgList> {
+class _CategorySettingsState extends State<CategorySettings> {
   final horizontalController = FixedExtentScrollController();
   final fn = FocusNode();
   bool moving = false;
@@ -27,12 +26,63 @@ class _EpgListState extends State<EpgList> {
     super.dispose();
   }
 
+  final List<Widget> text = [
+    const Text(
+      'Favorite',
+      style: TextStyle(
+        fontWeight: FontWeight.bold,
+        fontSize: 16,
+      ),
+    ),
+    const Text(
+      'Audio tracks',
+      style: TextStyle(
+        fontWeight: FontWeight.bold,
+        fontSize: 16,
+      ),
+    ),
+    const Text(
+      'Subtitles',
+      style: TextStyle(
+        fontWeight: FontWeight.bold,
+        fontSize: 16,
+      ),
+    ),
+    const Text(
+      'TV guide',
+      style: TextStyle(
+        fontWeight: FontWeight.bold,
+        fontSize: 16,
+      ),
+    ),
+    const Text(
+      'Screen fit',
+      style: TextStyle(
+        fontWeight: FontWeight.bold,
+        fontSize: 16,
+      ),
+    ),
+  ];
+  final List<Widget> icons = const [
+    Icon(Icons.favorite_border),
+    Icon(Icons.audiotrack_outlined),
+    Icon(Icons.subtitles),
+    Icon(Icons.table_rows_outlined),
+    Icon(Icons.fit_screen),
+  ];
   @override
   Widget build(BuildContext context) {
     return Focus(
-      onFocusChange: (_) => setState(() {}),
+      onFocusChange: (_) {
+        setState(() {});
+        horizontalController.animateToItem(
+          0,
+          duration: Durations.short3,
+          curve: Curves.bounceInOut,
+        );
+      },
       focusNode: fn,
-      autofocus: widget.focued,
+      autofocus: widget.focused,
       onKeyEvent: (node, event) {
         if (event is! KeyUpEvent) {
           switch (event.logicalKey) {
@@ -78,7 +128,6 @@ class _EpgListState extends State<EpgList> {
               }
               moving = true;
               return KeyEventResult.handled;
-
             default:
           }
         } else {
@@ -90,14 +139,13 @@ class _EpgListState extends State<EpgList> {
         }
         return KeyEventResult.ignored;
       },
-      child: Stack(
-        clipBehavior: Clip.none,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Positioned(
-            top: 0,
-            bottom: 0,
-            left: -100,
-            right: -100,
+          const SizedBox(height: 30),
+          SizedBox(
+            height: 50,
             child: RotatedBox(
               quarterTurns: -1,
               child: FadingEdgeScrollView.fromListWheelScrollView(
@@ -107,12 +155,11 @@ class _EpgListState extends State<EpgList> {
                   controller: horizontalController,
                   diameterRatio: 10,
                   onSelectedItemChanged: (value) => setState(() {}),
-                  itemExtent: 240,
+                  itemExtent: 50,
                   offAxisFraction: 0.0,
                   childDelegate: ListWheelChildBuilderDelegate(
                     builder: (context, j) {
                       final selected = j == horizontalController.selectedItem;
-
                       return RotatedBox(
                         quarterTurns: 1,
                         child: AnimatedScale(
@@ -132,23 +179,37 @@ class _EpgListState extends State<EpgList> {
                                 width: 2,
                               ),
                             ),
-                            padding: const EdgeInsets.all(2),
                             margin: const EdgeInsets.all(8),
-                            width: 240,
-                            height: 80,
                             child: Container(
-                              color: Colors.black26,
-                              child: Text('EPG TILE $j'),
+                              padding: const EdgeInsets.all(2),
+                              color: Colors.black45,
+                              child: icons[j],
                             ),
                           ),
                         ),
                       );
                     },
-                    childCount: 20,
+                    childCount: text.length,
                   ),
                 ),
               ),
             ),
+          ),
+          AnimatedSwitcher(
+            duration: Durations.short4,
+            child: fn.hasFocus && widget.focused
+                ? FutureBuilder(
+                    future: Future.delayed(Duration.zero),
+                    builder: (context, s) {
+                      return s.connectionState == ConnectionState.done
+                          ? SizedBox(
+                              height: 30,
+                              child: text[horizontalController.selectedItem],
+                            )
+                          : const SizedBox(height: 30);
+                    },
+                  )
+                : const SizedBox(height: 30),
           ),
         ],
       ),

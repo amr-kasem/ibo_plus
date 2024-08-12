@@ -2,7 +2,7 @@ import 'package:fading_edge_scrollview/fading_edge_scrollview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../../../utils/app_utils.dart';
+import '../../../../../utils/app_utils.dart';
 
 class ScreenFitOptions extends StatefulWidget {
   const ScreenFitOptions({

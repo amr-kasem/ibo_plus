@@ -1,24 +1,23 @@
 import 'package:fading_edge_scrollview/fading_edge_scrollview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../utils/app_utils.dart';
+import '../../../../../utils/app_utils.dart';
 
-class ChannelOptions extends StatefulWidget {
-  const ChannelOptions({
+class CategoryOptions extends ConsumerStatefulWidget {
+  const CategoryOptions({
     super.key,
     required this.focused,
     required this.updateViewIndex,
-    required this.currentChannel,
   });
   final void Function(int index) updateViewIndex;
   final bool focused;
-  final bool currentChannel;
   @override
-  State<ChannelOptions> createState() => _ChannelOptionsState();
+  ConsumerState<CategoryOptions> createState() => _CategoryOptionsState();
 }
 
-class _ChannelOptionsState extends State<ChannelOptions> {
+class _CategoryOptionsState extends ConsumerState<CategoryOptions> {
   final horizontalController = FixedExtentScrollController(initialItem: 1);
   final fn = FocusNode();
   bool moving = false;
@@ -32,6 +31,8 @@ class _ChannelOptionsState extends State<ChannelOptions> {
 
   @override
   Widget build(BuildContext context) {
+    // final currentCategoryIndex = ref
+    //     .watch(liveControllerProvider.select((s) => s.selectedCategoryIndex));
     final List<Widget> text = [
       const Text(
         'Search',
@@ -42,36 +43,6 @@ class _ChannelOptionsState extends State<ChannelOptions> {
       ),
       const Text(
         'Favorite',
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 16,
-        ),
-      ),
-      if (widget.currentChannel)
-        const Text(
-          'Audio tracks',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-          ),
-        ),
-      if (widget.currentChannel)
-        const Text(
-          'Subtitles',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-          ),
-        ),
-      const Text(
-        'TV guide',
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 16,
-        ),
-      ),
-      const Text(
-        'Screen fit',
         style: TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 16,
@@ -89,10 +60,6 @@ class _ChannelOptionsState extends State<ChannelOptions> {
     final List<Widget> icons = [
       const Icon(Icons.search),
       const Icon(Icons.favorite_border),
-      if (widget.currentChannel) const Icon(Icons.audiotrack_outlined),
-      if (widget.currentChannel) const Icon(Icons.subtitles),
-      const Icon(Icons.table_rows_outlined),
-      const Icon(Icons.fit_screen),
       const Icon(Icons.settings),
     ];
     return Focus(

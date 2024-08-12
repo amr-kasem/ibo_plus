@@ -2,23 +2,23 @@ import 'package:fading_edge_scrollview/fading_edge_scrollview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../../../utils/app_utils.dart';
+import '../../../../../utils/app_utils.dart';
 
-class CategoryOptions extends StatefulWidget {
-  const CategoryOptions({
+class ChannelOptions extends StatefulWidget {
+  const ChannelOptions({
     super.key,
     required this.focused,
     required this.updateViewIndex,
-    required this.currentCategory,
+    required this.currentChannel,
   });
   final void Function(int index) updateViewIndex;
   final bool focused;
-  final bool currentCategory;
+  final bool currentChannel;
   @override
-  State<CategoryOptions> createState() => _CategoryOptionsState();
+  State<ChannelOptions> createState() => _ChannelOptionsState();
 }
 
-class _CategoryOptionsState extends State<CategoryOptions> {
+class _ChannelOptionsState extends State<ChannelOptions> {
   final horizontalController = FixedExtentScrollController(initialItem: 1);
   final fn = FocusNode();
   bool moving = false;
@@ -47,6 +47,36 @@ class _CategoryOptionsState extends State<CategoryOptions> {
           fontSize: 16,
         ),
       ),
+      if (widget.currentChannel)
+        const Text(
+          'Audio tracks',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+          ),
+        ),
+      if (widget.currentChannel)
+        const Text(
+          'Subtitles',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+          ),
+        ),
+      const Text(
+        'TV guide',
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 16,
+        ),
+      ),
+      const Text(
+        'Screen fit',
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 16,
+        ),
+      ),
       const Text(
         'Settings',
         style: TextStyle(
@@ -59,6 +89,10 @@ class _CategoryOptionsState extends State<CategoryOptions> {
     final List<Widget> icons = [
       const Icon(Icons.search),
       const Icon(Icons.favorite_border),
+      if (widget.currentChannel) const Icon(Icons.audiotrack_outlined),
+      if (widget.currentChannel) const Icon(Icons.subtitles),
+      const Icon(Icons.table_rows_outlined),
+      const Icon(Icons.fit_screen),
       const Icon(Icons.settings),
     ];
     return Focus(

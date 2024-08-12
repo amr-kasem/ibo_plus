@@ -4,70 +4,37 @@ import 'package:fading_edge_scrollview/fading_edge_scrollview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gradient_borders/gradient_borders.dart';
 import 'package:intl/intl.dart' as intl;
 
 import '../../../../data/models/category.dart';
 import '../../../../utils/app_utils.dart';
 import '../../../providers/live_state.dart';
-import 'category_options_parent.dart';
+import 'category_tile.dart';
+import 'options/category_options_parent.dart';
 
-class CategoryList extends ConsumerWidget {
+class CategoryList extends ConsumerStatefulWidget {
   const CategoryList({
-    super.key,
-    required this.showSettings,
-    required this.onSelect,
-    required this.visible,
-  });
-  final bool visible;
-  final bool showSettings;
-  final VoidCallback onSelect;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final channelList = ref.watch(LiveState.liveCategories);
-
-    return channelList.when(
-      data: (categories) => CategoriesListView(
-        categories: categories,
-        showSettings: showSettings,
-        visible: visible,
-        onSelect: onSelect,
-      ),
-      error: (e, s) => Center(
-        child: Text('$e,$s'),
-      ),
-      loading: () => const Center(
-        child: CircularProgressIndicator(),
-      ),
-    );
-  }
-}
-
-class CategoriesListView extends ConsumerStatefulWidget {
-  const CategoriesListView({
-    required this.categories,
     required this.showSettings,
     required this.visible,
     required this.onSelect,
     super.key,
   });
-  final List<Category> categories;
   final bool showSettings;
   final bool visible;
   final VoidCallback onSelect;
 
   @override
-  ConsumerState<CategoriesListView> createState() => _CategoriesListViewState();
+  ConsumerState<CategoryList> createState() => _CategoryListState();
 }
 
-class _CategoriesListViewState extends ConsumerState<CategoriesListView> {
-  final verticalScrollController = FixedExtentScrollController();
+class _CategoryListState extends ConsumerState<CategoryList> {
+  late final verticalScrollController = FixedExtentScrollController();
   bool focued = false;
   final fn = FocusNode();
   bool epgVisible = false;
   Timer? epgTimer;
   bool moving = false;
+  bool contaminated = false;
   @override
   void initState() {
     epgTimer = Timer(Durations.short2, () {
@@ -77,27 +44,20 @@ class _CategoriesListViewState extends ConsumerState<CategoriesListView> {
         });
       }
     });
-    ref.read(LiveState.currentCategoryIndex.future).then(
-          (i) => verticalScrollController.jumpToItem(i),
-        );
+
     super.initState();
   }
 
-  late final changeCategory = ref.read(LiveState.selectCategory);
+  late final liveNotifier = ref.read(liveControllerProvider.notifier);
 
   @override
   Widget build(BuildContext context) {
+    final categories =
+        ref.watch(liveControllerProvider.select((s) => s.categories));
+    final currentCategory =
+        ref.watch(liveControllerProvider.select((s) => s.selectedCategory));
     intl.NumberFormat formatter = intl.NumberFormat(
-        List.filled(widget.categories.length.toString().length, '0').join());
-    final hoverCategoryNotifier = ref.read(LiveState.hoverCategory.notifier);
-    final categoryList = widget.categories
-        .where((element) =>
-            element.categoryName.contains(ref.watch(LiveState.search)))
-        .toList();
-    final currentCategoryIndex = ref
-        .watch(LiveState.currentCategoryIndex)
-        .when(data: (d) => d, error: (_, __) => null, loading: () => null);
-    final resetHover = ref.read(LiveState.resetCategoryHover);
+        List.filled(categories.length.toString().length, '0').join());
 
     return Focus(
       focusNode: fn,
@@ -105,15 +65,6 @@ class _CategoriesListViewState extends ConsumerState<CategoriesListView> {
         setState(() {
           focued = value;
         });
-        if (!value) {
-          resetHover();
-        } else {
-          Future.delayed(Duration.zero).then(
-            (_) {
-              verticalScrollController.jumpToItem(currentCategoryIndex ?? 0);
-            },
-          );
-        }
       },
       onKeyEvent: (node, event) {
         final itemIndex = verticalScrollController.selectedItem;
@@ -121,34 +72,10 @@ class _CategoriesListViewState extends ConsumerState<CategoriesListView> {
         if (event is! KeyUpEvent) {
           switch (event.logicalKey) {
             case LogicalKeyboardKey.arrowUp:
-              if (!moving) {
-                verticalScrollController
-                    .animateToItem(
-                      AppUtils.clamp(
-                        itemIndex - 1,
-                        widget.categories.length,
-                      ),
-                      duration: Durations.short2,
-                      curve: Curves.easeInOut,
-                    )
-                    .then((_) => moving = false);
-              }
-              moving = true;
+              moveCursor(itemIndex - 1, categories);
               break;
             case LogicalKeyboardKey.arrowDown:
-              if (!moving) {
-                verticalScrollController
-                    .animateToItem(
-                      AppUtils.clamp(
-                        itemIndex + 1,
-                        widget.categories.length,
-                      ),
-                      duration: Durations.short2,
-                      curve: Curves.easeInOut,
-                    )
-                    .then((_) => moving = false);
-              }
-              moving = true;
+              moveCursor(itemIndex + 1, categories);
               break;
 
             case LogicalKeyboardKey.arrowRight:
@@ -162,24 +89,22 @@ class _CategoriesListViewState extends ConsumerState<CategoriesListView> {
               if (!fn.hasPrimaryFocus) {
                 fn.requestFocus();
                 return KeyEventResult.handled;
+              } else {
+                if (categories[verticalScrollController.selectedItem] !=
+                    currentCategory) {
+                  moveCursor(liveNotifier.resetCategry(), categories);
+                  contaminated = true;
+                  return KeyEventResult.handled;
+                }
               }
 
               break;
             case LogicalKeyboardKey.select:
             case LogicalKeyboardKey.space:
               widget.onSelect();
-              changeCategory(
-                categoryList[verticalScrollController.selectedItem],
-              );
+              liveNotifier.commitSelectedCategory();
 
             default:
-          }
-        } else {
-          if (LogicalKeyboardKey.arrowDown == event.logicalKey ||
-              LogicalKeyboardKey.arrowUp == event.logicalKey) {
-            hoverCategoryNotifier.update(
-              (state) => categoryList[verticalScrollController.selectedItem],
-            );
           }
         }
         return KeyEventResult.ignored;
@@ -197,70 +122,24 @@ class _CategoriesListViewState extends ConsumerState<CategoriesListView> {
                 squeeze: 0.8,
                 offAxisFraction: 1.5,
                 itemExtent: 40,
-                onSelectedItemChanged: (_) {
-                  setState(() {});
+                onSelectedItemChanged: (i) {
+                  liveNotifier.selectCategory(categories[i]);
                 },
                 childDelegate: ListWheelChildBuilderDelegate(
                   builder: (context, index) {
                     final hovered =
                         verticalScrollController.selectedItem == index;
 
-                    return Container(
-                      margin: const EdgeInsetsDirectional.only(start: 20),
-                      decoration: hovered && focued
-                          ? BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: [
-                                  fn.hasPrimaryFocus
-                                      ? Colors.orange.withOpacity(0.5)
-                                      : Colors.amber.withOpacity(0.07),
-                                  Colors.transparent,
-                                ],
-                                stops: const [0, 0.6],
-                              ),
-                              border: GradientBoxBorder(
-                                width: 3,
-                                gradient: LinearGradient(
-                                  colors: [
-                                    (fn.hasPrimaryFocus && hovered)
-                                        ? Colors.amber
-                                        : Colors.amber.withOpacity(0.3),
-                                    Colors.transparent,
-                                  ],
-                                  stops: const [0, 0.5],
-                                ),
-                              ),
-                            )
-                          : null,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          const SizedBox(width: 8),
-                          Text(
-                            formatter.format(index + 1),
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: Text(
-                              categoryList[index].categoryName,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 25),
-                        ],
-                      ),
+                    return CategoryTile(
+                      index: index,
+                      hovered: hovered,
+                      focued: focued,
+                      fn: fn,
+                      formatter: formatter,
+                      categories: categories,
                     );
                   },
-                  childCount: categoryList.length,
+                  childCount: categories.length,
                 ),
               ),
             ),
@@ -272,13 +151,27 @@ class _CategoriesListViewState extends ConsumerState<CategoriesListView> {
                   ? CategoryOptionsParent(
                       focused: !fn.hasPrimaryFocus,
                       focusable: fn.hasFocus,
-                      currentcategory: currentCategoryIndex ==
-                          verticalScrollController.selectedItem,
                     )
                   : const SizedBox.shrink(),
             ),
         ],
       ),
     );
+  }
+
+  void moveCursor(int newIndex, List<Category> categories) {
+    if (!moving) {
+      verticalScrollController
+          .animateToItem(
+            AppUtils.clamp(
+              newIndex,
+              categories.length,
+            ),
+            duration: Durations.short2,
+            curve: Curves.easeInOut,
+          )
+          .then((_) => moving = false);
+      moving = true;
+    }
   }
 }

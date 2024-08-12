@@ -2,19 +2,20 @@ import 'package:fading_edge_scrollview/fading_edge_scrollview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../../../utils/app_utils.dart';
+import '../../../../../utils/app_utils.dart';
 
-class ChannelSettings extends StatefulWidget {
-  const ChannelSettings({
+class EpgList extends StatefulWidget {
+  const EpgList({
     super.key,
-    required this.focused,
+    required this.focued,
   });
-  final bool focused;
+
+  final bool focued;
   @override
-  State<ChannelSettings> createState() => _ChannelSettingsState();
+  State<EpgList> createState() => _EpgListState();
 }
 
-class _ChannelSettingsState extends State<ChannelSettings> {
+class _EpgListState extends State<EpgList> {
   final horizontalController = FixedExtentScrollController();
   final fn = FocusNode();
   bool moving = false;
@@ -26,63 +27,12 @@ class _ChannelSettingsState extends State<ChannelSettings> {
     super.dispose();
   }
 
-  final List<Widget> text = [
-    const Text(
-      'Favorite',
-      style: TextStyle(
-        fontWeight: FontWeight.bold,
-        fontSize: 16,
-      ),
-    ),
-    const Text(
-      'Audio tracks',
-      style: TextStyle(
-        fontWeight: FontWeight.bold,
-        fontSize: 16,
-      ),
-    ),
-    const Text(
-      'Subtitles',
-      style: TextStyle(
-        fontWeight: FontWeight.bold,
-        fontSize: 16,
-      ),
-    ),
-    const Text(
-      'TV guide',
-      style: TextStyle(
-        fontWeight: FontWeight.bold,
-        fontSize: 16,
-      ),
-    ),
-    const Text(
-      'Screen fit',
-      style: TextStyle(
-        fontWeight: FontWeight.bold,
-        fontSize: 16,
-      ),
-    ),
-  ];
-  final List<Widget> icons = const [
-    Icon(Icons.favorite_border),
-    Icon(Icons.audiotrack_outlined),
-    Icon(Icons.subtitles),
-    Icon(Icons.table_rows_outlined),
-    Icon(Icons.fit_screen),
-  ];
   @override
   Widget build(BuildContext context) {
     return Focus(
-      onFocusChange: (_) {
-        setState(() {});
-        horizontalController.animateToItem(
-          0,
-          duration: Durations.short3,
-          curve: Curves.bounceInOut,
-        );
-      },
+      onFocusChange: (_) => setState(() {}),
       focusNode: fn,
-      autofocus: widget.focused,
+      autofocus: widget.focued,
       onKeyEvent: (node, event) {
         if (event is! KeyUpEvent) {
           switch (event.logicalKey) {
@@ -128,6 +78,7 @@ class _ChannelSettingsState extends State<ChannelSettings> {
               }
               moving = true;
               return KeyEventResult.handled;
+
             default:
           }
         } else {
@@ -139,13 +90,14 @@ class _ChannelSettingsState extends State<ChannelSettings> {
         }
         return KeyEventResult.ignored;
       },
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
+      child: Stack(
+        clipBehavior: Clip.none,
         children: [
-          const SizedBox(height: 30),
-          SizedBox(
-            height: 50,
+          Positioned(
+            top: 0,
+            bottom: 0,
+            left: -100,
+            right: -100,
             child: RotatedBox(
               quarterTurns: -1,
               child: FadingEdgeScrollView.fromListWheelScrollView(
@@ -155,11 +107,12 @@ class _ChannelSettingsState extends State<ChannelSettings> {
                   controller: horizontalController,
                   diameterRatio: 10,
                   onSelectedItemChanged: (value) => setState(() {}),
-                  itemExtent: 50,
+                  itemExtent: 240,
                   offAxisFraction: 0.0,
                   childDelegate: ListWheelChildBuilderDelegate(
                     builder: (context, j) {
                       final selected = j == horizontalController.selectedItem;
+
                       return RotatedBox(
                         quarterTurns: 1,
                         child: AnimatedScale(
@@ -179,37 +132,23 @@ class _ChannelSettingsState extends State<ChannelSettings> {
                                 width: 2,
                               ),
                             ),
+                            padding: const EdgeInsets.all(2),
                             margin: const EdgeInsets.all(8),
+                            width: 240,
+                            height: 80,
                             child: Container(
-                              padding: const EdgeInsets.all(2),
-                              color: Colors.black45,
-                              child: icons[j],
+                              color: Colors.black26,
+                              child: Text('EPG TILE $j'),
                             ),
                           ),
                         ),
                       );
                     },
-                    childCount: text.length,
+                    childCount: 20,
                   ),
                 ),
               ),
             ),
-          ),
-          AnimatedSwitcher(
-            duration: Durations.short4,
-            child: fn.hasFocus && widget.focused
-                ? FutureBuilder(
-                    future: Future.delayed(Duration.zero),
-                    builder: (context, s) {
-                      return s.connectionState == ConnectionState.done
-                          ? SizedBox(
-                              height: 30,
-                              child: text[horizontalController.selectedItem],
-                            )
-                          : const SizedBox(height: 30);
-                    },
-                  )
-                : const SizedBox(height: 30),
           ),
         ],
       ),
