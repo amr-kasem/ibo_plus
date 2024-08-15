@@ -1,23 +1,18 @@
 import 'package:fading_edge_scrollview/fading_edge_scrollview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../../utils/app_utils.dart';
 
-class CategoryOptions extends ConsumerStatefulWidget {
-  const CategoryOptions({
+class IboTextFieldOptions extends StatefulWidget {
+  const IboTextFieldOptions({
     super.key,
-    required this.focused,
-    required this.updateViewIndex,
   });
-  final void Function(int index) updateViewIndex;
-  final bool focused;
   @override
-  ConsumerState<CategoryOptions> createState() => _CategoryOptionsState();
+  State<IboTextFieldOptions> createState() => _IboTextFieldOptionsState();
 }
 
-class _CategoryOptionsState extends ConsumerState<CategoryOptions> {
+class _IboTextFieldOptionsState extends State<IboTextFieldOptions> {
   final horizontalController = FixedExtentScrollController(initialItem: 1);
   final fn = FocusNode();
   bool moving = false;
@@ -33,21 +28,35 @@ class _CategoryOptionsState extends ConsumerState<CategoryOptions> {
   Widget build(BuildContext context) {
     final List<Widget> text = [
       const Text(
-        'Search',
+        'Delete',
         style: TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 16,
         ),
       ),
       const Text(
-        'Favorite',
+        'Ok',
         style: TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 16,
         ),
       ),
       const Text(
-        'Settings',
+        'Cancel',
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 16,
+        ),
+      ),
+      const Text(
+        'Numbers',
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 16,
+        ),
+      ),
+      const Text(
+        'Change Language',
         style: TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 16,
@@ -56,9 +65,11 @@ class _CategoryOptionsState extends ConsumerState<CategoryOptions> {
     ];
 
     final List<Widget> icons = [
-      const Icon(Icons.search),
-      const Icon(Icons.favorite_border),
-      const Icon(Icons.settings),
+      const Icon(Icons.arrow_back),
+      const Icon(Icons.check),
+      const Icon(Icons.close),
+      const Icon(Icons.numbers),
+      const Icon(Icons.language),
     ];
     return Focus(
       onFocusChange: (_) {
@@ -70,7 +81,6 @@ class _CategoryOptionsState extends ConsumerState<CategoryOptions> {
         );
       },
       focusNode: fn,
-      autofocus: widget.focused,
       onKeyEvent: (node, event) {
         if (event is! KeyUpEvent) {
           switch (event.logicalKey) {
@@ -87,6 +97,10 @@ class _CategoryOptionsState extends ConsumerState<CategoryOptions> {
                   )
                   .then((_) => moving = false);
             case LogicalKeyboardKey.arrowLeft:
+              if (horizontalController.selectedItem == 0 ||
+                  horizontalController.selectedItem == icons.length) {
+                return KeyEventResult.ignored;
+              }
               if (!moving) {
                 horizontalController
                     .animateToItem(
@@ -102,10 +116,9 @@ class _CategoryOptionsState extends ConsumerState<CategoryOptions> {
               moving = true;
               return KeyEventResult.handled;
             case LogicalKeyboardKey.arrowRight:
-              if (horizontalController.selectedItem == 0 &&
-                  Directionality.of(context) == TextDirection.rtl) {
-                node.parent?.requestFocus();
-                return KeyEventResult.handled;
+              if (horizontalController.selectedItem == 0 ||
+                  horizontalController.selectedItem == icons.length) {
+                return KeyEventResult.ignored;
               }
 
               if (!moving) {
@@ -124,7 +137,6 @@ class _CategoryOptionsState extends ConsumerState<CategoryOptions> {
               return KeyEventResult.handled;
             case LogicalKeyboardKey.select:
             case LogicalKeyboardKey.space:
-              widget.updateViewIndex(horizontalController.selectedItem);
               return KeyEventResult.handled;
 
             default:
@@ -194,7 +206,7 @@ class _CategoryOptionsState extends ConsumerState<CategoryOptions> {
           ),
           AnimatedSwitcher(
             duration: Durations.short4,
-            child: fn.hasFocus && widget.focused
+            child: fn.hasFocus
                 ? FutureBuilder(
                     future: Future.delayed(Duration.zero),
                     builder: (context, s) {

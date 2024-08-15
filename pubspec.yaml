@@ -66,6 +66,8 @@ dependencies:
   logging: ^1.2.0
   freezed_annotation: ^2.4.4
   riverpod_annotation: ^2.3.5
+  virtual_keyboard_multi_language: ^1.1.0
+  soft_keyboard: ^0.2.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

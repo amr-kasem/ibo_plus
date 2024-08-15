@@ -6,7 +6,7 @@ import 'channel_options.dart';
 import 'channel_settings.dart';
 import 'epg_list.dart';
 import 'screen_fit_options.dart';
-import 'search_channels.dart';
+import 'text_field.dart';
 import 'subtitles_list.dart';
 
 class ChannelOptionsParent extends StatefulWidget {
@@ -35,7 +35,7 @@ class _ChannelOptionsState extends State<ChannelOptionsParent> {
   @override
   Widget build(BuildContext context) {
     late List<Widget> views = [
-      const SearchChannels(),
+      const IboTextField(),
       ChannelOptions(
         focused: widget.focused,
         updateViewIndex: updateState,
