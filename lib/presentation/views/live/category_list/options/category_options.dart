@@ -87,6 +87,9 @@ class _CategoryOptionsState extends ConsumerState<CategoryOptions> {
                   )
                   .then((_) => moving = false);
             case LogicalKeyboardKey.arrowLeft:
+              if (horizontalController.selectedItem == 0) {
+                return KeyEventResult.ignored;
+              }
               if (!moving) {
                 horizontalController
                     .animateToItem(
@@ -102,12 +105,6 @@ class _CategoryOptionsState extends ConsumerState<CategoryOptions> {
               moving = true;
               return KeyEventResult.handled;
             case LogicalKeyboardKey.arrowRight:
-              if (horizontalController.selectedItem == 0 &&
-                  Directionality.of(context) == TextDirection.rtl) {
-                node.parent?.requestFocus();
-                return KeyEventResult.handled;
-              }
-
               if (!moving) {
                 horizontalController
                     .animateToItem(

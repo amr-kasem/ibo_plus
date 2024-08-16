@@ -26,10 +26,10 @@ class AppUtils {
   static bool intToBool(int i) => i == 1;
   static int boolToInt(bool b) => b ? 1 : 0;
   static String? toStr(x) => x == null ? null : '$x';
-  static int clamp(int i, int max) => i > max
-      ? max
-      : i < 0
+  static int clamp(int i, int max) => i < max
+      ? i < 0
           ? 0
-          : i;
+          : i
+      : max;
   static int cycle(i, int max) => i % max;
 }

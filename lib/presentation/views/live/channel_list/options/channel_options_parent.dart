@@ -35,7 +35,9 @@ class _ChannelOptionsState extends State<ChannelOptionsParent> {
   @override
   Widget build(BuildContext context) {
     late List<Widget> views = [
-      const SearchChannels(),
+      SearchChannels(
+        goBack: () => updateState(1),
+      ),
       ChannelOptions(
         focused: widget.focused,
         updateViewIndex: updateState,

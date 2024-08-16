@@ -27,4 +27,13 @@ class Category {
   });
   factory Category.fromJson(Map<String, dynamic> json) =>
       _$CategoryFromJson(json);
+
+  @override
+  bool operator ==(Object other) {
+    if (other is! Category) return false;
+    return hashCode == other.hashCode;
+  }
+
+  @override
+  int get hashCode => categoryId.hashCode;
 }

@@ -80,17 +80,6 @@ class _LiveInfoState extends ConsumerState<LiveInfo> {
                     );
                   }
                 });
-              } else if (event.logicalKey == LogicalKeyboardKey.arrowRight) {
-                setState(() {
-                  categories = Directionality.of(context) != TextDirection.ltr;
-                  if (categories) {
-                    Future.delayed(Duration.zero).then(
-                      (_) {
-                        fn.focusInDirection(TraversalDirection.right);
-                      },
-                    );
-                  }
-                });
               } else if (event.logicalKey == LogicalKeyboardKey.goBack ||
                   event.logicalKey == LogicalKeyboardKey.escape) {
                 if (!categories && visible) {
@@ -130,66 +119,44 @@ class _LiveInfoState extends ConsumerState<LiveInfo> {
             }
             return KeyEventResult.ignored;
           },
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Stack(
+            clipBehavior: Clip.antiAlias,
             children: [
-              SizedBox(
-                height: 40,
-                child: AnimatedSwitcher(
-                  duration: Durations.medium1,
-                  child: categories
-                      ? const SizedBox.shrink()
-                      : const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 24.0),
-                          child: Text(
-                            'All Channels',
-                            style: TextStyle(fontSize: 18),
-                          ),
-                        ),
+              AnimatedPositionedDirectional(
+                duration: Durations.medium1,
+                start: categories ? 0 : -700,
+                top: 0,
+                bottom: 0,
+                width: 700,
+                child: CategoryList(
+                  showSettings: categories,
+                  visible: fn.hasFocus && visible,
+                  onSelect: () {
+                    setState(() {
+                      fn.traversalChildren.last.requestFocus();
+                      categories = false;
+                    });
+                  },
                 ),
               ),
-              Expanded(
-                child: Stack(
-                  clipBehavior: Clip.antiAlias,
-                  children: [
-                    AnimatedPositionedDirectional(
-                      duration: Durations.medium1,
-                      start: categories ? 0 : -600,
-                      top: 0,
-                      bottom: 0,
-                      width: 600,
-                      child: CategoryList(
-                        showSettings: categories,
-                        visible: fn.hasFocus && visible,
-                        onSelect: () {
-                          setState(() {
-                            fn.traversalChildren.last.requestFocus();
-                            categories = false;
-                          });
-                        },
-                      ),
-                    ),
-                    AnimatedPositionedDirectional(
-                      duration: Durations.medium1,
-                      start: categories ? 600 : 0,
-                      top: 0,
-                      bottom: 0,
-                      end: 0,
-                      child: AnimatedOpacity(
-                        duration: Durations.medium3,
-                        opacity: categories ? 0.6 : 1,
-                        child: ChannelList(
-                          showEPG: !categories,
-                          visible: fn.hasFocus && visible,
-                          onSelect: () {
-                            setState(() {
-                              visible = false;
-                            });
-                          },
-                        ),
-                      ),
-                    ),
-                  ],
+              AnimatedPositionedDirectional(
+                duration: Durations.medium1,
+                start: categories ? 700 : 0,
+                top: 0,
+                bottom: 0,
+                width: MediaQuery.of(context).size.width,
+                child: AnimatedOpacity(
+                  duration: Durations.medium3,
+                  opacity: categories ? 0.6 : 1,
+                  child: ChannelList(
+                    showEPG: !categories,
+                    visible: fn.hasFocus && visible,
+                    onSelect: () {
+                      setState(() {
+                        visible = false;
+                      });
+                    },
+                  ),
                 ),
               ),
             ],

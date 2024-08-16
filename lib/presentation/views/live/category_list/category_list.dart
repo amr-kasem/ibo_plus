@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:fading_edge_scrollview/fading_edge_scrollview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,6 +10,7 @@ import 'package:intl/intl.dart' as intl;
 import '../../../../data/models/category.dart';
 import '../../../../utils/app_utils.dart';
 import '../../../providers/live_state.dart';
+import 'category_list_header.dart';
 import 'category_tile.dart';
 import 'options/category_options_parent.dart';
 
@@ -28,13 +30,15 @@ class CategoryList extends ConsumerStatefulWidget {
 }
 
 class _CategoryListState extends ConsumerState<CategoryList> {
-  late final verticalScrollController = FixedExtentScrollController();
+  late final liveNotifier = ref.read(liveControllerProvider.notifier);
+  late final FixedExtentScrollController verticalScrollController =
+      FixedExtentScrollController();
   bool focued = false;
   final fn = FocusNode();
   bool epgVisible = false;
   Timer? epgTimer;
   bool moving = false;
-  bool contaminated = false;
+  bool initialized = false;
   @override
   void initState() {
     epgTimer = Timer(Durations.short2, () {
@@ -48,114 +52,145 @@ class _CategoryListState extends ConsumerState<CategoryList> {
     super.initState();
   }
 
-  late final liveNotifier = ref.read(liveControllerProvider.notifier);
-
   @override
   Widget build(BuildContext context) {
-    final categories =
-        ref.watch(liveControllerProvider.select((s) => s.categories));
     final currentCategory =
         ref.watch(liveControllerProvider.select((s) => s.selectedCategory));
+    ref.listen(liveControllerProvider.select((s) => s.categories), (a, b) {
+      final same = const ListEquality().equals(a, b);
+      if (!same || !initialized) {
+        initialized = true;
+        int i = 0;
+        if (currentCategory != null) {
+          i = b.indexOf(currentCategory);
+          if (i == -1) {
+            i = 0;
+          }
+        }
+        verticalScrollController.jumpToItem(i);
+      }
+    });
+    final categories =
+        ref.watch(liveControllerProvider.select((s) => s.categories));
     intl.NumberFormat formatter = intl.NumberFormat(
         List.filled(categories.length.toString().length, '0').join());
 
-    return Focus(
-      focusNode: fn,
-      onFocusChange: (value) {
-        setState(() {
-          focued = value;
-        });
-      },
-      onKeyEvent: (node, event) {
-        final itemIndex = verticalScrollController.selectedItem;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const CategoryListHeader(),
+        Expanded(
+          child: Focus(
+            focusNode: fn,
+            onFocusChange: (value) {
+              setState(() {
+                focued = value;
+              });
+            },
+            onKeyEvent: (node, event) {
+              final itemIndex = verticalScrollController.selectedItem;
 
-        if (event is! KeyUpEvent) {
-          switch (event.logicalKey) {
-            case LogicalKeyboardKey.arrowUp:
-              moveCursor(itemIndex - 1, categories);
-              break;
-            case LogicalKeyboardKey.arrowDown:
-              moveCursor(itemIndex + 1, categories);
-              break;
+              if (event is! KeyUpEvent) {
+                switch (event.logicalKey) {
+                  case LogicalKeyboardKey.arrowUp:
+                    moveCursor(itemIndex - 1, categories);
+                    break;
+                  case LogicalKeyboardKey.arrowDown:
+                    moveCursor(itemIndex + 1, categories);
+                    break;
 
-            case LogicalKeyboardKey.arrowRight:
-              final f = node.traversalDescendants.firstOrNull;
-              if (f != null) {
-                f.requestFocus();
-              }
-              return KeyEventResult.handled;
+                  case LogicalKeyboardKey.arrowRight:
+                    if (fn.hasPrimaryFocus) {
+                      final f = node.traversalDescendants.firstOrNull;
+                      if (f != null) {
+                        f.requestFocus();
+                      }
+                      return KeyEventResult.handled;
+                    }
 
-            case LogicalKeyboardKey.goBack:
-              if (!fn.hasPrimaryFocus) {
-                fn.requestFocus();
-                return KeyEventResult.handled;
-              } else {
-                if (categories[verticalScrollController.selectedItem] !=
-                    currentCategory) {
-                  moveCursor(liveNotifier.resetCategry(), categories);
-                  contaminated = true;
-                  return KeyEventResult.handled;
+                  case LogicalKeyboardKey.goBack:
+                    if (!fn.hasPrimaryFocus) {
+                      fn.requestFocus();
+                      return KeyEventResult.handled;
+                    } else {
+                      if (liveNotifier
+                          .stateSnapshot.searchCategories.isNotEmpty) {
+                        liveNotifier.searchCategories('');
+                      }
+                      if (categories[verticalScrollController.selectedItem] !=
+                          currentCategory) {
+                        final i = liveNotifier.resetCategry();
+                        moveCursor(i, categories);
+
+                        return KeyEventResult.handled;
+                      }
+                    }
+
+                    break;
+                  case LogicalKeyboardKey.arrowLeft:
+                    if (!fn.hasPrimaryFocus) {
+                      fn.requestFocus();
+                      return KeyEventResult.handled;
+                    }
+                  case LogicalKeyboardKey.select:
+                  case LogicalKeyboardKey.space:
+                    widget.onSelect();
+
+                  default:
                 }
               }
+              return KeyEventResult.ignored;
+            },
+            child: Row(
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: FadingEdgeScrollView.fromListWheelScrollView(
+                    gradientFractionOnEnd: 0.5,
+                    gradientFractionOnStart: 0.5,
+                    child: ListWheelScrollView.useDelegate(
+                      controller: verticalScrollController,
+                      diameterRatio: 8,
+                      squeeze: 0.8,
+                      offAxisFraction: 1.5,
+                      itemExtent: 40,
+                      onSelectedItemChanged: (i) {
+                        liveNotifier.selectCategory(categories[i]);
+                      },
+                      childDelegate: ListWheelChildBuilderDelegate(
+                        builder: (context, index) {
+                          final hovered =
+                              verticalScrollController.selectedItem == index;
 
-              break;
-            case LogicalKeyboardKey.select:
-            case LogicalKeyboardKey.space:
-              widget.onSelect();
-              liveNotifier.commitSelectedCategory();
-
-            default:
-          }
-        }
-        return KeyEventResult.ignored;
-      },
-      child: Row(
-        children: [
-          Expanded(
-            flex: 2,
-            child: FadingEdgeScrollView.fromListWheelScrollView(
-              gradientFractionOnEnd: 0.5,
-              gradientFractionOnStart: 0.5,
-              child: ListWheelScrollView.useDelegate(
-                controller: verticalScrollController,
-                diameterRatio: 8,
-                squeeze: 0.8,
-                offAxisFraction: 1.5,
-                itemExtent: 40,
-                onSelectedItemChanged: (i) {
-                  liveNotifier.selectCategory(categories[i]);
-                },
-                childDelegate: ListWheelChildBuilderDelegate(
-                  builder: (context, index) {
-                    final hovered =
-                        verticalScrollController.selectedItem == index;
-
-                    return CategoryTile(
-                      index: index,
-                      hovered: hovered,
-                      focued: focued,
-                      fn: fn,
-                      formatter: formatter,
-                      categories: categories,
-                    );
-                  },
-                  childCount: categories.length,
+                          return CategoryTile(
+                            index: index,
+                            hovered: hovered,
+                            focued: focued,
+                            fn: fn,
+                            formatter: formatter,
+                            categories: categories,
+                          );
+                        },
+                        childCount: categories.length,
+                      ),
+                    ),
+                  ),
                 ),
-              ),
+                if (widget.showSettings)
+                  Expanded(
+                    flex: 1,
+                    child: epgVisible
+                        ? CategoryOptionsParent(
+                            focused: !fn.hasPrimaryFocus,
+                            focusable: fn.hasFocus,
+                          )
+                        : const SizedBox.shrink(),
+                  ),
+              ],
             ),
           ),
-          if (widget.showSettings)
-            Expanded(
-              flex: 1,
-              child: epgVisible
-                  ? CategoryOptionsParent(
-                      focused: !fn.hasPrimaryFocus,
-                      focusable: fn.hasFocus,
-                    )
-                  : const SizedBox.shrink(),
-            ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 

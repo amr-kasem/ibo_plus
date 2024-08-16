@@ -33,11 +33,15 @@ class LiveState with _$LiveState {
           (int.tryParse(c.categoryId ?? '') == hoverCategory?.categoryId ||
               hoverCategory?.categoryId == null ||
               hoverCategory?.categoryId == -1) &&
-          c.name.contains(searchChannels))
+          c.name.toLowerCase().contains(searchChannels.toLowerCase()))
       .toList();
 
   List<Category> get categories => allCategoris
-      .where((c) => c.categoryName.contains(searchCategories))
+      .where(
+        (c) => c.categoryName.toLowerCase().contains(
+              searchCategories.toLowerCase(),
+            ),
+      )
       .toList();
 
   int get selectedChannelIndex =>
@@ -106,6 +110,7 @@ class LiveController extends Notifier<LiveState> {
     log("${playlist?.url}${playlist?.username}/${playlist?.password}/${channel.streamId}");
     state = state.copyWith(selectedChannel: channel);
     LiveServices.changeCurrentChannel(state.selectedChannel!);
+    commitSelectedCategory();
   }
 
   void selectCategory(Category category) {
@@ -114,7 +119,9 @@ class LiveController extends Notifier<LiveState> {
 
   int resetCategry() {
     state = state.copyWith(hoverCategory: state.selectedCategory);
-    return state.selectedCategoryIndex;
+    return state.selectedCategory == null
+        ? 0
+        : state.categories.indexOf(state.selectedCategory!);
   }
 
   void commitSelectedCategory() async {

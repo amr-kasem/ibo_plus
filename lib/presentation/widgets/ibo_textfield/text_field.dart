@@ -12,19 +12,24 @@ class IboTextField extends StatefulWidget {
     super.key,
     this.onSubmit,
     this.onChange,
+    this.onCancel,
+    this.initialValue,
   });
 
   final void Function(String value)? onSubmit;
   final void Function(String value)? onChange;
+  final void Function()? onCancel;
+  final String? initialValue;
 
   @override
   State<IboTextField> createState() => _IboTextFieldState();
 }
 
 class _IboTextFieldState extends State<IboTextField> {
-  late final _controllerText = TextEditingController();
+  late final _controllerText = TextEditingController(text: widget.initialValue);
   late final verticalScrollController = FixedExtentScrollController();
   late final scrollController = ScrollController();
+  late final fn = FocusNode();
   bool moving = false;
   final letters = [
     'A',
@@ -72,6 +77,7 @@ class _IboTextFieldState extends State<IboTextField> {
 
   @override
   Widget build(BuildContext context) {
+    bool searchFocused = fn.hasFocus;
     return Container(
       // color: Colors.purple,
       padding: const EdgeInsets.all(10),
@@ -93,7 +99,7 @@ class _IboTextFieldState extends State<IboTextField> {
                         Colors.amber.withOpacity(0.2),
                         Colors.transparent
                       ],
-                      stops: const [0, 0.5, 0.75],
+                      stops: searchFocused ? const [0, 0.5, 0.75] : [0, 0.5, 1],
                       begin: Alignment.centerLeft,
                       end: Alignment.centerRight,
                     ),
@@ -166,106 +172,121 @@ class _IboTextFieldState extends State<IboTextField> {
                             ),
                           ),
                         ),
-                        Positioned.directional(
-                          textDirection: Directionality.of(context),
-                          end: 5,
-                          top: -17,
-                          child: Transform.scale(
-                            scaleX: 0.33,
-                            alignment: AlignmentDirectional.centerEnd,
-                            child: Container(
-                              height: 60,
-                              width: 75,
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 5),
-                              decoration: BoxDecoration(
-                                border: const GradientBoxBorder(
-                                  gradient: LinearGradient(
-                                    colors: [
-                                      Colors.transparent,
-                                      Colors.amber,
-                                      Colors.transparent
-                                    ],
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
-                                  ),
-                                  width: 2,
-                                ),
-                                gradient: LinearGradient(
-                                  colors: [
-                                    Colors.transparent,
-                                    Colors.amber.withOpacity(0.4),
-                                    Colors.amber.withOpacity(0.4),
-                                    Colors.transparent
-                                  ],
-                                  stops: const [0, 0.3, 0.7, 1],
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Positioned.directional(
-                          textDirection: Directionality.of(context),
-                          end: 5,
-                          top: -17,
-                          child: Container(
-                            height: 60,
-                            width: 26,
+                        AnimatedOpacity(
+                          opacity: searchFocused ? 1 : 0,
+                          duration: Durations.medium1,
+                          child: Stack(
                             clipBehavior: Clip.none,
-                            padding: const EdgeInsets.symmetric(horizontal: 5),
-                            child: Focus(
-                              autofocus: true,
-                              onKeyEvent: (node, event) {
-                                final itemIndex =
-                                    verticalScrollController.selectedItem;
-
-                                if (event is! KeyUpEvent) {
-                                  switch (event.logicalKey) {
-                                    case LogicalKeyboardKey.arrowUp:
-                                      moveCursor(itemIndex - 1, letters);
-
-                                      return KeyEventResult.handled;
-                                    case LogicalKeyboardKey.arrowDown:
-                                      moveCursor(itemIndex + 1, letters);
-
-                                      return KeyEventResult.handled;
-                                    case LogicalKeyboardKey.select:
-                                      _controllerText.text +=
-                                          letters[itemIndex].toLowerCase();
-
-                                      // setState(() {});
-                                      return KeyEventResult.handled;
-                                  }
-                                }
-                                return KeyEventResult.ignored;
-                              },
-                              child:
-                                  FadingEdgeScrollView.fromListWheelScrollView(
-                                gradientFractionOnEnd: 0.5,
-                                gradientFractionOnStart: 0.5,
-                                child: ListWheelScrollView.useDelegate(
-                                  controller: verticalScrollController,
-                                  itemExtent: 25,
-                                  onSelectedItemChanged: (i) {},
-                                  childDelegate:
-                                      ListWheelChildLoopingListDelegate(
-                                    children: letters
-                                        .map(
-                                          (l) => Text(
-                                            l.toLowerCase(),
-                                            textAlign: TextAlign.center,
-                                            style: const TextStyle(
-                                              fontSize: 20,
-                                            ),
-                                          ),
-                                        )
-                                        .toList(),
+                            children: [
+                              Positioned.directional(
+                                textDirection: Directionality.of(context),
+                                end: 5,
+                                top: -17,
+                                child: Transform.scale(
+                                  scaleX: 0.33,
+                                  alignment: AlignmentDirectional.centerEnd,
+                                  child: Container(
+                                    height: 60,
+                                    width: 75,
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 5),
+                                    decoration: BoxDecoration(
+                                      border: const GradientBoxBorder(
+                                        gradient: LinearGradient(
+                                          colors: [
+                                            Colors.transparent,
+                                            Colors.amber,
+                                            Colors.transparent
+                                          ],
+                                          begin: Alignment.topCenter,
+                                          end: Alignment.bottomCenter,
+                                        ),
+                                        width: 2,
+                                      ),
+                                      gradient: LinearGradient(
+                                        colors: [
+                                          Colors.transparent,
+                                          Colors.amber.withOpacity(0.4),
+                                          Colors.amber.withOpacity(0.4),
+                                          Colors.transparent
+                                        ],
+                                        stops: const [0, 0.3, 0.7, 1],
+                                        begin: Alignment.topCenter,
+                                        end: Alignment.bottomCenter,
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
+                              Positioned.directional(
+                                textDirection: Directionality.of(context),
+                                end: 5,
+                                top: -17,
+                                child: Container(
+                                  height: 60,
+                                  width: 26,
+                                  clipBehavior: Clip.none,
+                                  padding:
+                                      const EdgeInsets.symmetric(horizontal: 5),
+                                  child: Focus(
+                                    focusNode: fn,
+                                    autofocus: true,
+                                    onFocusChange: (v) {
+                                      setState(() {});
+                                    },
+                                    onKeyEvent: (node, event) {
+                                      final itemIndex =
+                                          verticalScrollController.selectedItem;
+
+                                      if (event is! KeyUpEvent) {
+                                        switch (event.logicalKey) {
+                                          case LogicalKeyboardKey.arrowUp:
+                                            moveCursor(itemIndex - 1, letters);
+
+                                            return KeyEventResult.handled;
+                                          case LogicalKeyboardKey.arrowDown:
+                                            moveCursor(itemIndex + 1, letters);
+
+                                            return KeyEventResult.handled;
+                                          case LogicalKeyboardKey.select:
+                                            _controllerText.text +=
+                                                letters[itemIndex]
+                                                    .toLowerCase();
+
+                                            // setState(() {});
+                                            return KeyEventResult.handled;
+                                        }
+                                      }
+                                      return KeyEventResult.ignored;
+                                    },
+                                    child: FadingEdgeScrollView
+                                        .fromListWheelScrollView(
+                                      gradientFractionOnEnd: 0.5,
+                                      gradientFractionOnStart: 0.5,
+                                      child: ListWheelScrollView.useDelegate(
+                                        controller: verticalScrollController,
+                                        itemExtent: 25,
+                                        onSelectedItemChanged: (i) {},
+                                        childDelegate:
+                                            ListWheelChildLoopingListDelegate(
+                                          children: letters
+                                              .map(
+                                                (l) => Text(
+                                                  l.toLowerCase(),
+                                                  textAlign: TextAlign.center,
+                                                  style: const TextStyle(
+                                                    fontSize: 20,
+                                                  ),
+                                                ),
+                                              )
+                                              .toList(),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],
@@ -281,6 +302,11 @@ class _IboTextFieldState extends State<IboTextField> {
                   },
                   onOk: () {
                     widget.onSubmit?.call(_controllerText.text);
+                  },
+                  onCancel: () {
+                    _controllerText.text = '';
+
+                    widget.onCancel?.call();
                   },
                 ),
               ),

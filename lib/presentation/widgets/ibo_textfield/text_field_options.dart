@@ -9,9 +9,11 @@ class IboTextFieldOptions extends StatefulWidget {
     super.key,
     required this.onDelete,
     required this.onOk,
+    required this.onCancel,
   });
   final VoidCallback onDelete;
   final VoidCallback onOk;
+  final VoidCallback onCancel;
   @override
   State<IboTextFieldOptions> createState() => _IboTextFieldOptionsState();
 }
@@ -83,7 +85,9 @@ class _IboTextFieldOptionsState extends State<IboTextFieldOptions> {
       () {
         widget.onOk();
       },
-      () {},
+      () {
+        widget.onCancel();
+      },
       () {},
       () {},
     ];
@@ -102,20 +106,11 @@ class _IboTextFieldOptionsState extends State<IboTextFieldOptions> {
           switch (event.logicalKey) {
             case LogicalKeyboardKey.arrowUp:
             case LogicalKeyboardKey.arrowDown:
-              horizontalController
-                  .animateToItem(
-                    AppUtils.clamp(
-                      1,
-                      icons.length,
-                    ),
-                    duration: Durations.medium1,
-                    curve: Curves.easeInOut,
-                  )
-                  .then((_) => moving = false);
+              return KeyEventResult.handled;
             case LogicalKeyboardKey.arrowLeft:
-              if (horizontalController.selectedItem == 0 ||
-                  horizontalController.selectedItem == icons.length) {
-                return KeyEventResult.ignored;
+              if (horizontalController.selectedItem == 0) {
+                fn.focusInDirection(TraversalDirection.left);
+                return KeyEventResult.handled;
               }
               if (!moving) {
                 horizontalController
@@ -132,11 +127,6 @@ class _IboTextFieldOptionsState extends State<IboTextFieldOptions> {
               moving = true;
               return KeyEventResult.handled;
             case LogicalKeyboardKey.arrowRight:
-              if (horizontalController.selectedItem == 0 ||
-                  horizontalController.selectedItem == icons.length) {
-                return KeyEventResult.ignored;
-              }
-
               if (!moving) {
                 horizontalController
                     .animateToItem(
