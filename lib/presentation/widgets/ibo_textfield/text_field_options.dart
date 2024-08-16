@@ -2,12 +2,16 @@ import 'package:fading_edge_scrollview/fading_edge_scrollview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../../../../utils/app_utils.dart';
+import '../../../utils/app_utils.dart';
 
 class IboTextFieldOptions extends StatefulWidget {
   const IboTextFieldOptions({
     super.key,
+    required this.onDelete,
+    required this.onOk,
   });
+  final VoidCallback onDelete;
+  final VoidCallback onOk;
   @override
   State<IboTextFieldOptions> createState() => _IboTextFieldOptionsState();
 }
@@ -65,11 +69,23 @@ class _IboTextFieldOptionsState extends State<IboTextFieldOptions> {
     ];
 
     final List<Widget> icons = [
-      const Icon(Icons.arrow_back),
-      const Icon(Icons.check),
       const Icon(Icons.close),
+      const Icon(Icons.check),
+      const Icon(Icons.undo),
       const Icon(Icons.numbers),
       const Icon(Icons.language),
+    ];
+
+    final List<VoidCallback> callbacks = [
+      () {
+        widget.onDelete();
+      },
+      () {
+        widget.onOk();
+      },
+      () {},
+      () {},
+      () {},
     ];
     return Focus(
       onFocusChange: (_) {
@@ -137,6 +153,7 @@ class _IboTextFieldOptionsState extends State<IboTextFieldOptions> {
               return KeyEventResult.handled;
             case LogicalKeyboardKey.select:
             case LogicalKeyboardKey.space:
+              callbacks[horizontalController.selectedItem]();
               return KeyEventResult.handled;
 
             default:

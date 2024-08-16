@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../providers/app_state.dart';
 import '../widgets/custom_tab_bar.dart';
+import '../widgets/ibo_textfield/text_field.dart';
 import 'home/home_tabview.dart';
-import 'live/channel_list/options/text_field.dart';
 import 'live/live_tabview.dart';
 import 'settings/settings_tabview.dart';
 
@@ -163,7 +163,11 @@ class _HomePageState extends State<HomePage> {
       case 2:
         return const Placeholder();
       case 3:
-        return const Center(child: IboTextField());
+        return Center(
+          child: IboTextField(
+            onSubmit: (v) {},
+          ),
+        );
       case 4:
         return const Placeholder();
       case 5:

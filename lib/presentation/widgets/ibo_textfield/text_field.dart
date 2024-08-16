@@ -2,21 +2,29 @@ import 'package:fading_edge_scrollview/fading_edge_scrollview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gradient_borders/gradient_borders.dart';
-import 'package:ibo_plus/presentation/views/live/channel_list/options/text_field_options.dart';
-import 'package:ibo_plus/presentation/widgets/faded_widget.dart';
 
-import '../../../../../utils/app_utils.dart';
+import '../../../utils/app_utils.dart';
+import '../faded_widget.dart';
+import 'text_field_options.dart';
 
 class IboTextField extends StatefulWidget {
-  const IboTextField({super.key});
+  const IboTextField({
+    super.key,
+    this.onSubmit,
+    this.onChange,
+  });
+
+  final void Function(String value)? onSubmit;
+  final void Function(String value)? onChange;
 
   @override
   State<IboTextField> createState() => _IboTextFieldState();
 }
 
 class _IboTextFieldState extends State<IboTextField> {
-  late final _controllerText = TextEditingController(text: 'test');
+  late final _controllerText = TextEditingController();
   late final verticalScrollController = FixedExtentScrollController();
+  late final scrollController = ScrollController();
   bool moving = false;
   final letters = [
     'A',
@@ -46,6 +54,22 @@ class _IboTextFieldState extends State<IboTextField> {
     'Y',
     'Z'
   ];
+  @override
+  void initState() {
+    _controllerText.addListener(() {
+      _scrollToEnd();
+      widget.onChange?.call(_controllerText.text);
+    });
+    super.initState();
+  }
+
+  void _scrollToEnd() async {
+    await Future.delayed(Duration.zero);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      scrollController.jumpTo(scrollController.position.maxScrollExtent);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -94,34 +118,50 @@ class _IboTextFieldState extends State<IboTextField> {
                         Align(
                           alignment: AlignmentDirectional.centerStart,
                           child: Container(
-                            padding: const EdgeInsetsDirectional.only(end: 25),
+                            padding: const EdgeInsetsDirectional.only(end: 35),
                             height: 30,
                             child: Focus(
                               canRequestFocus: false,
                               descendantsAreFocusable: false,
-                              child: TextField(
-                                textAlignVertical: TextAlignVertical.center,
-                                decoration: const InputDecoration(
-                                  border: InputBorder.none,
-                                  contentPadding: EdgeInsets.symmetric(
-                                      horizontal: 4, vertical: 0),
-                                  filled: false,
-                                  constraints: BoxConstraints(
-                                    maxHeight: 20,
-                                  ),
-                                  isDense: true,
-                                  prefixIconConstraints: BoxConstraints(
-                                    maxHeight: 30,
-                                    maxWidth: 35,
-                                  ),
-                                  prefixIcon: Icon(Icons.search),
-                                  prefixIconColor: Colors.amber,
+                              child: ConstrainedBox(
+                                constraints: const BoxConstraints(
+                                  minWidth: 100,
+                                  maxWidth: 220,
                                 ),
-                                style: const TextStyle(
-                                  fontSize: 20,
+                                child: GlowingOverscrollIndicator(
+                                  showLeading: false,
+                                  showTrailing: false,
+                                  axisDirection: AxisDirection.left,
+                                  color: Colors.transparent,
+                                  child: TextField(
+                                    scrollController: scrollController,
+                                    textAlignVertical: TextAlignVertical.center,
+                                    scrollPhysics:
+                                        const ClampingScrollPhysics(),
+                                    decoration: const InputDecoration(
+                                      hintText: 'Search',
+                                      border: InputBorder.none,
+                                      contentPadding: EdgeInsets.symmetric(
+                                          horizontal: 4, vertical: 0),
+                                      filled: false,
+                                      constraints: BoxConstraints(
+                                        maxHeight: 20,
+                                      ),
+                                      isDense: true,
+                                      prefixIconConstraints: BoxConstraints(
+                                        maxHeight: 30,
+                                        maxWidth: 35,
+                                      ),
+                                      prefixIcon: Icon(Icons.search),
+                                      prefixIconColor: Colors.amber,
+                                    ),
+                                    style: const TextStyle(
+                                      fontSize: 20,
+                                    ),
+                                    controller: _controllerText,
+                                    maxLines: 1,
+                                  ),
                                 ),
-                                controller: _controllerText,
-                                maxLines: 1,
                               ),
                             ),
                           ),
@@ -185,14 +225,17 @@ class _IboTextFieldState extends State<IboTextField> {
                                   switch (event.logicalKey) {
                                     case LogicalKeyboardKey.arrowUp:
                                       moveCursor(itemIndex - 1, letters);
+
                                       return KeyEventResult.handled;
                                     case LogicalKeyboardKey.arrowDown:
                                       moveCursor(itemIndex + 1, letters);
+
                                       return KeyEventResult.handled;
                                     case LogicalKeyboardKey.select:
                                       _controllerText.text +=
                                           letters[itemIndex].toLowerCase();
-                                      setState(() {});
+
+                                      // setState(() {});
                                       return KeyEventResult.handled;
                                   }
                                 }
@@ -206,17 +249,19 @@ class _IboTextFieldState extends State<IboTextField> {
                                   controller: verticalScrollController,
                                   itemExtent: 25,
                                   onSelectedItemChanged: (i) {},
-                                  childDelegate: ListWheelChildBuilderDelegate(
-                                    builder: (context, index) {
-                                      return Text(
-                                        letters[index].toLowerCase(),
-                                        textAlign: TextAlign.center,
-                                        style: const TextStyle(
-                                          fontSize: 20,
-                                        ),
-                                      );
-                                    },
-                                    childCount: letters.length,
+                                  childDelegate:
+                                      ListWheelChildLoopingListDelegate(
+                                    children: letters
+                                        .map(
+                                          (l) => Text(
+                                            l.toLowerCase(),
+                                            textAlign: TextAlign.center,
+                                            style: const TextStyle(
+                                              fontSize: 20,
+                                            ),
+                                          ),
+                                        )
+                                        .toList(),
                                   ),
                                 ),
                               ),
@@ -228,7 +273,17 @@ class _IboTextFieldState extends State<IboTextField> {
                   ),
                 ),
               ),
-              const Expanded(child: IboTextFieldOptions()),
+              Expanded(
+                child: IboTextFieldOptions(
+                  onDelete: () {
+                    final t = _controllerText.text;
+                    _controllerText.text = t.substring(0, t.length - 1);
+                  },
+                  onOk: () {
+                    widget.onSubmit?.call(_controllerText.text);
+                  },
+                ),
+              ),
             ],
           ),
         ),
@@ -240,7 +295,7 @@ class _IboTextFieldState extends State<IboTextField> {
     if (!moving) {
       verticalScrollController
           .animateToItem(
-            AppUtils.clamp(
+            AppUtils.cycle(
               newIndex,
               letters.length,
             ),
@@ -248,6 +303,7 @@ class _IboTextFieldState extends State<IboTextField> {
             curve: Curves.easeInOut,
           )
           .then((_) => moving = false);
+
       moving = true;
     }
   }

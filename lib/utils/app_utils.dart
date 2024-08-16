@@ -31,4 +31,5 @@ class AppUtils {
       : i < 0
           ? 0
           : i;
+  static int cycle(i, int max) => i % max;
 }

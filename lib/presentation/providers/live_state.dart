@@ -1,7 +1,7 @@
 import 'dart:developer';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../data/models/category.dart';
 import '../../data/models/live_channel.dart';
@@ -125,6 +125,18 @@ class LiveController extends Notifier<LiveState> {
       LiveServices.changeCurrentCategoryById(
           state.selectedCategory?.categoryId!);
     }
+  }
+
+  void searchChannels(String v) async {
+    state = state.copyWith(
+      searchChannels: v,
+    );
+  }
+
+  void searchCategories(String v) async {
+    state = state.copyWith(
+      searchCategories: v,
+    );
   }
 }
 
