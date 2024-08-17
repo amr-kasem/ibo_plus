@@ -136,7 +136,7 @@ class IsarDB {
   Future<List<LiveChannel>> getLiveChannels(M3UPlaylist m3uPlaylist) async {
     return await _isar.liveChannels
         .where()
-        .playlistIdEqualTo(m3uPlaylist.isarId)
+        // .playlistIdEqualTo(m3uPlaylist.isarId)
         .findAll();
   }
 
@@ -153,10 +153,16 @@ class IsarDB {
     required M3UPlaylist m3uPlaylist,
     required CategoryType type,
   }) async {
-    return await _isar.categorys
-        .where()
-        .typePlaylistIdEqualTo(type, m3uPlaylist.isarId)
-        .findAll();
+    return [
+      Category(categoryId: -2, categoryName: 'All Channels', parentId: 0)
+        ..playlistId = m3uPlaylist.isarId,
+      Category(categoryId: -1, categoryName: 'Favorite', parentId: 0)
+        ..playlistId = m3uPlaylist.isarId,
+      ...await _isar.categorys
+          .where()
+          .typePlaylistIdEqualTo(type, m3uPlaylist.isarId)
+          .findAll()
+    ];
   }
 
   Future<Category?> getCategoryById(
@@ -164,19 +170,21 @@ class IsarDB {
       required CategoryType type,
       required int? categoryId}) async {
     if (categoryId == -1) {
-      return Category(categoryId: -1, categoryName: 'Favorite', parentId: 0);
+      return Category(categoryId: -1, categoryName: 'Favorite', parentId: 0)
+        ..playlistId = m3uPlaylist.isarId;
     }
     return (await _isar.categorys
             .where()
-            .categoryIdEqualTo(categoryId ?? -2)
+            .isarIdEqualTo(
+                AppUtils.fastHash('${m3uPlaylist.isarId}$categoryId'))
             .findAll())
         .firstWhere(
       (c) => c.playlistId == m3uPlaylist.isarId,
       orElse: () => Category(
-        categoryId: null,
+        categoryId: -2,
         categoryName: 'All Channels',
         parentId: 0,
-      ),
+      )..playlistId = m3uPlaylist.isarId,
     );
   }
 }

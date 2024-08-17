@@ -69,7 +69,7 @@ class PlaylistRemoteDatasource {
           'password': m3uPlaylist.password,
           'action': 'get_live_streams',
         },
-      ).timeout(const Duration(seconds: 4));
+      );
     } catch (e) {
       return Future.error(e);
     }

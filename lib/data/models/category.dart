@@ -9,13 +9,14 @@ part 'category.g.dart';
 @JsonSerializable(fieldRename: FieldRename.snake)
 @collection
 class Category {
-  @JsonKey(fromJson: int.tryParse, toJson: AppUtils.toStr)
-  final Id? categoryId;
+  @Index(composite: [CompositeIndex('playlistId'), CompositeIndex('type')])
+  @JsonKey(fromJson: int.parse, toJson: AppUtils.toStr)
+  final int categoryId;
   final String categoryName;
   final int parentId;
   @JsonKey(includeFromJson: false, includeToJson: false)
   @enumerated
-  @Index(composite: [CompositeIndex('playlistId')])
+  @Index()
   late CategoryType type;
   @Index()
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -34,6 +35,8 @@ class Category {
     return hashCode == other.hashCode;
   }
 
+  Id get isarId => AppUtils.fastHash('$playlistId$categoryId');
+
   @override
-  int get hashCode => categoryId.hashCode;
+  int get hashCode => isarId.hashCode;
 }

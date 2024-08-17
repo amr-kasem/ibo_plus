@@ -29,7 +29,9 @@ class _CategoryOptionsState extends State<CategoryOptionsParent> {
   @override
   Widget build(BuildContext context) {
     late List<Widget> views = [
-      const SearchCategories(),
+      SearchCategories(
+        goBack: () => updateState(1),
+      ),
       CategoryOptions(
         focused: widget.focused,
         updateViewIndex: updateState,

@@ -82,6 +82,7 @@ class _CategoryListState extends ConsumerState<CategoryList> {
         Expanded(
           child: Focus(
             focusNode: fn,
+            skipTraversal: !widget.visible,
             onFocusChange: (value) {
               setState(() {
                 focued = value;

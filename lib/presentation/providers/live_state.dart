@@ -28,13 +28,12 @@ class LiveState with _$LiveState {
   const LiveState._(); // Added for custom getters
 
   // Custom Getters
-  List<LiveChannel> get channels => allChannels
-      .where((c) =>
-          (int.tryParse(c.categoryId ?? '') == hoverCategory?.categoryId ||
-              hoverCategory?.categoryId == null ||
-              hoverCategory?.categoryId == -1) &&
-          c.name.toLowerCase().contains(searchChannels.toLowerCase()))
-      .toList();
+  List<LiveChannel> get channels => allChannels.where((c) {
+        return (int.tryParse(c.categoryId ?? '') == hoverCategory?.categoryId ||
+                hoverCategory?.categoryId == -2 ||
+                hoverCategory?.categoryId == -1) &&
+            c.name.toLowerCase().contains(searchChannels.toLowerCase());
+      }).toList();
 
   List<Category> get categories => allCategoris
       .where(
@@ -65,14 +64,13 @@ class LiveController extends Notifier<LiveState> {
       final channels = await LiveServices.getLiveChannels();
       final categories = await LiveServices.getLiveCategories();
       final selectedChannel = await LiveServices.getSelectedChannel();
-      var playlist = ref.watch(m3UPlaylistControllerProvider).selectedPlaylist;
+      final playlist = ref.read(m3UPlaylistControllerProvider).selectedPlaylist;
+      final selectedCategory = await LiveServices.getSelectedCategory();
 
       log(playlist.toString());
       _playerNotifier.openMedia(
           "${playlist?.url}${playlist?.username}/${playlist?.password}/${selectedChannel?.streamId}");
       log("${playlist?.url}${playlist?.username}/${playlist?.password}/${selectedChannel?.streamId}");
-
-      final selectedCategory = await LiveServices.getSelectedCategory();
 
       // Update the state with the fetched data
       state = state.copyWith(
@@ -130,7 +128,8 @@ class LiveController extends Notifier<LiveState> {
     );
     if (state.selectedCategory != null) {
       LiveServices.changeCurrentCategoryById(
-          state.selectedCategory?.categoryId!);
+        state.selectedCategory?.categoryId,
+      );
     }
   }
 

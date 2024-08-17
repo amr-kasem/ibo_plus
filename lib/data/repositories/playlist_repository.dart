@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import '../../utils/category_type.dart';
 import '../data_sources/isar_db.dart';
 import '../data_sources/playlist_remote_datasource.dart';
@@ -19,10 +21,15 @@ class PlaylistRepository {
   }
 
   static Future<void> refreshLiveChannels() async {
-    final liveChannels = await PlaylistRemoteDatasource.getLiveChannels(
-      m3uPlaylist: (await UserRepository.selectedPlaylist)!,
-    );
-    IsarDB.instance.storeLiveChannels(liveChannels);
+    try {
+      final liveChannels = await PlaylistRemoteDatasource.getLiveChannels(
+        m3uPlaylist: (await UserRepository.selectedPlaylist)!,
+      );
+      print(liveChannels);
+      IsarDB.instance.storeLiveChannels(liveChannels);
+    } catch (e) {
+      log(e.toString());
+    }
   }
 
   static Future<void> refreshCategories(CategoryType type) async {

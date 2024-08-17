@@ -119,12 +119,18 @@ class _ChannelListState extends ConsumerState<ChannelList> {
                     break;
 
                   case LogicalKeyboardKey.arrowRight:
+                    if (!widget.visible) {
+                      return KeyEventResult.handled;
+                    }
                     final f = node.traversalDescendants.firstOrNull;
                     if (f != null) {
                       f.requestFocus();
                     }
                     break;
                   case LogicalKeyboardKey.arrowLeft:
+                    if (!widget.visible) {
+                      return KeyEventResult.handled;
+                    }
                     if (!fn.hasPrimaryFocus) {
                       fn.requestFocus();
                       return KeyEventResult.handled;
