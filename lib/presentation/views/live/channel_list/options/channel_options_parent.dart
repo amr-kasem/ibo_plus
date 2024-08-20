@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../../../../data/models/live_channel.dart';
 import 'audio_list.dart';
 import 'channel_options.dart';
 import 'channel_settings.dart';
@@ -15,10 +16,12 @@ class ChannelOptionsParent extends StatefulWidget {
     required this.focused,
     required this.focusable,
     required this.currentChannel,
+    required this.hoverChanel,
   });
   final bool focused;
   final bool focusable;
   final bool currentChannel;
+  final LiveChannel hoverChanel;
   @override
   State<ChannelOptionsParent> createState() => _ChannelOptionsState();
 }
@@ -42,6 +45,7 @@ class _ChannelOptionsState extends State<ChannelOptionsParent> {
         focused: widget.focused,
         updateViewIndex: updateState,
         currentChannel: widget.currentChannel,
+        hoverChannel: widget.hoverChanel,
       ),
       if (widget.currentChannel) const AudioList(),
       if (widget.currentChannel) const SubtitlesList(),

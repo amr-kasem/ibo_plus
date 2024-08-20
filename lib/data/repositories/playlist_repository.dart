@@ -25,7 +25,6 @@ class PlaylistRepository {
       final liveChannels = await PlaylistRemoteDatasource.getLiveChannels(
         m3uPlaylist: (await UserRepository.selectedPlaylist)!,
       );
-      print(liveChannels);
       IsarDB.instance.storeLiveChannels(liveChannels);
     } catch (e) {
       log(e.toString());
@@ -90,5 +89,13 @@ class PlaylistRepository {
         categoryId: id,
       );
     }
+  }
+
+  static void updateChannel(LiveChannel channel) async {
+    IsarDB.instance.updateChannel(channel);
+  }
+
+  static void updateCategory(Category category) async {
+    IsarDB.instance.updateCategory(category);
   }
 }

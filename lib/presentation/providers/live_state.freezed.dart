@@ -25,6 +25,8 @@ mixin _$LiveState {
   Category? get hoverCategory => throw _privateConstructorUsedError;
   bool get isLoading => throw _privateConstructorUsedError;
   Object? get error => throw _privateConstructorUsedError;
+  bool get notify => throw _privateConstructorUsedError;
+  bool get onlyFavoriteCategories => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $LiveStateCopyWith<LiveState> get copyWith =>
@@ -45,7 +47,9 @@ abstract class $LiveStateCopyWith<$Res> {
       Category? selectedCategory,
       Category? hoverCategory,
       bool isLoading,
-      Object? error});
+      Object? error,
+      bool notify,
+      bool onlyFavoriteCategories});
 }
 
 /// @nodoc
@@ -70,6 +74,8 @@ class _$LiveStateCopyWithImpl<$Res, $Val extends LiveState>
     Object? hoverCategory = freezed,
     Object? isLoading = null,
     Object? error = freezed,
+    Object? notify = null,
+    Object? onlyFavoriteCategories = null,
   }) {
     return _then(_value.copyWith(
       allChannels: null == allChannels
@@ -105,6 +111,14 @@ class _$LiveStateCopyWithImpl<$Res, $Val extends LiveState>
           : isLoading // ignore: cast_nullable_to_non_nullable
               as bool,
       error: freezed == error ? _value.error : error,
+      notify: null == notify
+          ? _value.notify
+          : notify // ignore: cast_nullable_to_non_nullable
+              as bool,
+      onlyFavoriteCategories: null == onlyFavoriteCategories
+          ? _value.onlyFavoriteCategories
+          : onlyFavoriteCategories // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -126,7 +140,9 @@ abstract class _$$LiveStateImplCopyWith<$Res>
       Category? selectedCategory,
       Category? hoverCategory,
       bool isLoading,
-      Object? error});
+      Object? error,
+      bool notify,
+      bool onlyFavoriteCategories});
 }
 
 /// @nodoc
@@ -149,6 +165,8 @@ class __$$LiveStateImplCopyWithImpl<$Res>
     Object? hoverCategory = freezed,
     Object? isLoading = null,
     Object? error = freezed,
+    Object? notify = null,
+    Object? onlyFavoriteCategories = null,
   }) {
     return _then(_$LiveStateImpl(
       allChannels: null == allChannels
@@ -184,6 +202,14 @@ class __$$LiveStateImplCopyWithImpl<$Res>
           : isLoading // ignore: cast_nullable_to_non_nullable
               as bool,
       error: freezed == error ? _value.error : error,
+      notify: null == notify
+          ? _value.notify
+          : notify // ignore: cast_nullable_to_non_nullable
+              as bool,
+      onlyFavoriteCategories: null == onlyFavoriteCategories
+          ? _value.onlyFavoriteCategories
+          : onlyFavoriteCategories // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -200,7 +226,9 @@ class _$LiveStateImpl extends _LiveState {
       this.selectedCategory,
       this.hoverCategory,
       this.isLoading = false,
-      this.error})
+      this.error,
+      this.notify = false,
+      this.onlyFavoriteCategories = false})
       : _allChannels = allChannels,
         _allCategoris = allCategoris,
         super._();
@@ -240,10 +268,16 @@ class _$LiveStateImpl extends _LiveState {
   final bool isLoading;
   @override
   final Object? error;
+  @override
+  @JsonKey()
+  final bool notify;
+  @override
+  @JsonKey()
+  final bool onlyFavoriteCategories;
 
   @override
   String toString() {
-    return 'LiveState(allChannels: $allChannels, searchChannels: $searchChannels, allCategoris: $allCategoris, searchCategories: $searchCategories, selectedChannel: $selectedChannel, selectedCategory: $selectedCategory, hoverCategory: $hoverCategory, isLoading: $isLoading, error: $error)';
+    return 'LiveState(allChannels: $allChannels, searchChannels: $searchChannels, allCategoris: $allCategoris, searchCategories: $searchCategories, selectedChannel: $selectedChannel, selectedCategory: $selectedCategory, hoverCategory: $hoverCategory, isLoading: $isLoading, error: $error, notify: $notify, onlyFavoriteCategories: $onlyFavoriteCategories)';
   }
 
   @override
@@ -267,7 +301,10 @@ class _$LiveStateImpl extends _LiveState {
                 other.hoverCategory == hoverCategory) &&
             (identical(other.isLoading, isLoading) ||
                 other.isLoading == isLoading) &&
-            const DeepCollectionEquality().equals(other.error, error));
+            const DeepCollectionEquality().equals(other.error, error) &&
+            (identical(other.notify, notify) || other.notify == notify) &&
+            (identical(other.onlyFavoriteCategories, onlyFavoriteCategories) ||
+                other.onlyFavoriteCategories == onlyFavoriteCategories));
   }
 
   @override
@@ -281,7 +318,9 @@ class _$LiveStateImpl extends _LiveState {
       selectedCategory,
       hoverCategory,
       isLoading,
-      const DeepCollectionEquality().hash(error));
+      const DeepCollectionEquality().hash(error),
+      notify,
+      onlyFavoriteCategories);
 
   @JsonKey(ignore: true)
   @override
@@ -300,7 +339,9 @@ abstract class _LiveState extends LiveState {
       final Category? selectedCategory,
       final Category? hoverCategory,
       final bool isLoading,
-      final Object? error}) = _$LiveStateImpl;
+      final Object? error,
+      final bool notify,
+      final bool onlyFavoriteCategories}) = _$LiveStateImpl;
   const _LiveState._() : super._();
 
   @override
@@ -321,6 +362,10 @@ abstract class _LiveState extends LiveState {
   bool get isLoading;
   @override
   Object? get error;
+  @override
+  bool get notify;
+  @override
+  bool get onlyFavoriteCategories;
   @override
   @JsonKey(ignore: true)
   _$$LiveStateImplCopyWith<_$LiveStateImpl> get copyWith =>

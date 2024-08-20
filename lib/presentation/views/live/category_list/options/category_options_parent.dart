@@ -10,9 +10,11 @@ class CategoryOptionsParent extends StatefulWidget {
     super.key,
     required this.focused,
     required this.focusable,
+    required this.showFavoriteButton,
   });
   final bool focused;
   final bool focusable;
+  final bool showFavoriteButton;
   @override
   State<CategoryOptionsParent> createState() => _CategoryOptionsState();
 }
@@ -35,6 +37,7 @@ class _CategoryOptionsState extends State<CategoryOptionsParent> {
       CategoryOptions(
         focused: widget.focused,
         updateViewIndex: updateState,
+        showFavoriteButton: widget.showFavoriteButton,
       ),
       CategorySettings(focused: widget.focused)
     ];

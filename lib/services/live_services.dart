@@ -8,15 +8,6 @@ class LiveServices {
   static Future<void> initialize() async {
     PlaylistRepository.refreshCategories(CategoryType.liveChannels);
     PlaylistRepository.refreshLiveChannels();
-    // PlaylistRepository.liveChannelsNotifier.listen((e) {
-    //   AppUtils.providerContainer.invalidate(LiveState.liveChannels);
-    // });
-    // UserRepository.currentChannelNotifier.listen((e) {
-    //   AppUtils.providerContainer.invalidate(LiveState.currentChannel);
-    // });
-    // UserRepository.currentLiveCategoryNotifier.listen((e) {
-    //   AppUtils.providerContainer.invalidate(LiveState.currentCategory);
-    // });
   }
 
   static void changeCurrentChannel(LiveChannel channel) async {
@@ -53,5 +44,15 @@ class LiveServices {
 
   static Future<List<Category>> getLiveCategories() async {
     return await PlaylistRepository.getCategories(CategoryType.liveChannels);
+  }
+
+  static void toggleFavoriteChannel(LiveChannel channel) {
+    channel.isFavorite = !channel.isFavorite;
+    PlaylistRepository.updateChannel(channel);
+  }
+
+  static void toggleFavoriteCategory(Category category) {
+    category.isFavorite = !category.isFavorite;
+    PlaylistRepository.updateCategory(category);
   }
 }

@@ -23,6 +23,8 @@ class LiveState with _$LiveState {
     Category? hoverCategory,
     @Default(false) bool isLoading,
     Object? error,
+    @Default(false) bool notify,
+    @Default(false) bool onlyFavoriteCategories,
   }) = _LiveState;
 
   const LiveState._(); // Added for custom getters
@@ -31,15 +33,17 @@ class LiveState with _$LiveState {
   List<LiveChannel> get channels => allChannels.where((c) {
         return (int.tryParse(c.categoryId ?? '') == hoverCategory?.categoryId ||
                 hoverCategory?.categoryId == -2 ||
-                hoverCategory?.categoryId == -1) &&
+                (hoverCategory?.categoryId == -1 && c.isFavorite)) &&
             c.name.toLowerCase().contains(searchChannels.toLowerCase());
       }).toList();
 
   List<Category> get categories => allCategoris
       .where(
-        (c) => c.categoryName.toLowerCase().contains(
-              searchCategories.toLowerCase(),
-            ),
+        (c) =>
+            c.categoryName.toLowerCase().contains(
+                  searchCategories.toLowerCase(),
+                ) &&
+            (!onlyFavoriteCategories || c.isFavorite),
       )
       .toList();
 
@@ -142,6 +146,28 @@ class LiveController extends Notifier<LiveState> {
   void searchCategories(String v) async {
     state = state.copyWith(
       searchCategories: v,
+    );
+  }
+
+  void toggleFavoriteCategory() {
+    if (state.hoverCategory != null) {
+      LiveServices.toggleFavoriteCategory(state.hoverCategory!);
+      state = state.copyWith(
+        notify: !state.notify,
+      );
+    }
+  }
+
+  void toggleFavoriteChannel(LiveChannel channel) {
+    LiveServices.toggleFavoriteChannel(channel);
+    state = state.copyWith(
+      notify: !state.notify,
+    );
+  }
+
+  void toggleShowOnlyFavoriteCategories() {
+    state = state.copyWith(
+      onlyFavoriteCategories: !state.onlyFavoriteCategories,
     );
   }
 }

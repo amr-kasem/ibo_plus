@@ -32,18 +32,23 @@ const CategorySchema = CollectionSchema(
       name: r'hashCode',
       type: IsarType.long,
     ),
-    r'parentId': PropertySchema(
+    r'isFavorite': PropertySchema(
       id: 3,
+      name: r'isFavorite',
+      type: IsarType.bool,
+    ),
+    r'parentId': PropertySchema(
+      id: 4,
       name: r'parentId',
       type: IsarType.long,
     ),
     r'playlistId': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'playlistId',
       type: IsarType.long,
     ),
     r'type': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'type',
       type: IsarType.byte,
       enumMap: _CategorytypeEnumValueMap,
@@ -55,14 +60,14 @@ const CategorySchema = CollectionSchema(
   deserializeProp: _categoryDeserializeProp,
   idName: r'isarId',
   indexes: {
-    r'type_playlistId': IndexSchema(
-      id: -9021455214236852950,
-      name: r'type_playlistId',
+    r'categoryId_playlistId': IndexSchema(
+      id: -3711201959082582640,
+      name: r'categoryId_playlistId',
       unique: false,
       replace: false,
       properties: [
         IndexPropertySchema(
-          name: r'type',
+          name: r'categoryId',
           type: IndexType.value,
           caseSensitive: false,
         ),
@@ -73,14 +78,32 @@ const CategorySchema = CollectionSchema(
         )
       ],
     ),
-    r'playlistId': IndexSchema(
-      id: 7921918076105486368,
-      name: r'playlistId',
+    r'type': IndexSchema(
+      id: 5117122708147080838,
+      name: r'type',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'type',
+          type: IndexType.value,
+          caseSensitive: false,
+        )
+      ],
+    ),
+    r'playlistId_type': IndexSchema(
+      id: -9190797914089246011,
+      name: r'playlistId_type',
       unique: false,
       replace: false,
       properties: [
         IndexPropertySchema(
           name: r'playlistId',
+          type: IndexType.value,
+          caseSensitive: false,
+        ),
+        IndexPropertySchema(
+          name: r'type',
           type: IndexType.value,
           caseSensitive: false,
         )
@@ -114,9 +137,10 @@ void _categorySerialize(
   writer.writeLong(offsets[0], object.categoryId);
   writer.writeString(offsets[1], object.categoryName);
   writer.writeLong(offsets[2], object.hashCode);
-  writer.writeLong(offsets[3], object.parentId);
-  writer.writeLong(offsets[4], object.playlistId);
-  writer.writeByte(offsets[5], object.type.index);
+  writer.writeBool(offsets[3], object.isFavorite);
+  writer.writeLong(offsets[4], object.parentId);
+  writer.writeLong(offsets[5], object.playlistId);
+  writer.writeByte(offsets[6], object.type.index);
 }
 
 Category _categoryDeserialize(
@@ -128,10 +152,11 @@ Category _categoryDeserialize(
   final object = Category(
     categoryId: reader.readLong(offsets[0]),
     categoryName: reader.readString(offsets[1]),
-    parentId: reader.readLong(offsets[3]),
+    isFavorite: reader.readBoolOrNull(offsets[3]) ?? false,
+    parentId: reader.readLong(offsets[4]),
   );
-  object.playlistId = reader.readLong(offsets[4]);
-  object.type = _CategorytypeValueEnumMap[reader.readByteOrNull(offsets[5])] ??
+  object.playlistId = reader.readLong(offsets[5]);
+  object.type = _CategorytypeValueEnumMap[reader.readByteOrNull(offsets[6])] ??
       CategoryType.liveChannels;
   return object;
 }
@@ -150,10 +175,12 @@ P _categoryDeserializeProp<P>(
     case 2:
       return (reader.readLong(offset)) as P;
     case 3:
-      return (reader.readLong(offset)) as P;
+      return (reader.readBoolOrNull(offset) ?? false) as P;
     case 4:
       return (reader.readLong(offset)) as P;
     case 5:
+      return (reader.readLong(offset)) as P;
+    case 6:
       return (_CategorytypeValueEnumMap[reader.readByteOrNull(offset)] ??
           CategoryType.liveChannels) as P;
     default:
@@ -189,18 +216,26 @@ extension CategoryQueryWhereSort on QueryBuilder<Category, Category, QWhere> {
     });
   }
 
-  QueryBuilder<Category, Category, QAfterWhere> anyTypePlaylistId() {
+  QueryBuilder<Category, Category, QAfterWhere> anyCategoryIdPlaylistId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
-        const IndexWhereClause.any(indexName: r'type_playlistId'),
+        const IndexWhereClause.any(indexName: r'categoryId_playlistId'),
       );
     });
   }
 
-  QueryBuilder<Category, Category, QAfterWhere> anyPlaylistId() {
+  QueryBuilder<Category, Category, QAfterWhere> anyType() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
-        const IndexWhereClause.any(indexName: r'playlistId'),
+        const IndexWhereClause.any(indexName: r'type'),
+      );
+    });
+  }
+
+  QueryBuilder<Category, Category, QAfterWhere> anyPlaylistIdType() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        const IndexWhereClause.any(indexName: r'playlistId_type'),
       );
     });
   }
@@ -274,29 +309,218 @@ extension CategoryQueryWhere on QueryBuilder<Category, Category, QWhereClause> {
     });
   }
 
-  QueryBuilder<Category, Category, QAfterWhereClause> typeEqualToAnyPlaylistId(
-      CategoryType type) {
+  QueryBuilder<Category, Category, QAfterWhereClause>
+      categoryIdEqualToAnyPlaylistId(int categoryId) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IndexWhereClause.equalTo(
-        indexName: r'type_playlistId',
-        value: [type],
+        indexName: r'categoryId_playlistId',
+        value: [categoryId],
       ));
     });
   }
 
   QueryBuilder<Category, Category, QAfterWhereClause>
-      typeNotEqualToAnyPlaylistId(CategoryType type) {
+      categoryIdNotEqualToAnyPlaylistId(int categoryId) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'type_playlistId',
+              indexName: r'categoryId_playlistId',
+              lower: [],
+              upper: [categoryId],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'categoryId_playlistId',
+              lower: [categoryId],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'categoryId_playlistId',
+              lower: [categoryId],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'categoryId_playlistId',
+              lower: [],
+              upper: [categoryId],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<Category, Category, QAfterWhereClause>
+      categoryIdGreaterThanAnyPlaylistId(
+    int categoryId, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'categoryId_playlistId',
+        lower: [categoryId],
+        includeLower: include,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<Category, Category, QAfterWhereClause>
+      categoryIdLessThanAnyPlaylistId(
+    int categoryId, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'categoryId_playlistId',
+        lower: [],
+        upper: [categoryId],
+        includeUpper: include,
+      ));
+    });
+  }
+
+  QueryBuilder<Category, Category, QAfterWhereClause>
+      categoryIdBetweenAnyPlaylistId(
+    int lowerCategoryId,
+    int upperCategoryId, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'categoryId_playlistId',
+        lower: [lowerCategoryId],
+        includeLower: includeLower,
+        upper: [upperCategoryId],
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<Category, Category, QAfterWhereClause>
+      categoryIdPlaylistIdEqualTo(int categoryId, int playlistId) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'categoryId_playlistId',
+        value: [categoryId, playlistId],
+      ));
+    });
+  }
+
+  QueryBuilder<Category, Category, QAfterWhereClause>
+      categoryIdEqualToPlaylistIdNotEqualTo(int categoryId, int playlistId) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'categoryId_playlistId',
+              lower: [categoryId],
+              upper: [categoryId, playlistId],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'categoryId_playlistId',
+              lower: [categoryId, playlistId],
+              includeLower: false,
+              upper: [categoryId],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'categoryId_playlistId',
+              lower: [categoryId, playlistId],
+              includeLower: false,
+              upper: [categoryId],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'categoryId_playlistId',
+              lower: [categoryId],
+              upper: [categoryId, playlistId],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<Category, Category, QAfterWhereClause>
+      categoryIdEqualToPlaylistIdGreaterThan(
+    int categoryId,
+    int playlistId, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'categoryId_playlistId',
+        lower: [categoryId, playlistId],
+        includeLower: include,
+        upper: [categoryId],
+      ));
+    });
+  }
+
+  QueryBuilder<Category, Category, QAfterWhereClause>
+      categoryIdEqualToPlaylistIdLessThan(
+    int categoryId,
+    int playlistId, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'categoryId_playlistId',
+        lower: [categoryId],
+        upper: [categoryId, playlistId],
+        includeUpper: include,
+      ));
+    });
+  }
+
+  QueryBuilder<Category, Category, QAfterWhereClause>
+      categoryIdEqualToPlaylistIdBetween(
+    int categoryId,
+    int lowerPlaylistId,
+    int upperPlaylistId, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'categoryId_playlistId',
+        lower: [categoryId, lowerPlaylistId],
+        includeLower: includeLower,
+        upper: [categoryId, upperPlaylistId],
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<Category, Category, QAfterWhereClause> typeEqualTo(
+      CategoryType type) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'type',
+        value: [type],
+      ));
+    });
+  }
+
+  QueryBuilder<Category, Category, QAfterWhereClause> typeNotEqualTo(
+      CategoryType type) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'type',
               lower: [],
               upper: [type],
               includeUpper: false,
             ))
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'type_playlistId',
+              indexName: r'type',
               lower: [type],
               includeLower: false,
               upper: [],
@@ -304,13 +528,13 @@ extension CategoryQueryWhere on QueryBuilder<Category, Category, QWhereClause> {
       } else {
         return query
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'type_playlistId',
+              indexName: r'type',
               lower: [type],
               includeLower: false,
               upper: [],
             ))
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'type_playlistId',
+              indexName: r'type',
               lower: [],
               upper: [type],
               includeUpper: false,
@@ -319,14 +543,13 @@ extension CategoryQueryWhere on QueryBuilder<Category, Category, QWhereClause> {
     });
   }
 
-  QueryBuilder<Category, Category, QAfterWhereClause>
-      typeGreaterThanAnyPlaylistId(
+  QueryBuilder<Category, Category, QAfterWhereClause> typeGreaterThan(
     CategoryType type, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IndexWhereClause.between(
-        indexName: r'type_playlistId',
+        indexName: r'type',
         lower: [type],
         includeLower: include,
         upper: [],
@@ -334,13 +557,13 @@ extension CategoryQueryWhere on QueryBuilder<Category, Category, QWhereClause> {
     });
   }
 
-  QueryBuilder<Category, Category, QAfterWhereClause> typeLessThanAnyPlaylistId(
+  QueryBuilder<Category, Category, QAfterWhereClause> typeLessThan(
     CategoryType type, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IndexWhereClause.between(
-        indexName: r'type_playlistId',
+        indexName: r'type',
         lower: [],
         upper: [type],
         includeUpper: include,
@@ -348,7 +571,7 @@ extension CategoryQueryWhere on QueryBuilder<Category, Category, QWhereClause> {
     });
   }
 
-  QueryBuilder<Category, Category, QAfterWhereClause> typeBetweenAnyPlaylistId(
+  QueryBuilder<Category, Category, QAfterWhereClause> typeBetween(
     CategoryType lowerType,
     CategoryType upperType, {
     bool includeLower = true,
@@ -356,7 +579,7 @@ extension CategoryQueryWhere on QueryBuilder<Category, Category, QWhereClause> {
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IndexWhereClause.between(
-        indexName: r'type_playlistId',
+        indexName: r'type',
         lower: [lowerType],
         includeLower: includeLower,
         upper: [upperType],
@@ -365,125 +588,29 @@ extension CategoryQueryWhere on QueryBuilder<Category, Category, QWhereClause> {
     });
   }
 
-  QueryBuilder<Category, Category, QAfterWhereClause> typePlaylistIdEqualTo(
-      CategoryType type, int playlistId) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IndexWhereClause.equalTo(
-        indexName: r'type_playlistId',
-        value: [type, playlistId],
-      ));
-    });
-  }
-
-  QueryBuilder<Category, Category, QAfterWhereClause>
-      typeEqualToPlaylistIdNotEqualTo(CategoryType type, int playlistId) {
-    return QueryBuilder.apply(this, (query) {
-      if (query.whereSort == Sort.asc) {
-        return query
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'type_playlistId',
-              lower: [type],
-              upper: [type, playlistId],
-              includeUpper: false,
-            ))
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'type_playlistId',
-              lower: [type, playlistId],
-              includeLower: false,
-              upper: [type],
-            ));
-      } else {
-        return query
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'type_playlistId',
-              lower: [type, playlistId],
-              includeLower: false,
-              upper: [type],
-            ))
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'type_playlistId',
-              lower: [type],
-              upper: [type, playlistId],
-              includeUpper: false,
-            ));
-      }
-    });
-  }
-
-  QueryBuilder<Category, Category, QAfterWhereClause>
-      typeEqualToPlaylistIdGreaterThan(
-    CategoryType type,
-    int playlistId, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IndexWhereClause.between(
-        indexName: r'type_playlistId',
-        lower: [type, playlistId],
-        includeLower: include,
-        upper: [type],
-      ));
-    });
-  }
-
-  QueryBuilder<Category, Category, QAfterWhereClause>
-      typeEqualToPlaylistIdLessThan(
-    CategoryType type,
-    int playlistId, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IndexWhereClause.between(
-        indexName: r'type_playlistId',
-        lower: [type],
-        upper: [type, playlistId],
-        includeUpper: include,
-      ));
-    });
-  }
-
-  QueryBuilder<Category, Category, QAfterWhereClause>
-      typeEqualToPlaylistIdBetween(
-    CategoryType type,
-    int lowerPlaylistId,
-    int upperPlaylistId, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IndexWhereClause.between(
-        indexName: r'type_playlistId',
-        lower: [type, lowerPlaylistId],
-        includeLower: includeLower,
-        upper: [type, upperPlaylistId],
-        includeUpper: includeUpper,
-      ));
-    });
-  }
-
-  QueryBuilder<Category, Category, QAfterWhereClause> playlistIdEqualTo(
+  QueryBuilder<Category, Category, QAfterWhereClause> playlistIdEqualToAnyType(
       int playlistId) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IndexWhereClause.equalTo(
-        indexName: r'playlistId',
+        indexName: r'playlistId_type',
         value: [playlistId],
       ));
     });
   }
 
-  QueryBuilder<Category, Category, QAfterWhereClause> playlistIdNotEqualTo(
-      int playlistId) {
+  QueryBuilder<Category, Category, QAfterWhereClause>
+      playlistIdNotEqualToAnyType(int playlistId) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'playlistId',
+              indexName: r'playlistId_type',
               lower: [],
               upper: [playlistId],
               includeUpper: false,
             ))
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'playlistId',
+              indexName: r'playlistId_type',
               lower: [playlistId],
               includeLower: false,
               upper: [],
@@ -491,13 +618,13 @@ extension CategoryQueryWhere on QueryBuilder<Category, Category, QWhereClause> {
       } else {
         return query
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'playlistId',
+              indexName: r'playlistId_type',
               lower: [playlistId],
               includeLower: false,
               upper: [],
             ))
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'playlistId',
+              indexName: r'playlistId_type',
               lower: [],
               upper: [playlistId],
               includeUpper: false,
@@ -506,13 +633,14 @@ extension CategoryQueryWhere on QueryBuilder<Category, Category, QWhereClause> {
     });
   }
 
-  QueryBuilder<Category, Category, QAfterWhereClause> playlistIdGreaterThan(
+  QueryBuilder<Category, Category, QAfterWhereClause>
+      playlistIdGreaterThanAnyType(
     int playlistId, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IndexWhereClause.between(
-        indexName: r'playlistId',
+        indexName: r'playlistId_type',
         lower: [playlistId],
         includeLower: include,
         upper: [],
@@ -520,13 +648,13 @@ extension CategoryQueryWhere on QueryBuilder<Category, Category, QWhereClause> {
     });
   }
 
-  QueryBuilder<Category, Category, QAfterWhereClause> playlistIdLessThan(
+  QueryBuilder<Category, Category, QAfterWhereClause> playlistIdLessThanAnyType(
     int playlistId, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IndexWhereClause.between(
-        indexName: r'playlistId',
+        indexName: r'playlistId_type',
         lower: [],
         upper: [playlistId],
         includeUpper: include,
@@ -534,7 +662,7 @@ extension CategoryQueryWhere on QueryBuilder<Category, Category, QWhereClause> {
     });
   }
 
-  QueryBuilder<Category, Category, QAfterWhereClause> playlistIdBetween(
+  QueryBuilder<Category, Category, QAfterWhereClause> playlistIdBetweenAnyType(
     int lowerPlaylistId,
     int upperPlaylistId, {
     bool includeLower = true,
@@ -542,10 +670,106 @@ extension CategoryQueryWhere on QueryBuilder<Category, Category, QWhereClause> {
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IndexWhereClause.between(
-        indexName: r'playlistId',
+        indexName: r'playlistId_type',
         lower: [lowerPlaylistId],
         includeLower: includeLower,
         upper: [upperPlaylistId],
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<Category, Category, QAfterWhereClause> playlistIdTypeEqualTo(
+      int playlistId, CategoryType type) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'playlistId_type',
+        value: [playlistId, type],
+      ));
+    });
+  }
+
+  QueryBuilder<Category, Category, QAfterWhereClause>
+      playlistIdEqualToTypeNotEqualTo(int playlistId, CategoryType type) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'playlistId_type',
+              lower: [playlistId],
+              upper: [playlistId, type],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'playlistId_type',
+              lower: [playlistId, type],
+              includeLower: false,
+              upper: [playlistId],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'playlistId_type',
+              lower: [playlistId, type],
+              includeLower: false,
+              upper: [playlistId],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'playlistId_type',
+              lower: [playlistId],
+              upper: [playlistId, type],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<Category, Category, QAfterWhereClause>
+      playlistIdEqualToTypeGreaterThan(
+    int playlistId,
+    CategoryType type, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'playlistId_type',
+        lower: [playlistId, type],
+        includeLower: include,
+        upper: [playlistId],
+      ));
+    });
+  }
+
+  QueryBuilder<Category, Category, QAfterWhereClause>
+      playlistIdEqualToTypeLessThan(
+    int playlistId,
+    CategoryType type, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'playlistId_type',
+        lower: [playlistId],
+        upper: [playlistId, type],
+        includeUpper: include,
+      ));
+    });
+  }
+
+  QueryBuilder<Category, Category, QAfterWhereClause>
+      playlistIdEqualToTypeBetween(
+    int playlistId,
+    CategoryType lowerType,
+    CategoryType upperType, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'playlistId_type',
+        lower: [playlistId, lowerType],
+        includeLower: includeLower,
+        upper: [playlistId, upperType],
         includeUpper: includeUpper,
       ));
     });
@@ -790,6 +1014,16 @@ extension CategoryQueryFilter
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<Category, Category, QAfterFilterCondition> isFavoriteEqualTo(
+      bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'isFavorite',
+        value: value,
       ));
     });
   }
@@ -1050,6 +1284,18 @@ extension CategoryQuerySortBy on QueryBuilder<Category, Category, QSortBy> {
     });
   }
 
+  QueryBuilder<Category, Category, QAfterSortBy> sortByIsFavorite() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isFavorite', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Category, Category, QAfterSortBy> sortByIsFavoriteDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isFavorite', Sort.desc);
+    });
+  }
+
   QueryBuilder<Category, Category, QAfterSortBy> sortByParentId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'parentId', Sort.asc);
@@ -1125,6 +1371,18 @@ extension CategoryQuerySortThenBy
     });
   }
 
+  QueryBuilder<Category, Category, QAfterSortBy> thenByIsFavorite() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isFavorite', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Category, Category, QAfterSortBy> thenByIsFavoriteDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isFavorite', Sort.desc);
+    });
+  }
+
   QueryBuilder<Category, Category, QAfterSortBy> thenByIsarId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isarId', Sort.asc);
@@ -1195,6 +1453,12 @@ extension CategoryQueryWhereDistinct
     });
   }
 
+  QueryBuilder<Category, Category, QDistinct> distinctByIsFavorite() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'isFavorite');
+    });
+  }
+
   QueryBuilder<Category, Category, QDistinct> distinctByParentId() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'parentId');
@@ -1237,6 +1501,12 @@ extension CategoryQueryProperty
   QueryBuilder<Category, int, QQueryOperations> hashCodeProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'hashCode');
+    });
+  }
+
+  QueryBuilder<Category, bool, QQueryOperations> isFavoriteProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'isFavorite');
     });
   }
 

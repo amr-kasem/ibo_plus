@@ -1,14 +1,51 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:ibo_plus/presentation/providers/player_state.dart';
+import 'package:ibo_plus/utils/app_utils.dart';
 
 import '../../data/repositories/user_repository.dart';
 import '../../utils/translation_asset_loader.dart';
 import 'ibo_app.dart';
 
-class AppParent extends StatelessWidget {
+class AppParent extends StatefulWidget {
   const AppParent({
     super.key,
   });
+
+  @override
+  State<AppParent> createState() => _AppParentState();
+}
+
+class _AppParentState extends State<AppParent> {
+  late final AppLifecycleListener _listener;
+  final List<String> _states = <String>[];
+  late AppLifecycleState? _state;
+
+  @override
+  void initState() {
+    super.initState();
+    _state = SchedulerBinding.instance.lifecycleState;
+    final playerController =
+        AppUtils.providerContainer.read(playerControllerProvider.notifier);
+    _listener = AppLifecycleListener(
+      onHide: () {
+        playerController.stop();
+      },
+      onShow: () {
+        playerController.play();
+      },
+    );
+    if (_state != null) {
+      _states.add(_state!.name);
+    }
+  }
+
+  @override
+  void dispose() {
+    _listener.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

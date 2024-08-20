@@ -58,11 +58,12 @@ class _CategoryListState extends ConsumerState<CategoryList> {
         ref.watch(liveControllerProvider.select((s) => s.selectedCategory));
     ref.listen(liveControllerProvider.select((s) => s.categories), (a, b) {
       final same = const ListEquality().equals(a, b);
-      if (!same || !initialized) {
-        initialized = true;
+      if (!same) {
         int i = 0;
-        if (currentCategory != null) {
-          i = b.indexOf(currentCategory);
+        final c =
+            ref.read(liveControllerProvider.select((s) => s.selectedCategory));
+        if (c != null) {
+          i = b.indexOf(c);
           if (i == -1) {
             i = 0;
           }
@@ -72,6 +73,19 @@ class _CategoryListState extends ConsumerState<CategoryList> {
     });
     final categories =
         ref.watch(liveControllerProvider.select((s) => s.categories));
+    if (!initialized) {
+      initialized = true;
+      int i = 0;
+      if (currentCategory != null) {
+        i = categories.indexOf(currentCategory);
+        if (i == -1) {
+          i = 0;
+        }
+      }
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        verticalScrollController.jumpToItem(i);
+      });
+    }
     intl.NumberFormat formatter = intl.NumberFormat(
         List.filled(categories.length.toString().length, '0').join());
 
@@ -135,6 +149,8 @@ class _CategoryListState extends ConsumerState<CategoryList> {
                     }
                   case LogicalKeyboardKey.select:
                   case LogicalKeyboardKey.space:
+                    liveNotifier.selectCategory(liveNotifier.stateSnapshot
+                        .categories[verticalScrollController.selectedItem]);
                     widget.onSelect();
 
                   default:
@@ -156,7 +172,10 @@ class _CategoryListState extends ConsumerState<CategoryList> {
                       offAxisFraction: 1.5,
                       itemExtent: 40,
                       onSelectedItemChanged: (i) {
-                        liveNotifier.selectCategory(categories[i]);
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          liveNotifier.selectCategory(
+                              liveNotifier.stateSnapshot.categories[i]);
+                        });
                       },
                       childDelegate: ListWheelChildBuilderDelegate(
                         builder: (context, index) {
@@ -184,6 +203,15 @@ class _CategoryListState extends ConsumerState<CategoryList> {
                         ? CategoryOptionsParent(
                             focused: !fn.hasPrimaryFocus,
                             focusable: fn.hasFocus,
+                            showFavoriteButton: categories[
+                                            verticalScrollController
+                                                .selectedItem]
+                                        .categoryId !=
+                                    -2 &&
+                                categories[verticalScrollController
+                                            .selectedItem]
+                                        .categoryId !=
+                                    -1,
                           )
                         : const SizedBox.shrink(),
                   ),

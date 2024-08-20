@@ -96,23 +96,78 @@ class IsarDB {
 
   void storeTranslations(List<Language> languages) =>
       _isar.writeTxn(() async => await _isar.languages.putAll(languages));
+  void storeLiveChannels(List<LiveChannel> channels) async {
+    final existingChannels = await _isar.liveChannels.where().findAll();
 
-  void storeLiveChannels(List<LiveChannel> channels) {
-    _isar.writeTxn(() async {
-      await _isar.liveChannels.putAll(channels);
-      await _isar.dataEvents.put(
-        DataEvent(dataEventType: DataEventType.liveChannelsChange),
-      );
-    });
+    // Step 3: Create a map of existing channels by their ID for quick lookup
+    final Map<int, LiveChannel> existingChannelsMap = {
+      for (var channel in existingChannels) channel.streamId: channel
+    };
+
+    // Step 4: Merge new data with existing channels
+    final List<LiveChannel> channelsToUpdate = [];
+
+    for (var newChannel in channels) {
+      final existingChannel = existingChannelsMap[newChannel.streamId];
+
+      if (existingChannel != null) {
+        // Retain favorite status and check if the other fields differ
+        if (existingChannel != newChannel) {
+          newChannel.isFavorite = existingChannel.isFavorite;
+          channelsToUpdate.add(newChannel);
+        }
+      } else {
+        // No existing channel, so add the new one directly
+        channelsToUpdate.add(newChannel);
+      }
+    }
+
+    // Step 5: Store the merged channels in the database if there are any changes
+    if (channelsToUpdate.isNotEmpty) {
+      await _isar.writeTxn(() async {
+        await _isar.liveChannels.putAll(channelsToUpdate);
+        await _isar.dataEvents.put(
+          DataEvent(dataEventType: DataEventType.liveChannelsChange),
+        );
+      });
+    }
   }
 
-  void storeLiveCategories(List<Category> categories) {
-    _isar.writeTxn(() async {
-      await _isar.categorys.putAll(categories);
-      await _isar.dataEvents.put(
-        DataEvent(dataEventType: DataEventType.liveCategoriesChange),
-      );
-    });
+  void storeLiveCategories(List<Category> categories) async {
+    final existingCategories = await _isar.categorys.where().findAll();
+
+    // Step 3: Create a map of existing categories by their ID for quick lookup
+    final Map<int, Category> existingCategoriesMap = {
+      for (var category in existingCategories) category.categoryId: category
+    };
+
+    // Step 4: Merge new data with existing categories
+    final List<Category> categoriesToUpdate = [];
+
+    for (var newCategory in categories) {
+      final existingCategory = existingCategoriesMap[newCategory.categoryId];
+
+      if (existingCategory != null) {
+        // Retain favorite status and check if the other fields differ
+        if (existingCategory != newCategory) {
+          newCategory.isFavorite = existingCategory.isFavorite;
+          categoriesToUpdate.add(newCategory);
+        }
+      } else {
+        // No existing category, so add the new one directly
+        categoriesToUpdate.add(newCategory);
+      }
+    }
+
+    // Step 5: Store the merged categories in the database if there are any changes
+    if (categoriesToUpdate.isNotEmpty) {
+      await _isar.writeTxn(() async {
+        await _isar.categorys.putAll(categoriesToUpdate);
+        await _isar.dataEvents.put(
+          DataEvent(dataEventType: DataEventType.liveCategoriesChange),
+        );
+      });
+    }
   }
 
   Future<Language?> getLanguage(String code) async =>
@@ -154,13 +209,21 @@ class IsarDB {
     required CategoryType type,
   }) async {
     return [
-      Category(categoryId: -2, categoryName: 'All Channels', parentId: 0)
-        ..playlistId = m3uPlaylist.isarId,
-      Category(categoryId: -1, categoryName: 'Favorite', parentId: 0)
-        ..playlistId = m3uPlaylist.isarId,
+      Category(
+        categoryId: -2,
+        categoryName: 'All Channels',
+        parentId: 0,
+        isFavorite: true,
+      )..playlistId = m3uPlaylist.isarId,
+      Category(
+        categoryId: -1,
+        categoryName: 'Favorite',
+        parentId: 0,
+        isFavorite: true,
+      )..playlistId = m3uPlaylist.isarId,
       ...await _isar.categorys
           .where()
-          .typePlaylistIdEqualTo(type, m3uPlaylist.isarId)
+          .playlistIdTypeEqualTo(m3uPlaylist.isarId, type)
           .findAll()
     ];
   }
@@ -170,8 +233,12 @@ class IsarDB {
       required CategoryType type,
       required int? categoryId}) async {
     if (categoryId == -1) {
-      return Category(categoryId: -1, categoryName: 'Favorite', parentId: 0)
-        ..playlistId = m3uPlaylist.isarId;
+      return Category(
+        categoryId: -1,
+        categoryName: 'Favorite',
+        parentId: 0,
+        isFavorite: true,
+      )..playlistId = m3uPlaylist.isarId;
     }
     return (await _isar.categorys
             .where()
@@ -184,7 +251,24 @@ class IsarDB {
         categoryId: -2,
         categoryName: 'All Channels',
         parentId: 0,
+        isFavorite: true,
       )..playlistId = m3uPlaylist.isarId,
+    );
+  }
+
+  void updateChannel(LiveChannel channel) {
+    _isar.writeTxn(
+      () async {
+        _isar.liveChannels.put(channel);
+      },
+    );
+  }
+
+  void updateCategory(Category category) {
+    _isar.writeTxn(
+      () async {
+        _isar.categorys.put(category);
+      },
     );
   }
 }

@@ -1,27 +1,34 @@
 import 'package:fading_edge_scrollview/fading_edge_scrollview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../../data/models/live_channel.dart';
 import '../../../../../utils/app_utils.dart';
+import '../../../../providers/live_state.dart';
 
-class ChannelOptions extends StatefulWidget {
+class ChannelOptions extends ConsumerStatefulWidget {
   const ChannelOptions({
     super.key,
     required this.focused,
     required this.updateViewIndex,
     required this.currentChannel,
+    required this.hoverChannel,
   });
   final void Function(int index) updateViewIndex;
   final bool focused;
   final bool currentChannel;
+  final LiveChannel hoverChannel;
   @override
-  State<ChannelOptions> createState() => _ChannelOptionsState();
+  ConsumerState<ChannelOptions> createState() => _ChannelOptionsState();
 }
 
-class _ChannelOptionsState extends State<ChannelOptions> {
+class _ChannelOptionsState extends ConsumerState<ChannelOptions> {
   final horizontalController = FixedExtentScrollController(initialItem: 1);
   final fn = FocusNode();
   bool moving = false;
+  late final toggleFavorite =
+      ref.read(liveControllerProvider.notifier).toggleFavoriteChannel;
 
   @override
   void dispose() {
@@ -70,13 +77,14 @@ class _ChannelOptionsState extends State<ChannelOptions> {
           fontSize: 16,
         ),
       ),
-      const Text(
-        'Screen fit',
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 16,
+      if (widget.currentChannel)
+        const Text(
+          'Screen fit',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+          ),
         ),
-      ),
       const Text(
         'Settings',
         style: TextStyle(
@@ -88,11 +96,21 @@ class _ChannelOptionsState extends State<ChannelOptions> {
 
     final List<Widget> icons = [
       const Icon(Icons.search),
-      const Icon(Icons.favorite_border),
+      Consumer(
+        builder: (_, WidgetRef r, __) {
+          ref.watch(liveControllerProvider.select((s) => s.notify));
+          return Icon(
+            widget.hoverChannel.isFavorite
+                ? Icons.favorite
+                : Icons.favorite_border,
+            color: widget.hoverChannel.isFavorite ? Colors.red : Colors.white,
+          );
+        },
+      ),
       if (widget.currentChannel) const Icon(Icons.audiotrack_outlined),
       if (widget.currentChannel) const Icon(Icons.subtitles),
       const Icon(Icons.table_rows_outlined),
-      const Icon(Icons.fit_screen),
+      if (widget.currentChannel) const Icon(Icons.fit_screen),
       const Icon(Icons.settings),
     ];
     return Focus(
@@ -156,6 +174,10 @@ class _ChannelOptionsState extends State<ChannelOptions> {
               return KeyEventResult.handled;
             case LogicalKeyboardKey.select:
             case LogicalKeyboardKey.space:
+              if (horizontalController.selectedItem == 1) {
+                toggleFavorite(widget.hoverChannel);
+                return KeyEventResult.handled;
+              }
               widget.updateViewIndex(horizontalController.selectedItem);
               return KeyEventResult.handled;
 

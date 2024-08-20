@@ -119,9 +119,7 @@ class _ChannelListState extends ConsumerState<ChannelList> {
                     break;
 
                   case LogicalKeyboardKey.arrowRight:
-                    if (!widget.visible) {
-                      return KeyEventResult.handled;
-                    }
+                    if (!widget.visible) {}
                     final f = node.traversalDescendants.firstOrNull;
                     if (f != null) {
                       f.requestFocus();
@@ -222,6 +220,8 @@ class _ChannelListState extends ConsumerState<ChannelList> {
                             focusable: fn.hasFocus,
                             currentChannel: currentChannelIndex ==
                                 verticalScrollController.selectedItem,
+                            hoverChanel: channelList[
+                                verticalScrollController.selectedItem],
                           )
                         : const SizedBox.shrink(),
                   ),

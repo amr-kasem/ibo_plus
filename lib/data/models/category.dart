@@ -9,7 +9,7 @@ part 'category.g.dart';
 @JsonSerializable(fieldRename: FieldRename.snake)
 @collection
 class Category {
-  @Index(composite: [CompositeIndex('playlistId'), CompositeIndex('type')])
+  @Index(composite: [CompositeIndex('playlistId')])
   @JsonKey(fromJson: int.parse, toJson: AppUtils.toStr)
   final int categoryId;
   final String categoryName;
@@ -18,13 +18,16 @@ class Category {
   @enumerated
   @Index()
   late CategoryType type;
-  @Index()
+  @Index(composite: [CompositeIndex('type')])
   @JsonKey(includeFromJson: false, includeToJson: false)
   late int playlistId;
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  bool isFavorite;
   Category({
     required this.categoryId,
     required this.categoryName,
     required this.parentId,
+    this.isFavorite = false,
   });
   factory Category.fromJson(Map<String, dynamic> json) =>
       _$CategoryFromJson(json);
