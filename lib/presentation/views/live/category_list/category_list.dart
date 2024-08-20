@@ -203,15 +203,17 @@ class _CategoryListState extends ConsumerState<CategoryList> {
                         ? CategoryOptionsParent(
                             focused: !fn.hasPrimaryFocus,
                             focusable: fn.hasFocus,
-                            showFavoriteButton: categories[
-                                            verticalScrollController
+                            showFavoriteButton: categories.length >
+                                    verticalScrollController.selectedItem
+                                ? categories[verticalScrollController
                                                 .selectedItem]
-                                        .categoryId !=
-                                    -2 &&
-                                categories[verticalScrollController
-                                            .selectedItem]
-                                        .categoryId !=
-                                    -1,
+                                            .categoryId !=
+                                        -2 &&
+                                    categories[verticalScrollController
+                                                .selectedItem]
+                                            .categoryId !=
+                                        -1
+                                : true,
                           )
                         : const SizedBox.shrink(),
                   ),

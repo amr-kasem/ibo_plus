@@ -220,8 +220,11 @@ class _ChannelListState extends ConsumerState<ChannelList> {
                             focusable: fn.hasFocus,
                             currentChannel: currentChannelIndex ==
                                 verticalScrollController.selectedItem,
-                            hoverChanel: channelList[
-                                verticalScrollController.selectedItem],
+                            hoverChanel: channelList.length >
+                                    verticalScrollController.selectedItem
+                                ? channelList[
+                                    verticalScrollController.selectedItem]
+                                : null,
                           )
                         : const SizedBox.shrink(),
                   ),

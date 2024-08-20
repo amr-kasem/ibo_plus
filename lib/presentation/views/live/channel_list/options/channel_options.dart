@@ -18,7 +18,7 @@ class ChannelOptions extends ConsumerStatefulWidget {
   final void Function(int index) updateViewIndex;
   final bool focused;
   final bool currentChannel;
-  final LiveChannel hoverChannel;
+  final LiveChannel? hoverChannel;
   @override
   ConsumerState<ChannelOptions> createState() => _ChannelOptionsState();
 }
@@ -100,10 +100,12 @@ class _ChannelOptionsState extends ConsumerState<ChannelOptions> {
         builder: (_, WidgetRef r, __) {
           ref.watch(liveControllerProvider.select((s) => s.notify));
           return Icon(
-            widget.hoverChannel.isFavorite
+            widget.hoverChannel?.isFavorite ?? false
                 ? Icons.favorite
                 : Icons.favorite_border,
-            color: widget.hoverChannel.isFavorite ? Colors.red : Colors.white,
+            color: widget.hoverChannel?.isFavorite ?? false
+                ? Colors.red
+                : Colors.white,
           );
         },
       ),
@@ -175,7 +177,9 @@ class _ChannelOptionsState extends ConsumerState<ChannelOptions> {
             case LogicalKeyboardKey.select:
             case LogicalKeyboardKey.space:
               if (horizontalController.selectedItem == 1) {
-                toggleFavorite(widget.hoverChannel);
+                if (widget.hoverChannel != null) {
+                  toggleFavorite(widget.hoverChannel!);
+                }
                 return KeyEventResult.handled;
               }
               widget.updateViewIndex(horizontalController.selectedItem);

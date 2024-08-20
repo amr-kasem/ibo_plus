@@ -21,7 +21,7 @@ class ChannelOptionsParent extends StatefulWidget {
   final bool focused;
   final bool focusable;
   final bool currentChannel;
-  final LiveChannel hoverChanel;
+  final LiveChannel? hoverChanel;
   @override
   State<ChannelOptionsParent> createState() => _ChannelOptionsState();
 }
