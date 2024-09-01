@@ -142,6 +142,9 @@ class _CategoryOptionsState extends ConsumerState<CategoryOptions> {
               moving = true;
               return KeyEventResult.handled;
             case LogicalKeyboardKey.arrowRight:
+              if (horizontalController.selectedItem == icons.length - 1) {
+                return KeyEventResult.ignored;
+              }
               if (!moving) {
                 horizontalController
                     .animateToItem(

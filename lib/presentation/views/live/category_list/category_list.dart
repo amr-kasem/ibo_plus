@@ -7,8 +7,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart' as intl;
 
-import '../../../../data/models/category.dart';
-import '../../../../utils/app_utils.dart';
 import '../../../providers/live_state.dart';
 import 'category_list_header.dart';
 import 'category_tile.dart';
@@ -121,6 +119,8 @@ class _CategoryListState extends ConsumerState<CategoryList> {
                         f.requestFocus();
                       }
                       return KeyEventResult.handled;
+                    } else {
+                      widget.onSelect();
                     }
 
                   case LogicalKeyboardKey.goBack:
@@ -225,19 +225,39 @@ class _CategoryListState extends ConsumerState<CategoryList> {
     );
   }
 
-  void moveCursor(int newIndex, List<Category> categories) {
+  // void moveCursor(int newIndex, List<Category> categories) {
+  //   if (!moving) {
+  //     verticalScrollController
+  //         .animateToItem(
+  //           AppUtils.clamp(
+  //             newIndex,
+  //             categories.length,
+  //           ),
+  //           duration: Durations.short2,
+  //           curve: Curves.easeInOut,
+  //         )
+  //         .then((_) => moving = false);
+  //     moving = true;
+  //   }
+  // }
+  void moveCursor(int itemIndex, channelList) {
     if (!moving) {
-      verticalScrollController
-          .animateToItem(
-            AppUtils.clamp(
-              newIndex,
-              categories.length,
-            ),
-            duration: Durations.short2,
-            curve: Curves.easeInOut,
-          )
-          .then((_) => moving = false);
-      moving = true;
+      // verticalScrollController
+      //     .animateToItem(
+      //       AppUtils.clamp(
+      //         itemIndex,
+      //         channelList.length,
+      //       ),
+      //       duration: Durations.short2,
+      //       curve: Curves.easeInOut,
+      //     )
+      //     .then((_) => moving = false);
+
+      Future.delayed(Durations.short3).then((_) {
+        verticalScrollController.jumpToItem(itemIndex);
+        moving = false;
+      });
     }
+    moving = true;
   }
 }

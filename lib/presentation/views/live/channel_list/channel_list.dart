@@ -7,7 +7,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart' as intl;
 
-import '../../../../utils/app_utils.dart';
 import '../../../providers/live_state.dart';
 import 'channel_list_header.dart';
 import 'channel_tile.dart';
@@ -36,6 +35,7 @@ class _ChannelListState extends ConsumerState<ChannelList> {
   final fn = FocusNode();
   bool epgVisible = false;
   Timer? epgTimer;
+  Timer? visibilityTimer;
   bool moving = false;
   late final chaI = liveNotifier.stateSnapshot.selectedChannelIndex;
   late final catId = liveNotifier.stateSnapshot.selectedCategory?.categoryId;
@@ -101,6 +101,27 @@ class _ChannelListState extends ConsumerState<ChannelList> {
             onFocusChange: (value) {
               setState(() {
                 focued = value;
+                if (focued) {
+                  visibilityTimer?.cancel();
+
+                  visibilityTimer = Timer(
+                    const Duration(seconds: 2),
+                    () {
+                      if (currentChannelIndex !=
+                          verticalScrollController.selectedItem) {
+                        liveNotifier.selectChannel(
+                            channelList[verticalScrollController.selectedItem]);
+                      }
+
+                      visibilityTimer = Timer(
+                        const Duration(seconds: 4),
+                        () {
+                          widget.onSelect();
+                        },
+                      );
+                    },
+                  );
+                }
               });
             },
             onKeyEvent: (node, event) {
@@ -122,6 +143,7 @@ class _ChannelListState extends ConsumerState<ChannelList> {
                     if (!widget.visible) {}
                     final f = node.traversalDescendants.firstOrNull;
                     if (f != null) {
+                      visibilityTimer?.cancel();
                       f.requestFocus();
                     }
                     break;
@@ -133,6 +155,7 @@ class _ChannelListState extends ConsumerState<ChannelList> {
                       fn.requestFocus();
                       return KeyEventResult.handled;
                     }
+                    visibilityTimer?.cancel();
                   case LogicalKeyboardKey.goBack:
                     if (!fn.hasPrimaryFocus) {
                       fn.requestFocus();
@@ -168,6 +191,13 @@ class _ChannelListState extends ConsumerState<ChannelList> {
                         return KeyEventResult.handled;
                       }
                     } else {
+                      visibilityTimer?.cancel();
+                      visibilityTimer = Timer(
+                        const Duration(seconds: 6),
+                        () {
+                          widget.onSelect();
+                        },
+                      );
                       verticalScrollController.jumpToItem(currentChannelIndex);
                     }
 
@@ -190,6 +220,23 @@ class _ChannelListState extends ConsumerState<ChannelList> {
                       itemExtent: 40,
                       onSelectedItemChanged: (value) {
                         setState(() {});
+                        if (!fn.hasPrimaryFocus) {
+                          liveNotifier.selectChannel(channelList[value]);
+                        } else {
+                          visibilityTimer?.cancel();
+                          visibilityTimer = Timer(
+                            const Duration(seconds: 2),
+                            () {
+                              liveNotifier.selectChannel(channelList[value]);
+                              visibilityTimer = Timer(
+                                const Duration(seconds: 4),
+                                () {
+                                  widget.onSelect();
+                                },
+                              );
+                            },
+                          );
+                        }
                       },
                       childDelegate: ListWheelChildBuilderDelegate(
                         builder: (context, index) {
@@ -238,16 +285,21 @@ class _ChannelListState extends ConsumerState<ChannelList> {
 
   void moveCursor(int itemIndex, channelList) {
     if (!moving) {
-      verticalScrollController
-          .animateToItem(
-            AppUtils.clamp(
-              itemIndex,
-              channelList.length,
-            ),
-            duration: Durations.short2,
-            curve: Curves.easeInOut,
-          )
-          .then((_) => moving = false);
+      // verticalScrollController
+      //     .animateToItem(
+      //       AppUtils.clamp(
+      //         itemIndex,
+      //         channelList.length,
+      //       ),
+      //       duration: Durations.short2,
+      //       curve: Curves.easeInOut,
+      //     )
+      //     .then((_) => moving = false);
+
+      Future.delayed(Durations.short3).then((_) {
+        verticalScrollController.jumpToItem(itemIndex);
+        moving = false;
+      });
     }
     moving = true;
   }
