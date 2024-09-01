@@ -106,8 +106,13 @@ class _CategoryListState extends ConsumerState<CategoryList> {
               if (event is! KeyUpEvent) {
                 switch (event.logicalKey) {
                   case LogicalKeyboardKey.arrowUp:
+                    if (itemIndex - 1 < 0) {
+                      return KeyEventResult.ignored;
+                    }
+                    // fn.requestFocus();
                     moveCursor(itemIndex - 1, categories);
-                    break;
+
+                    return KeyEventResult.handled;
                   case LogicalKeyboardKey.arrowDown:
                     moveCursor(itemIndex + 1, categories);
                     break;

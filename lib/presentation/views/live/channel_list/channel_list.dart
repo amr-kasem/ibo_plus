@@ -128,16 +128,25 @@ class _ChannelListState extends ConsumerState<ChannelList> {
               final itemIndex = verticalScrollController.selectedItem;
 
               if (event is! KeyUpEvent) {
+                if (!fn.hasPrimaryFocus && !widget.visible) {
+                  fn.requestFocus();
+                  return KeyEventResult.ignored;
+                }
                 switch (event.logicalKey) {
                   case LogicalKeyboardKey.arrowUp:
+                    if (itemIndex - 1 < 0 || !widget.visible) {
+                      return KeyEventResult.ignored;
+                    }
                     // fn.requestFocus();
                     moveCursor(itemIndex - 1, channelList);
-                    break;
+                    return KeyEventResult.handled;
                   case LogicalKeyboardKey.arrowDown:
-
+                    if (!widget.visible) {
+                      return KeyEventResult.ignored;
+                    }
                     // fn.requestFocus();
                     moveCursor(itemIndex + 1, channelList);
-                    break;
+                    return KeyEventResult.handled;
 
                   case LogicalKeyboardKey.arrowRight:
                     if (!widget.visible) {}
