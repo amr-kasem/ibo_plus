@@ -37,6 +37,8 @@ class _ChannelListState extends ConsumerState<ChannelList> {
   Timer? epgTimer;
   Timer? visibilityTimer;
   bool moving = false;
+  bool wantToSelect = false;
+
   late final chaI = liveNotifier.stateSnapshot.selectedChannelIndex;
   late final catId = liveNotifier.stateSnapshot.selectedCategory?.categoryId;
   late var cha = liveNotifier.stateSnapshot.selectedChannel;
@@ -70,6 +72,8 @@ class _ChannelListState extends ConsumerState<ChannelList> {
     ref.listen(liveControllerProvider.select((s) => s.channels), (a, b) {
       final same = const ListEquality().equals(a, b);
       if (!same) {
+        moving = false;
+
         int i = 0;
         final currentChannel = liveNotifier.stateSnapshot.selectedChannel;
         if (currentChannel != null) {
@@ -193,11 +197,17 @@ class _ChannelListState extends ConsumerState<ChannelList> {
                   case LogicalKeyboardKey.select:
                   case LogicalKeyboardKey.space:
                     if (widget.visible) {
-                      if (currentChannelIndex != itemIndex) {
-                        liveNotifier.selectChannel(channelList[itemIndex]);
-                      } else {
-                        widget.onSelect();
-                        return KeyEventResult.handled;
+                      if (event is KeyRepeatEvent) {
+                        if (fn.hasPrimaryFocus) {
+                          wantToSelect = false;
+                          final f = node.traversalDescendants.firstOrNull;
+                          if (f != null) {
+                            visibilityTimer?.cancel();
+                            f.requestFocus();
+                          } else {
+                            wantToSelect = true;
+                          }
+                        }
                       }
                     } else {
                       visibilityTimer?.cancel();
@@ -210,6 +220,23 @@ class _ChannelListState extends ConsumerState<ChannelList> {
                       verticalScrollController.jumpToItem(currentChannelIndex);
                     }
 
+                  default:
+                }
+              } else {
+                switch (event.logicalKey) {
+                  case LogicalKeyboardKey.select:
+                  case LogicalKeyboardKey.space:
+                    if (fn.hasPrimaryFocus) {
+                      if (wantToSelect) {
+                        if (currentChannelIndex != itemIndex) {
+                          liveNotifier.selectChannel(channelList[itemIndex]);
+                        } else {
+                          widget.onSelect();
+                          return KeyEventResult.handled;
+                        }
+                      }
+                    }
+                    break;
                   default:
                 }
               }
@@ -229,22 +256,31 @@ class _ChannelListState extends ConsumerState<ChannelList> {
                       itemExtent: 40,
                       onSelectedItemChanged: (value) {
                         setState(() {});
-                        if (!fn.hasPrimaryFocus) {
-                          liveNotifier.selectChannel(channelList[value]);
-                        } else {
-                          visibilityTimer?.cancel();
-                          visibilityTimer = Timer(
-                            const Duration(seconds: 2),
-                            () {
-                              liveNotifier.selectChannel(channelList[value]);
-                              visibilityTimer = Timer(
-                                const Duration(seconds: 4),
-                                () {
-                                  widget.onSelect();
-                                },
-                              );
-                            },
-                          );
+
+                        late final catId = liveNotifier
+                            .stateSnapshot.selectedCategory?.categoryId;
+                        if (int.tryParse(channelList[currentChannelIndex]
+                                        .categoryId ??
+                                    '') ==
+                                catId &&
+                            fn.hasFocus) {
+                          if (!fn.hasPrimaryFocus) {
+                            liveNotifier.selectChannel(channelList[value]);
+                          } else {
+                            visibilityTimer?.cancel();
+                            visibilityTimer = Timer(
+                              const Duration(seconds: 2),
+                              () {
+                                liveNotifier.selectChannel(channelList[value]);
+                                visibilityTimer = Timer(
+                                  const Duration(seconds: 4),
+                                  () {
+                                    widget.onSelect();
+                                  },
+                                );
+                              },
+                            );
+                          }
                         }
                       },
                       childDelegate: ListWheelChildBuilderDelegate(
@@ -292,24 +328,11 @@ class _ChannelListState extends ConsumerState<ChannelList> {
     );
   }
 
-  void moveCursor(int itemIndex, channelList) {
-    if (!moving) {
-      // verticalScrollController
-      //     .animateToItem(
-      //       AppUtils.clamp(
-      //         itemIndex,
-      //         channelList.length,
-      //       ),
-      //       duration: Durations.short2,
-      //       curve: Curves.easeInOut,
-      //     )
-      //     .then((_) => moving = false);
+  void moveCursor(int itemIndex, channelList) async {
+    if (!moving) verticalScrollController.jumpToItem(itemIndex);
 
-      Future.delayed(Durations.short3).then((_) {
-        verticalScrollController.jumpToItem(itemIndex);
-        moving = false;
-      });
-    }
     moving = true;
+    await Future.delayed(Durations.short3);
+    moving = false;
   }
 }

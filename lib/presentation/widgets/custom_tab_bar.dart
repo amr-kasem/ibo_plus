@@ -90,8 +90,12 @@ class _CustomTabBarState extends ConsumerState<CustomTabBar> {
       child: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.black87, Color.fromARGB(0, 46, 45, 45)],
-            stops: [0.0, 2],
+            colors: [
+              Colors.transparent,
+              Colors.black54,
+              Color.fromARGB(0, 46, 45, 45)
+            ],
+            stops: [0.0, 0.2, 1],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),

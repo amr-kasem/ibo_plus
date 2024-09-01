@@ -176,14 +176,16 @@ class _ChannelOptionsState extends ConsumerState<ChannelOptions> {
               return KeyEventResult.handled;
             case LogicalKeyboardKey.select:
             case LogicalKeyboardKey.space:
-              if (horizontalController.selectedItem == 1) {
-                if (widget.hoverChannel != null) {
-                  toggleFavorite(widget.hoverChannel!);
+              if (event is KeyDownEvent) {
+                if (horizontalController.selectedItem == 1) {
+                  if (widget.hoverChannel != null) {
+                    toggleFavorite(widget.hoverChannel!);
+                  }
+                  return KeyEventResult.handled;
                 }
+                widget.updateViewIndex(horizontalController.selectedItem);
                 return KeyEventResult.handled;
               }
-              widget.updateViewIndex(horizontalController.selectedItem);
-              return KeyEventResult.handled;
 
             default:
           }

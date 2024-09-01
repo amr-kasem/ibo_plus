@@ -161,16 +161,18 @@ class _CategoryOptionsState extends ConsumerState<CategoryOptions> {
               return KeyEventResult.handled;
             case LogicalKeyboardKey.select:
             case LogicalKeyboardKey.space:
-              if (horizontalController.selectedItem == 1) {
-                toggleFavorite();
+              if (event is KeyDownEvent) {
+                if (horizontalController.selectedItem == 1) {
+                  toggleFavorite();
+                  return KeyEventResult.handled;
+                }
+                if (horizontalController.selectedItem == 3) {
+                  toggleOnlyFavorite();
+                  return KeyEventResult.handled;
+                }
+                widget.updateViewIndex(horizontalController.selectedItem);
                 return KeyEventResult.handled;
               }
-              if (horizontalController.selectedItem == 3) {
-                toggleOnlyFavorite();
-                return KeyEventResult.handled;
-              }
-              widget.updateViewIndex(horizontalController.selectedItem);
-              return KeyEventResult.handled;
 
             default:
           }

@@ -6,6 +6,7 @@ import '../widgets/custom_tab_bar.dart';
 import '../widgets/ibo_textfield/text_field.dart';
 import 'home/home_tabview.dart';
 import 'live/live_tabview.dart';
+import 'movies/movies_tabview.dart';
 import 'settings/settings_tabview.dart';
 
 class HomePage extends StatefulWidget {
@@ -36,12 +37,15 @@ class _HomePageState extends State<HomePage> {
                     top: 0,
                     bottom: 0,
                     textDirection: Directionality.of(context),
-                    child: AspectRatio(
-                      aspectRatio: 16 / 9,
-                      child: Image.network(
-                        'https://static01.nyt.com/images/2016/01/28/arts/kung/kung-superJumbo.jpg?quality=75&auto=webp',
-                        fit: BoxFit.cover,
-                      ),
+                    child: Consumer(
+                      builder: (_, WidgetRef ref, __) {
+                        return AnimatedSwitcher(
+                          duration: Durations.medium1,
+                          child: getBackground(
+                            ref.watch(AppState.homeIndex),
+                          ),
+                        );
+                      },
                     ),
                   ),
                   Positioned.directional(
@@ -152,6 +156,22 @@ class _HomePageState extends State<HomePage> {
     return const SizedBox.shrink();
   }
 
+  Widget getBackground(int i) {
+    switch (i) {
+      case 0:
+      case 2:
+      case 3:
+        return AspectRatio(
+          aspectRatio: 16 / 9,
+          child: Image.network(
+            'https://static01.nyt.com/images/2016/01/28/arts/kung/kung-superJumbo.jpg?quality=75&auto=webp',
+            fit: BoxFit.cover,
+          ),
+        );
+    }
+    return const SizedBox.shrink();
+  }
+
   Widget getBody(int i) {
     switch (i) {
       case 0:
@@ -161,7 +181,7 @@ class _HomePageState extends State<HomePage> {
         return const LiveTabView();
 
       case 2:
-        return const Placeholder();
+        return const MoviesTabView();
       case 3:
         return Center(
           child: IboTextField(

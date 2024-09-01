@@ -36,6 +36,7 @@ class _CategoryListState extends ConsumerState<CategoryList> {
   bool epgVisible = false;
   Timer? epgTimer;
   bool moving = false;
+  bool wantToSelect = false;
   bool initialized = false;
   @override
   void initState() {
@@ -118,15 +119,14 @@ class _CategoryListState extends ConsumerState<CategoryList> {
                     break;
 
                   case LogicalKeyboardKey.arrowRight:
+                    widget.onSelect();
                     if (fn.hasPrimaryFocus) {
                       final f = node.traversalDescendants.firstOrNull;
                       if (f != null) {
                         f.requestFocus();
                       }
                       return KeyEventResult.handled;
-                    } else {
-                      widget.onSelect();
-                    }
+                    } else {}
 
                   case LogicalKeyboardKey.goBack:
                     if (!fn.hasPrimaryFocus) {
@@ -154,10 +154,31 @@ class _CategoryListState extends ConsumerState<CategoryList> {
                     }
                   case LogicalKeyboardKey.select:
                   case LogicalKeyboardKey.space:
-                    liveNotifier.selectCategory(liveNotifier.stateSnapshot
-                        .categories[verticalScrollController.selectedItem]);
-                    widget.onSelect();
-
+                    if (event is KeyRepeatEvent) {
+                      if (fn.hasPrimaryFocus) {
+                        wantToSelect = false;
+                        final f = node.traversalDescendants.firstOrNull;
+                        if (f != null) {
+                          f.requestFocus();
+                        } else {
+                          wantToSelect = true;
+                        }
+                      }
+                    }
+                  default:
+                }
+              } else {
+                switch (event.logicalKey) {
+                  case LogicalKeyboardKey.select:
+                  case LogicalKeyboardKey.space:
+                    if (fn.hasPrimaryFocus) {
+                      if (wantToSelect) {
+                        liveNotifier.selectCategory(liveNotifier.stateSnapshot
+                            .categories[verticalScrollController.selectedItem]);
+                        widget.onSelect();
+                      }
+                    }
+                    break;
                   default:
                 }
               }
