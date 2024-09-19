@@ -7,6 +7,7 @@ import '../../utils/category_type.dart';
 import '../models/category.dart';
 import '../models/live_channel.dart';
 import '../models/m3u_playlist.dart';
+import '../models/movie.dart';
 
 class PlaylistRemoteDatasource {
   static Duration _getRemainingSubscriptionDuration(Map data) {
@@ -86,6 +87,40 @@ class PlaylistRemoteDatasource {
     }
   }
 
+  static Future<List<Movie>> getMovies({
+    int? id,
+    required M3UPlaylist m3uPlaylist,
+    void Function(int, int)? onReceiveProgress,
+  }) async {
+    late final Response res;
+    try {
+      res = await ExternalServices.dio.get(
+        '${m3uPlaylist.url}player_api.php',
+        queryParameters: {
+          "password": m3uPlaylist.password,
+          "username": m3uPlaylist.username,
+          "action": "get_vod_streams",
+        },
+        onReceiveProgress: onReceiveProgress,
+      );
+    } catch (e) {
+      return Future.error(e);
+    }
+    if ((res.statusCode ?? 900) < 300) {
+      final jsonData = res.data as List;
+      jsonData
+          .retainWhere((element) => (element as Map)['category_id'] != null);
+      final data = jsonData
+          .map(
+            (e) => Movie.fromJson(e)..playlistId = m3uPlaylist.isarId,
+          )
+          .toList();
+      return data;
+    } else {
+      return Future.error(res);
+    }
+  }
+
   static Future<List<Category>> getCategories({
     required CategoryType categoryType,
     required M3UPlaylist m3uPlaylist,
@@ -108,7 +143,7 @@ class PlaylistRemoteDatasource {
       final data = jsonData
           .map(
             (e) => Category.fromJson(e)
-              ..type = CategoryType.liveChannels
+              ..type = categoryType
               ..playlistId = m3uPlaylist.isarId,
           )
           .toList();

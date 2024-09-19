@@ -1,5 +1,7 @@
 import 'dart:developer';
 
+import 'package:ibo_plus/data/models/movie.dart';
+
 import '../../utils/category_type.dart';
 import '../data_sources/isar_db.dart';
 import '../data_sources/playlist_remote_datasource.dart';
@@ -31,12 +33,23 @@ class PlaylistRepository {
     }
   }
 
+  static Future<void> refreshMovies() async {
+    try {
+      final movies = await PlaylistRemoteDatasource.getMovies(
+        m3uPlaylist: (await UserRepository.selectedPlaylist)!,
+      );
+      IsarDB.instance.storeMovies(movies);
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
   static Future<void> refreshCategories(CategoryType type) async {
     final categories = await PlaylistRemoteDatasource.getCategories(
       m3uPlaylist: (await UserRepository.selectedPlaylist)!,
       categoryType: type,
     );
-    IsarDB.instance.storeLiveCategories(categories);
+    IsarDB.instance.storeCategories(categories);
   }
 
   static Stream<DataEvent?> get playlistsNotifier =>
@@ -54,6 +67,15 @@ class PlaylistRepository {
       return [];
     } else {
       return await IsarDB.instance.getLiveChannels(playlist);
+    }
+  }
+
+  static Future<List<Movie>> getMovies() async {
+    final playlist = await UserRepository.selectedPlaylist;
+    if (playlist == null) {
+      return [];
+    } else {
+      return await IsarDB.instance.getMovies(playlist);
     }
   }
 

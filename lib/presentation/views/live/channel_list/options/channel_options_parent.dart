@@ -13,15 +13,9 @@ import 'subtitles_list.dart';
 class ChannelOptionsParent extends StatefulWidget {
   const ChannelOptionsParent({
     super.key,
-    required this.focused,
-    required this.focusable,
-    required this.currentChannel,
-    required this.hoverChanel,
+    required this.getHoverChannel,
   });
-  final bool focused;
-  final bool focusable;
-  final bool currentChannel;
-  final LiveChannel? hoverChanel;
+  final LiveChannel? Function() getHoverChannel;
   @override
   State<ChannelOptionsParent> createState() => _ChannelOptionsState();
 }
@@ -42,20 +36,18 @@ class _ChannelOptionsState extends State<ChannelOptionsParent> {
         goBack: () => updateState(1),
       ),
       ChannelOptions(
-        focused: widget.focused,
+        focused: true,
         updateViewIndex: updateState,
-        currentChannel: widget.currentChannel,
-        hoverChannel: widget.hoverChanel,
+        getHoverChannel: widget.getHoverChannel,
       ),
-      if (widget.currentChannel) const AudioList(),
-      if (widget.currentChannel) const SubtitlesList(),
-      EpgList(focued: widget.focused),
-      ScreenFitOptions(focused: widget.focused),
-      ChannelSettings(focused: widget.focused)
+      const AudioList(),
+      const SubtitlesList(),
+      const EpgList(focued: true),
+      const ScreenFitOptions(focused: true),
+      const ChannelSettings(focused: true)
     ];
     return Focus(
       skipTraversal: true,
-      descendantsAreFocusable: widget.focusable,
       child: FocusScope(
         node: fsn,
         skipTraversal: true,

@@ -10,6 +10,7 @@ import '../models/data_event.dart';
 import '../models/language.dart';
 import '../models/live_channel.dart';
 import '../models/m3u_playlist.dart';
+import '../models/movie.dart';
 import '../models/user.dart';
 
 class IsarDB {
@@ -28,6 +29,7 @@ class IsarDB {
         M3UPlaylistSchema,
         LanguageSchema,
         LiveChannelSchema,
+        MovieSchema,
         DataEventSchema,
         CategorySchema,
       ],
@@ -133,7 +135,44 @@ class IsarDB {
     }
   }
 
-  void storeLiveCategories(List<Category> categories) async {
+  void storeMovies(List<Movie> movies) async {
+    final existingMoviess = await _isar.movies.where().findAll();
+
+    // Step 3: Create a map of existing channels by their ID for quick lookup
+    final Map<int, Movie> existingMoviessMap = {
+      for (var movies in existingMoviess) movies.streamId: movies
+    };
+
+    // Step 4: Merge new data with existing channels
+    final List<Movie> moviesToUpdate = [];
+
+    for (var newMovie in movies) {
+      final existingMovies = existingMoviessMap[newMovie.streamId];
+
+      if (existingMovies != null) {
+        // Retain favorite status and check if the other fields differ
+        if (existingMovies != newMovie) {
+          newMovie.isFavorite = existingMovies.isFavorite;
+          moviesToUpdate.add(newMovie);
+        }
+      } else {
+        // No existing channel, so add the new one directly
+        moviesToUpdate.add(newMovie);
+      }
+    }
+
+    // Step 5: Store the merged channels in the database if there are any changes
+    if (moviesToUpdate.isNotEmpty) {
+      await _isar.writeTxn(() async {
+        await _isar.movies.putAll(moviesToUpdate);
+        await _isar.dataEvents.put(
+          DataEvent(dataEventType: DataEventType.moviesChange),
+        );
+      });
+    }
+  }
+
+  void storeCategories(List<Category> categories) async {
     final existingCategories = await _isar.categorys.where().findAll();
 
     // Step 3: Create a map of existing categories by their ID for quick lookup
@@ -191,7 +230,7 @@ class IsarDB {
   Future<List<LiveChannel>> getLiveChannels(M3UPlaylist m3uPlaylist) async {
     return await _isar.liveChannels
         .where()
-        // .playlistIdEqualTo(m3uPlaylist.isarId)
+        .playlistIdEqualTo(m3uPlaylist.isarId)
         .findAll();
   }
 
@@ -203,6 +242,22 @@ class IsarDB {
         .streamIdPlaylistIdEqualTo(streamId, m3uPlaylist.isarId)
         .findFirst();
   }
+
+  Future<List<Movie>> getMovies(M3UPlaylist m3uPlaylist) async {
+    return await _isar.movies
+        .where()
+        .playlistIdEqualTo(m3uPlaylist.isarId)
+        .findAll();
+  }
+
+  // Future<LiveChannel?> getLiveChannelByStreamId(
+  //     M3UPlaylist m3uPlaylist, int? streamId) async {
+  //   if (streamId == null) return await _isar.liveChannels.where().findFirst();
+  //   return await _isar.liveChannels
+  //       .where()
+  //       .streamIdPlaylistIdEqualTo(streamId, m3uPlaylist.isarId)
+  //       .findFirst();
+  // }
 
   Future<List<Category>> getCategories({
     required M3UPlaylist m3uPlaylist,

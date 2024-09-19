@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../data/repositories/user_repository.dart';
 import '../../services/live_services.dart';
+import '../../services/movies_services.dart';
 import '../../services/playlist_services.dart';
 import '../../utils/app_utils.dart';
 import 'app_state.dart';
@@ -31,6 +32,7 @@ class RouterInitializationListenable with ChangeNotifier {
         await UserRepository.initialize();
         await PlaylistServices.initialize();
         await LiveServices.initialize();
+        await MoviesServices.initialize();
         appStateNotifier.update((s) => AppStates.initialized);
         notifyListeners();
       }

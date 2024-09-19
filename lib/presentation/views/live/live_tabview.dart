@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../providers/live_state.dart';
 import '../../providers/player_state.dart';
 import '../../widgets/player_widget.dart';
-import 'live_info.dart';
+import 'live_info/live_info.dart';
 
 class LiveTabView extends ConsumerStatefulWidget {
   const LiveTabView({super.key});

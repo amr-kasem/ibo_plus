@@ -2,9 +2,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class AppUtils {
   static final providerContainer = ProviderContainer();
+  static int? toInt(dynamic string) => int.tryParse('$string');
+  static double? toDouble(dynamic string) => double.tryParse('$string');
+  static String? numToString(num? n) => n?.toString();
   static int fastHash(String string) {
     var hash = 0xcbf29ce484222325;
-
     var i = 0;
     while (i < string.length) {
       final codeUnit = string.codeUnitAt(i++);
@@ -12,9 +14,12 @@ class AppUtils {
       hash *= 0x100000001b3;
       hash ^= codeUnit & 0xFF;
       hash *= 0x100000001b3;
+
+      // Ensure the result is a 32-bit integer
+      hash |= 0;
     }
 
-    return hash;
+    return hash & 0xFFFFFFFF; // Ensure the final result is a 32-bit integer
   }
 
   static bool? intToNullableBool(int? i) => i == null ? null : i == 1;

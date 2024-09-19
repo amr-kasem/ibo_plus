@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart' as intl;
 
 import '../../../providers/live_state.dart';
+import '../../../widgets/list_highlighter.dart';
 import 'category_list_header.dart';
 import 'category_tile.dart';
 import 'options/category_options_parent.dart';
@@ -53,8 +54,6 @@ class _CategoryListState extends ConsumerState<CategoryList> {
 
   @override
   Widget build(BuildContext context) {
-    final currentCategory =
-        ref.watch(liveControllerProvider.select((s) => s.selectedCategory));
     ref.listen(liveControllerProvider.select((s) => s.categories), (a, b) {
       final same = const ListEquality().equals(a, b);
       if (!same) {
@@ -72,19 +71,23 @@ class _CategoryListState extends ConsumerState<CategoryList> {
     });
     final categories =
         ref.watch(liveControllerProvider.select((s) => s.categories));
-    if (!initialized) {
-      initialized = true;
-      int i = 0;
-      if (currentCategory != null) {
-        i = categories.indexOf(currentCategory);
-        if (i == -1) {
-          i = 0;
+    ref.listen(liveControllerProvider.select((s) => s.selectedCategory),
+        (_, currentCategory) {
+      if (!initialized) {
+        initialized = true;
+        int i = 0;
+        if (currentCategory != null) {
+          i = categories.indexOf(currentCategory);
+          if (i == -1) {
+            i = 0;
+          }
         }
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          verticalScrollController.jumpToItem(i);
+        });
       }
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        verticalScrollController.jumpToItem(i);
-      });
-    }
+    });
+
     intl.NumberFormat formatter = intl.NumberFormat(
         List.filled(categories.length.toString().length, '0').join());
 
@@ -93,158 +96,161 @@ class _CategoryListState extends ConsumerState<CategoryList> {
       children: [
         const CategoryListHeader(),
         Expanded(
-          child: Focus(
-            focusNode: fn,
-            skipTraversal: !widget.visible,
-            onFocusChange: (value) {
-              setState(() {
-                focued = value;
-              });
-            },
-            onKeyEvent: (node, event) {
-              final itemIndex = verticalScrollController.selectedItem;
+          child: Stack(
+            children: [
+              ListHighlighter(highlighted: fn.hasFocus),
+              Focus(
+                autofocus: true,
+                focusNode: fn,
+                onFocusChange: (value) {
+                  setState(() {
+                    focued = value;
+                  });
+                },
+                onKeyEvent: (node, event) {
+                  final itemIndex = verticalScrollController.selectedItem;
 
-              if (event is! KeyUpEvent) {
-                switch (event.logicalKey) {
-                  case LogicalKeyboardKey.arrowUp:
-                    if (itemIndex - 1 < 0) {
-                      return KeyEventResult.ignored;
-                    }
-                    // fn.requestFocus();
-                    moveCursor(itemIndex - 1, categories);
-
-                    return KeyEventResult.handled;
-                  case LogicalKeyboardKey.arrowDown:
-                    moveCursor(itemIndex + 1, categories);
-                    break;
-
-                  case LogicalKeyboardKey.arrowRight:
-                    widget.onSelect();
-                    if (fn.hasPrimaryFocus) {
-                      final f = node.traversalDescendants.firstOrNull;
-                      if (f != null) {
-                        f.requestFocus();
-                      }
-                      return KeyEventResult.handled;
-                    } else {}
-
-                  case LogicalKeyboardKey.goBack:
-                    if (!fn.hasPrimaryFocus) {
-                      fn.requestFocus();
-                      return KeyEventResult.handled;
-                    } else {
-                      if (liveNotifier
-                          .stateSnapshot.searchCategories.isNotEmpty) {
-                        liveNotifier.searchCategories('');
-                      }
-                      if (categories[verticalScrollController.selectedItem] !=
-                          currentCategory) {
-                        final i = liveNotifier.resetCategry();
-                        moveCursor(i, categories);
+                  if (event is! KeyUpEvent) {
+                    switch (event.logicalKey) {
+                      case LogicalKeyboardKey.arrowUp:
+                        if (itemIndex - 1 < 0) {
+                          return KeyEventResult.ignored;
+                        }
+                        // fn.requestFocus();
+                        moveCursor(itemIndex - 1, categories);
 
                         return KeyEventResult.handled;
-                      }
-                    }
+                      case LogicalKeyboardKey.arrowDown:
+                        moveCursor(itemIndex + 1, categories);
+                        break;
 
-                    break;
-                  case LogicalKeyboardKey.arrowLeft:
-                    if (!fn.hasPrimaryFocus) {
-                      fn.requestFocus();
-                      return KeyEventResult.handled;
-                    }
-                  case LogicalKeyboardKey.select:
-                  case LogicalKeyboardKey.space:
-                    if (event is KeyRepeatEvent) {
-                      if (fn.hasPrimaryFocus) {
-                        wantToSelect = false;
-                        final f = node.traversalDescendants.firstOrNull;
-                        if (f != null) {
-                          f.requestFocus();
-                        } else {
-                          wantToSelect = true;
-                        }
-                      }
-                    }
-                  default:
-                }
-              } else {
-                switch (event.logicalKey) {
-                  case LogicalKeyboardKey.select:
-                  case LogicalKeyboardKey.space:
-                    if (fn.hasPrimaryFocus) {
-                      if (wantToSelect) {
-                        liveNotifier.selectCategory(liveNotifier.stateSnapshot
-                            .categories[verticalScrollController.selectedItem]);
+                      case LogicalKeyboardKey.arrowRight:
                         widget.onSelect();
-                      }
-                    }
-                    break;
-                  default:
-                }
-              }
-              return KeyEventResult.ignored;
-            },
-            child: Row(
-              children: [
-                Expanded(
-                  flex: 1,
-                  child: FadingEdgeScrollView.fromListWheelScrollView(
-                    gradientFractionOnEnd: 0.5,
-                    gradientFractionOnStart: 0.5,
-                    child: ListWheelScrollView.useDelegate(
-                      controller: verticalScrollController,
-                      diameterRatio: 8,
-                      squeeze: 0.8,
-                      offAxisFraction: 1.5,
-                      itemExtent: 40,
-                      onSelectedItemChanged: (i) {
-                        WidgetsBinding.instance.addPostFrameCallback((_) {
-                          liveNotifier.selectCategory(
-                              liveNotifier.stateSnapshot.categories[i]);
-                        });
-                      },
-                      childDelegate: ListWheelChildBuilderDelegate(
-                        builder: (context, index) {
-                          final hovered =
-                              verticalScrollController.selectedItem == index;
+                        if (fn.hasPrimaryFocus) {
+                          final f = node.traversalDescendants.firstOrNull;
+                          if (f != null) {
+                            f.requestFocus();
+                          }
+                          return KeyEventResult.handled;
+                        } else {}
 
-                          return CategoryTile(
-                            index: index,
-                            hovered: hovered,
-                            focued: focued,
-                            fn: fn,
-                            formatter: formatter,
-                            categories: categories,
-                          );
-                        },
-                        childCount: categories.length,
+                      case LogicalKeyboardKey.goBack:
+                        if (!fn.hasPrimaryFocus) {
+                          fn.requestFocus();
+                          return KeyEventResult.handled;
+                        } else {
+                          if (liveNotifier
+                              .stateSnapshot.searchCategories.isNotEmpty) {
+                            liveNotifier.searchCategories('');
+                          }
+                          if (categories[
+                                  verticalScrollController.selectedItem] !=
+                              ref.read(liveControllerProvider
+                                  .select((s) => s.selectedCategory))) {
+                            final i = liveNotifier.resetCategry();
+                            moveCursor(i, categories);
+
+                            return KeyEventResult.handled;
+                          }
+                        }
+
+                        break;
+                      case LogicalKeyboardKey.arrowLeft:
+                        if (!fn.hasPrimaryFocus) {
+                          fn.requestFocus();
+                          return KeyEventResult.handled;
+                        }
+                      case LogicalKeyboardKey.select:
+                      case LogicalKeyboardKey.space:
+                        if (event is KeyRepeatEvent) {
+                          if (fn.hasPrimaryFocus) {
+                            wantToSelect = false;
+                            final f = node.traversalDescendants.firstOrNull;
+                            if (f != null) {
+                              f.requestFocus();
+                            } else {
+                              wantToSelect = true;
+                            }
+                          }
+                        }
+                      default:
+                    }
+                  } else {
+                    switch (event.logicalKey) {
+                      case LogicalKeyboardKey.select:
+                      case LogicalKeyboardKey.space:
+                        if (fn.hasPrimaryFocus) {
+                          if (wantToSelect) {
+                            liveNotifier.selectCategory(
+                                liveNotifier.stateSnapshot.categories[
+                                    verticalScrollController.selectedItem]);
+                            widget.onSelect();
+                          }
+                        }
+                        break;
+                      default:
+                    }
+                  }
+                  return KeyEventResult.ignored;
+                },
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: FadingEdgeScrollView.fromListWheelScrollView(
+                        gradientFractionOnEnd: 0.5,
+                        gradientFractionOnStart: 0.5,
+                        child: ListWheelScrollView.useDelegate(
+                          controller: verticalScrollController,
+                          diameterRatio: 8,
+                          squeeze: 0.8,
+                          offAxisFraction: 1.5,
+                          itemExtent: 40,
+                          onSelectedItemChanged: (i) {
+                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                              liveNotifier.selectCategory(
+                                  liveNotifier.stateSnapshot.categories[i]);
+                            });
+                          },
+                          childDelegate: ListWheelChildBuilderDelegate(
+                            builder: (context, index) => CategoryTile(
+                              index: index,
+                              hovered: false,
+                              focued: focued,
+                              fn: fn,
+                              formatter: formatter,
+                              categories: categories,
+                            ),
+                            childCount: categories.length,
+                          ),
+                        ),
                       ),
                     ),
-                  ),
+                    if (widget.showSettings)
+                      Expanded(
+                        flex: 1,
+                        child: epgVisible
+                            ? CategoryOptionsParent(
+                                focused: !fn.hasPrimaryFocus,
+                                focusable: fn.hasFocus,
+                                showFavoriteButton: categories.length >
+                                        verticalScrollController.selectedItem
+                                    ? categories[verticalScrollController
+                                                    .selectedItem]
+                                                .categoryId !=
+                                            -2 &&
+                                        categories[verticalScrollController
+                                                    .selectedItem]
+                                                .categoryId !=
+                                            -1
+                                    : true,
+                              )
+                            : const SizedBox.shrink(),
+                      ),
+                  ],
                 ),
-                if (widget.showSettings)
-                  Expanded(
-                    flex: 1,
-                    child: epgVisible
-                        ? CategoryOptionsParent(
-                            focused: !fn.hasPrimaryFocus,
-                            focusable: fn.hasFocus,
-                            showFavoriteButton: categories.length >
-                                    verticalScrollController.selectedItem
-                                ? categories[verticalScrollController
-                                                .selectedItem]
-                                            .categoryId !=
-                                        -2 &&
-                                    categories[verticalScrollController
-                                                .selectedItem]
-                                            .categoryId !=
-                                        -1
-                                : true,
-                          )
-                        : const SizedBox.shrink(),
-                  ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ],

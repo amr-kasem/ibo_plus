@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'categories_list.dart';
+import 'movies_grid.dart';
 
-class MoviesTabView extends ConsumerWidget {
+class MoviesTabView extends StatelessWidget {
   const MoviesTabView({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return const Padding(
       padding: EdgeInsets.only(top: 50),
-      child: CategoriesList(),
+      child: MoviesGrid(),
     );
   }
 }

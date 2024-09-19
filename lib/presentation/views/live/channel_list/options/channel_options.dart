@@ -12,13 +12,11 @@ class ChannelOptions extends ConsumerStatefulWidget {
     super.key,
     required this.focused,
     required this.updateViewIndex,
-    required this.currentChannel,
-    required this.hoverChannel,
+    required this.getHoverChannel,
   });
   final void Function(int index) updateViewIndex;
   final bool focused;
-  final bool currentChannel;
-  final LiveChannel? hoverChannel;
+  final LiveChannel? Function() getHoverChannel;
   @override
   ConsumerState<ChannelOptions> createState() => _ChannelOptionsState();
 }
@@ -54,22 +52,20 @@ class _ChannelOptionsState extends ConsumerState<ChannelOptions> {
           fontSize: 16,
         ),
       ),
-      if (widget.currentChannel)
-        const Text(
-          'Audio tracks',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-          ),
+      const Text(
+        'Audio tracks',
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 16,
         ),
-      if (widget.currentChannel)
-        const Text(
-          'Subtitles',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-          ),
+      ),
+      const Text(
+        'Subtitles',
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 16,
         ),
+      ),
       const Text(
         'TV guide',
         style: TextStyle(
@@ -77,14 +73,13 @@ class _ChannelOptionsState extends ConsumerState<ChannelOptions> {
           fontSize: 16,
         ),
       ),
-      if (widget.currentChannel)
-        const Text(
-          'Screen fit',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-          ),
+      const Text(
+        'Screen fit',
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 16,
         ),
+      ),
       const Text(
         'Settings',
         style: TextStyle(
@@ -100,19 +95,19 @@ class _ChannelOptionsState extends ConsumerState<ChannelOptions> {
         builder: (_, WidgetRef r, __) {
           ref.watch(liveControllerProvider.select((s) => s.notify));
           return Icon(
-            widget.hoverChannel?.isFavorite ?? false
+            widget.getHoverChannel.call()?.isFavorite ?? false
                 ? Icons.favorite
                 : Icons.favorite_border,
-            color: widget.hoverChannel?.isFavorite ?? false
+            color: widget.getHoverChannel.call()?.isFavorite ?? false
                 ? Colors.red
                 : Colors.white,
           );
         },
       ),
-      if (widget.currentChannel) const Icon(Icons.audiotrack_outlined),
-      if (widget.currentChannel) const Icon(Icons.subtitles),
+      const Icon(Icons.audiotrack_outlined),
+      const Icon(Icons.subtitles),
       const Icon(Icons.table_rows_outlined),
-      if (widget.currentChannel) const Icon(Icons.fit_screen),
+      const Icon(Icons.fit_screen),
       const Icon(Icons.settings),
     ];
     return Focus(
@@ -178,8 +173,9 @@ class _ChannelOptionsState extends ConsumerState<ChannelOptions> {
             case LogicalKeyboardKey.space:
               if (event is KeyDownEvent) {
                 if (horizontalController.selectedItem == 1) {
-                  if (widget.hoverChannel != null) {
-                    toggleFavorite(widget.hoverChannel!);
+                  final hoverChannel = widget.getHoverChannel.call();
+                  if (hoverChannel != null) {
+                    toggleFavorite(hoverChannel);
                   }
                   return KeyEventResult.handled;
                 }
