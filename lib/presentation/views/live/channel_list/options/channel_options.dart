@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../../data/models/live_channel.dart';
 import '../../../../../utils/app_utils.dart';
 import '../../../../providers/live_state.dart';
 
@@ -12,11 +11,9 @@ class ChannelOptions extends ConsumerStatefulWidget {
     super.key,
     required this.focused,
     required this.updateViewIndex,
-    required this.getHoverChannel,
   });
   final void Function(int index) updateViewIndex;
   final bool focused;
-  final LiveChannel? Function() getHoverChannel;
   @override
   ConsumerState<ChannelOptions> createState() => _ChannelOptionsState();
 }
@@ -93,14 +90,12 @@ class _ChannelOptionsState extends ConsumerState<ChannelOptions> {
       const Icon(Icons.search),
       Consumer(
         builder: (_, WidgetRef r, __) {
-          ref.watch(liveControllerProvider.select((s) => s.notify));
+          // r.watch(liveControllerProvider.select((s) => s.notify));
+          final isFavorite = r.watch(
+              liveControllerProvider.select((s) => s.hoverChannel?.isFavorite));
           return Icon(
-            widget.getHoverChannel.call()?.isFavorite ?? false
-                ? Icons.favorite
-                : Icons.favorite_border,
-            color: widget.getHoverChannel.call()?.isFavorite ?? false
-                ? Colors.red
-                : Colors.white,
+            isFavorite ?? false ? Icons.favorite : Icons.favorite_border,
+            color: isFavorite ?? false ? Colors.red : Colors.white,
           );
         },
       ),
@@ -173,10 +168,7 @@ class _ChannelOptionsState extends ConsumerState<ChannelOptions> {
             case LogicalKeyboardKey.space:
               if (event is KeyDownEvent) {
                 if (horizontalController.selectedItem == 1) {
-                  final hoverChannel = widget.getHoverChannel.call();
-                  if (hoverChannel != null) {
-                    toggleFavorite(hoverChannel);
-                  }
+                  toggleFavorite();
                   return KeyEventResult.handled;
                 }
                 widget.updateViewIndex(horizontalController.selectedItem);

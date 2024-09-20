@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gradient_borders/gradient_borders.dart';
+import 'package:intl/intl.dart' as intl;
 
 import '../../../../../data/models/category.dart';
 import '../../../../providers/live_state.dart';
@@ -8,10 +9,12 @@ import '../../../../providers/live_state.dart';
 class CategoryTile extends StatelessWidget {
   const CategoryTile({
     super.key,
+    required this.formatter,
     required this.category,
     required this.index,
   });
   final int index;
+  final intl.NumberFormat formatter;
   final Category category;
 
   @override
@@ -19,8 +22,7 @@ class CategoryTile extends StatelessWidget {
     return Consumer(
       builder: (_, WidgetRef ref, child) {
         bool selected = ref.watch(liveControllerProvider
-                .select((s) => s.selectedCategoryIndex)) ==
-            index;
+            .select((s) => s.selectedCategory == category));
         return Container(
           margin: const EdgeInsetsDirectional.only(start: 20),
           decoration: selected
@@ -51,11 +53,14 @@ class CategoryTile extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           const SizedBox(width: 8),
-          Icon(
-            category.isFavorite ? Icons.favorite : Icons.favorite_border,
-            color: category.isFavorite ? Colors.red : null,
+          Text(
+            formatter.format(index + 1),
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-          const SizedBox(width: 16),
+          const SizedBox(width: 8),
           Expanded(
             child: Text(
               category.categoryName,

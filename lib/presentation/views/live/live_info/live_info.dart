@@ -15,6 +15,10 @@ class LiveInfo extends StatefulWidget {
 class _LiveInfoState extends State<LiveInfo> {
   bool categories = false;
   bool visible = false;
+  PageStorageKey channelListScrollKey =
+      const PageStorageKey('channelListScrollKey');
+  PageStorageKey categoryListScrollKey =
+      const PageStorageKey('categoryListScrollKey');
 
   Timer? infoTimer;
   @override
@@ -46,14 +50,16 @@ class _LiveInfoState extends State<LiveInfo> {
           onSelectChannel: () {
             if (categories) return;
             setState(() {
-              categories = false;
+              visible = false;
             });
           },
           onSelectCategory: () {
             setState(() {
-              visible = false;
+              categories = false;
             });
           },
+          channelListScrollKey: channelListScrollKey,
+          categoryListScrollKey: categoryListScrollKey,
         ),
       ),
     );

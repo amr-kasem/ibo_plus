@@ -13,12 +13,14 @@ class ChannelListRemoteControl extends StatefulWidget {
     required this.visible,
     required this.onSelect,
     required this.onClose,
+    required this.scrollKey,
   });
 
   final List<LiveChannel> channelList;
   final bool visible;
   final bool Function(LiveChannel) onSelect;
   final Function() onClose;
+  final PageStorageKey scrollKey;
   @override
   State<ChannelListRemoteControl> createState() =>
       _ChannelListRemoteControlState();
@@ -68,11 +70,17 @@ class _ChannelListRemoteControlState extends State<ChannelListRemoteControl> {
               break;
             case LogicalKeyboardKey.arrowLeft:
               if (!fn.hasPrimaryFocus) {
+                setState(() {
+                  showSettings = false;
+                });
                 fn.requestFocus();
                 return KeyEventResult.handled;
               }
             case LogicalKeyboardKey.goBack:
               if (!fn.hasPrimaryFocus) {
+                setState(() {
+                  showSettings = false;
+                });
                 fn.requestFocus();
                 return KeyEventResult.handled;
               } else {
@@ -131,6 +139,7 @@ class _ChannelListRemoteControlState extends State<ChannelListRemoteControl> {
         verticalScrollController: verticalScrollController,
         channelList: widget.channelList,
         showSettings: showSettings,
+        scrollKey: widget.scrollKey,
       ),
     );
   }
@@ -141,9 +150,8 @@ class _ChannelListRemoteControlState extends State<ChannelListRemoteControl> {
     visibilityTimer = Timer(
       const Duration(seconds: 2),
       () {
-        if (widget.onSelect(
-          widget.channelList[verticalScrollController.selectedItem],
-        )) {
+        if (!widget.onSelect(
+            widget.channelList[verticalScrollController.selectedItem])) {
           widget.onClose();
         } else {
           visibilityTimer = Timer(

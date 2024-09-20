@@ -22,6 +22,7 @@ mixin _$LiveState {
   String get searchCategories => throw _privateConstructorUsedError;
   LiveChannel? get selectedChannel => throw _privateConstructorUsedError;
   Category? get selectedCategory => throw _privateConstructorUsedError;
+  LiveChannel? get hoverChannel => throw _privateConstructorUsedError;
   Category? get hoverCategory => throw _privateConstructorUsedError;
   bool get isLoading => throw _privateConstructorUsedError;
   Object? get error => throw _privateConstructorUsedError;
@@ -45,6 +46,7 @@ abstract class $LiveStateCopyWith<$Res> {
       String searchCategories,
       LiveChannel? selectedChannel,
       Category? selectedCategory,
+      LiveChannel? hoverChannel,
       Category? hoverCategory,
       bool isLoading,
       Object? error,
@@ -71,6 +73,7 @@ class _$LiveStateCopyWithImpl<$Res, $Val extends LiveState>
     Object? searchCategories = null,
     Object? selectedChannel = freezed,
     Object? selectedCategory = freezed,
+    Object? hoverChannel = freezed,
     Object? hoverCategory = freezed,
     Object? isLoading = null,
     Object? error = freezed,
@@ -102,6 +105,10 @@ class _$LiveStateCopyWithImpl<$Res, $Val extends LiveState>
           ? _value.selectedCategory
           : selectedCategory // ignore: cast_nullable_to_non_nullable
               as Category?,
+      hoverChannel: freezed == hoverChannel
+          ? _value.hoverChannel
+          : hoverChannel // ignore: cast_nullable_to_non_nullable
+              as LiveChannel?,
       hoverCategory: freezed == hoverCategory
           ? _value.hoverCategory
           : hoverCategory // ignore: cast_nullable_to_non_nullable
@@ -138,6 +145,7 @@ abstract class _$$LiveStateImplCopyWith<$Res>
       String searchCategories,
       LiveChannel? selectedChannel,
       Category? selectedCategory,
+      LiveChannel? hoverChannel,
       Category? hoverCategory,
       bool isLoading,
       Object? error,
@@ -162,6 +170,7 @@ class __$$LiveStateImplCopyWithImpl<$Res>
     Object? searchCategories = null,
     Object? selectedChannel = freezed,
     Object? selectedCategory = freezed,
+    Object? hoverChannel = freezed,
     Object? hoverCategory = freezed,
     Object? isLoading = null,
     Object? error = freezed,
@@ -193,6 +202,10 @@ class __$$LiveStateImplCopyWithImpl<$Res>
           ? _value.selectedCategory
           : selectedCategory // ignore: cast_nullable_to_non_nullable
               as Category?,
+      hoverChannel: freezed == hoverChannel
+          ? _value.hoverChannel
+          : hoverChannel // ignore: cast_nullable_to_non_nullable
+              as LiveChannel?,
       hoverCategory: freezed == hoverCategory
           ? _value.hoverCategory
           : hoverCategory // ignore: cast_nullable_to_non_nullable
@@ -224,6 +237,7 @@ class _$LiveStateImpl extends _LiveState {
       this.searchCategories = '',
       this.selectedChannel,
       this.selectedCategory,
+      this.hoverChannel,
       this.hoverCategory,
       this.isLoading = false,
       this.error,
@@ -262,6 +276,8 @@ class _$LiveStateImpl extends _LiveState {
   @override
   final Category? selectedCategory;
   @override
+  final LiveChannel? hoverChannel;
+  @override
   final Category? hoverCategory;
   @override
   @JsonKey()
@@ -277,7 +293,7 @@ class _$LiveStateImpl extends _LiveState {
 
   @override
   String toString() {
-    return 'LiveState(allChannels: $allChannels, searchChannels: $searchChannels, allCategoris: $allCategoris, searchCategories: $searchCategories, selectedChannel: $selectedChannel, selectedCategory: $selectedCategory, hoverCategory: $hoverCategory, isLoading: $isLoading, error: $error, notify: $notify, onlyFavoriteCategories: $onlyFavoriteCategories)';
+    return 'LiveState(allChannels: $allChannels, searchChannels: $searchChannels, allCategoris: $allCategoris, searchCategories: $searchCategories, selectedChannel: $selectedChannel, selectedCategory: $selectedCategory, hoverChannel: $hoverChannel, hoverCategory: $hoverCategory, isLoading: $isLoading, error: $error, notify: $notify, onlyFavoriteCategories: $onlyFavoriteCategories)';
   }
 
   @override
@@ -297,6 +313,8 @@ class _$LiveStateImpl extends _LiveState {
                 other.selectedChannel == selectedChannel) &&
             (identical(other.selectedCategory, selectedCategory) ||
                 other.selectedCategory == selectedCategory) &&
+            (identical(other.hoverChannel, hoverChannel) ||
+                other.hoverChannel == hoverChannel) &&
             (identical(other.hoverCategory, hoverCategory) ||
                 other.hoverCategory == hoverCategory) &&
             (identical(other.isLoading, isLoading) ||
@@ -316,6 +334,7 @@ class _$LiveStateImpl extends _LiveState {
       searchCategories,
       selectedChannel,
       selectedCategory,
+      hoverChannel,
       hoverCategory,
       isLoading,
       const DeepCollectionEquality().hash(error),
@@ -337,6 +356,7 @@ abstract class _LiveState extends LiveState {
       final String searchCategories,
       final LiveChannel? selectedChannel,
       final Category? selectedCategory,
+      final LiveChannel? hoverChannel,
       final Category? hoverCategory,
       final bool isLoading,
       final Object? error,
@@ -356,6 +376,8 @@ abstract class _LiveState extends LiveState {
   LiveChannel? get selectedChannel;
   @override
   Category? get selectedCategory;
+  @override
+  LiveChannel? get hoverChannel;
   @override
   Category? get hoverCategory;
   @override

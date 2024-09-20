@@ -10,12 +10,16 @@ class InfoWidget extends StatelessWidget {
     required this.visible,
     required this.onSelectChannel,
     required this.onSelectCategory,
+    required this.channelListScrollKey,
+    required this.categoryListScrollKey,
   });
 
   final bool categories;
   final bool visible;
   final VoidCallback onSelectChannel;
   final VoidCallback onSelectCategory;
+  final PageStorageKey channelListScrollKey;
+  final PageStorageKey categoryListScrollKey;
 
   @override
   Widget build(BuildContext context) {
@@ -41,10 +45,12 @@ class InfoWidget extends StatelessWidget {
             ? CategoryList(
                 visible: visible,
                 onSelect: onSelectCategory,
+                scrollKey: categoryListScrollKey,
               )
             : ChannelList(
                 visible: visible,
                 onSelect: onSelectChannel,
+                scrollKey: channelListScrollKey,
               ),
       ),
     );

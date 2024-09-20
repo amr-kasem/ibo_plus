@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:collection/collection.dart';
 import 'package:fading_edge_scrollview/fading_edge_scrollview.dart';
 import 'package:flutter/material.dart';
@@ -11,25 +9,40 @@ import '../../../../providers/live_state.dart';
 import '../options/channel_options_parent.dart';
 import 'channel_tile.dart';
 
-class ChannelListWidget extends ConsumerWidget {
+class ChannelListWidget extends ConsumerStatefulWidget {
   const ChannelListWidget({
     super.key,
     required this.verticalScrollController,
     required this.channelList,
     required this.showSettings,
+    required this.scrollKey,
   });
 
   final FixedExtentScrollController verticalScrollController;
   final List<LiveChannel> channelList;
   final bool showSettings;
+  final PageStorageKey scrollKey;
+
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    intl.NumberFormat formatter = intl.NumberFormat(
-        List.filled(channelList.length.toString().length, '0').join());
+  ConsumerState<ChannelListWidget> createState() => _ChannelListWidgetState();
+}
+
+class _ChannelListWidgetState extends ConsumerState<ChannelListWidget> {
+  late intl.NumberFormat formatter;
+  bool initialized = false;
+  @override
+  void initState() {
+    super.initState();
+    formatter = intl.NumberFormat(
+        List.filled(widget.channelList.length.toString().length, '0').join());
+  }
+
+  @override
+  Widget build(BuildContext context) {
     ref.listen(liveControllerProvider.select((s) => s.channels), (a, b) {
       final same = const ListEquality().equals(a, b);
-      log('channel list changed $same');
-      if (!same) {
+      if (!same || !initialized) {
+        initialized = true;
         int i = 0;
         final currentChannel = ref
             .read(liveControllerProvider.notifier)
@@ -41,7 +54,7 @@ class ChannelListWidget extends ConsumerWidget {
             i = 0;
           }
         }
-        verticalScrollController.jumpToItem(i);
+        widget.verticalScrollController.jumpToItem(i);
       }
     });
     return Row(
@@ -51,61 +64,35 @@ class ChannelListWidget extends ConsumerWidget {
             gradientFractionOnEnd: 0.5,
             gradientFractionOnStart: 0.5,
             child: ListWheelScrollView.useDelegate(
-              controller: verticalScrollController,
+              key: widget.scrollKey,
+              controller: widget.verticalScrollController,
               diameterRatio: 8,
               squeeze: 0.8,
               offAxisFraction: 1.5,
               itemExtent: 40,
               onSelectedItemChanged: (value) {
-                // setState(() {});
-
-                // late final catId = liveNotifier
-                //     .stateSnapshot.selectedCategory?.categoryId;
-                // if (int.tryParse(channelList[currentChannelIndex]
-                //                 .categoryId ??
-                //             '') ==
-                //         catId &&
-                //     fn.hasFocus) {
-                //   if (!fn.hasPrimaryFocus) {
-                //     liveNotifier.selectChannel(channelList[value]);
-                //   } else {
-                //     visibilityTimer?.cancel();
-                //     visibilityTimer = Timer(
-                //       const Duration(seconds: 4),
-                //       () {
-                //         liveNotifier
-                //             .selectChannel(channelList[value]);
-                //         visibilityTimer = Timer(
-                //           const Duration(seconds: 4),
-                //           () {
-                //             widget.onSelect();
-                //           },
-                //         );
-                //       },
-                //     );
-                //   }
-                // }
+                ref
+                    .read(liveControllerProvider.notifier)
+                    .selectHoverChannel(widget.channelList[value]);
               },
               childDelegate: ListWheelChildBuilderDelegate(
                 builder: (context, index) {
                   return ChannelTile(
                     formatter: formatter,
-                    channel: channelList[index],
+                    channel: widget.channelList[index],
                     index: index,
                   );
                 },
-                childCount: channelList.length,
+                childCount: widget.channelList.length,
               ),
             ),
           ),
         ),
-        if (showSettings)
-          Expanded(
-            child: ChannelOptionsParent(
-              getHoverChannel: () =>
-                  channelList[verticalScrollController.selectedItem],
-            ),
-          ),
+        Expanded(
+          child: widget.showSettings
+              ? const ChannelOptionsParent()
+              : const SizedBox.shrink(),
+        ),
       ],
     );
   }

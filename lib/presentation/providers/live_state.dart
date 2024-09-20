@@ -20,6 +20,7 @@ class LiveState with _$LiveState {
     @Default('') String searchCategories,
     LiveChannel? selectedChannel,
     Category? selectedCategory,
+    LiveChannel? hoverChannel,
     Category? hoverCategory,
     @Default(false) bool isLoading,
     Object? error,
@@ -121,6 +122,10 @@ class LiveController extends Notifier<LiveState> {
     state = state.copyWith(hoverCategory: category);
   }
 
+  void selectHoverChannel(LiveChannel channel) {
+    state = state.copyWith(hoverChannel: channel);
+  }
+
   int resetCategry() {
     state = state.copyWith(hoverCategory: state.selectedCategory);
     return state.selectedCategory == null
@@ -160,11 +165,13 @@ class LiveController extends Notifier<LiveState> {
     }
   }
 
-  void toggleFavoriteChannel(LiveChannel channel) {
-    LiveServices.toggleFavoriteChannel(channel);
-    state = state.copyWith(
-      notify: !state.notify,
-    );
+  void toggleFavoriteChannel() {
+    if (state.hoverChannel != null) {
+      LiveServices.toggleFavoriteChannel(state.hoverChannel!);
+      state = state.copyWith(
+        notify: !state.notify,
+      );
+    }
   }
 
   void toggleShowOnlyFavoriteCategories() {

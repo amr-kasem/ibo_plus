@@ -11,10 +11,12 @@ class ChannelList extends ConsumerWidget {
   const ChannelList({
     required this.visible,
     required this.onSelect,
+    required this.scrollKey,
     super.key,
   });
   final bool visible;
   final VoidCallback onSelect;
+  final PageStorageKey scrollKey;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -39,6 +41,7 @@ class ChannelList extends ConsumerWidget {
                 onClose: () {
                   onSelect();
                 },
+                scrollKey: scrollKey,
               ),
             ],
           ),

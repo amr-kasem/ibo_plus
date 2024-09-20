@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../../../../data/models/live_channel.dart';
 import 'audio_list.dart';
 import 'channel_options.dart';
 import 'channel_settings.dart';
@@ -13,9 +12,7 @@ import 'subtitles_list.dart';
 class ChannelOptionsParent extends StatefulWidget {
   const ChannelOptionsParent({
     super.key,
-    required this.getHoverChannel,
   });
-  final LiveChannel? Function() getHoverChannel;
   @override
   State<ChannelOptionsParent> createState() => _ChannelOptionsState();
 }
@@ -38,7 +35,6 @@ class _ChannelOptionsState extends State<ChannelOptionsParent> {
       ChannelOptions(
         focused: true,
         updateViewIndex: updateState,
-        getHoverChannel: widget.getHoverChannel,
       ),
       const AudioList(),
       const SubtitlesList(),

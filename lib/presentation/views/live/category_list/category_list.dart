@@ -11,11 +11,12 @@ class CategoryList extends ConsumerWidget {
   const CategoryList({
     required this.visible,
     required this.onSelect,
+    required this.scrollKey,
     super.key,
   });
   final bool visible;
   final VoidCallback onSelect;
-
+  final PageStorageKey scrollKey;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     List<Category> categoryList =
@@ -29,6 +30,7 @@ class CategoryList extends ConsumerWidget {
             children: [
               ListHighlighter(highlighted: categoryList.isNotEmpty),
               CategoryListRemoteControl(
+                scrollKey: scrollKey,
                 categoryList: categoryList,
                 visible: visible,
                 onSelect: (category) {

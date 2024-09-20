@@ -9,12 +9,14 @@ import 'category_list_widget.dart';
 class CategoryListRemoteControl extends StatefulWidget {
   const CategoryListRemoteControl({
     super.key,
+    required this.scrollKey,
     required this.categoryList,
     required this.visible,
     required this.onSelect,
   });
 
   final List<Category> categoryList;
+  final PageStorageKey scrollKey;
   final bool visible;
   final void Function(Category) onSelect;
 
@@ -87,6 +89,8 @@ class _CategoryListRemoteControlState extends State<CategoryListRemoteControl> {
                     wantToSelect = true;
                   }
                 }
+              } else {
+                wantToSelect = true;
               }
               break;
             default:
@@ -106,6 +110,7 @@ class _CategoryListRemoteControlState extends State<CategoryListRemoteControl> {
         return KeyEventResult.ignored;
       },
       child: CategoryListWidget(
+        scrollKey: widget.scrollKey,
         verticalScrollController: verticalScrollController,
         categoryList: widget.categoryList,
       ),
