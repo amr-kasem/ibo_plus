@@ -39,7 +39,6 @@ class InfoWidget extends StatelessWidget {
         duration: Durations.medium1,
         child: categories
             ? CategoryList(
-                showSettings: categories,
                 visible: visible,
                 onSelect: onSelectCategory,
               )

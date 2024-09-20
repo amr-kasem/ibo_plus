@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:collection/collection.dart';
 import 'package:fading_edge_scrollview/fading_edge_scrollview.dart';
 import 'package:flutter/material.dart';
@@ -14,17 +16,19 @@ class ChannelListWidget extends ConsumerWidget {
     super.key,
     required this.verticalScrollController,
     required this.channelList,
+    required this.showSettings,
   });
 
   final FixedExtentScrollController verticalScrollController;
   final List<LiveChannel> channelList;
-
+  final bool showSettings;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     intl.NumberFormat formatter = intl.NumberFormat(
         List.filled(channelList.length.toString().length, '0').join());
     ref.listen(liveControllerProvider.select((s) => s.channels), (a, b) {
       final same = const ListEquality().equals(a, b);
+      log('channel list changed $same');
       if (!same) {
         int i = 0;
         final currentChannel = ref
@@ -37,9 +41,7 @@ class ChannelListWidget extends ConsumerWidget {
             i = 0;
           }
         }
-        if (verticalScrollController.hasClients) {
-          verticalScrollController.jumpToItem(i);
-        }
+        verticalScrollController.jumpToItem(i);
       }
     });
     return Row(
@@ -97,12 +99,13 @@ class ChannelListWidget extends ConsumerWidget {
             ),
           ),
         ),
-        Expanded(
-          child: ChannelOptionsParent(
-            getHoverChannel: () =>
-                channelList[verticalScrollController.selectedItem],
+        if (showSettings)
+          Expanded(
+            child: ChannelOptionsParent(
+              getHoverChannel: () =>
+                  channelList[verticalScrollController.selectedItem],
+            ),
           ),
-        ),
       ],
     );
   }

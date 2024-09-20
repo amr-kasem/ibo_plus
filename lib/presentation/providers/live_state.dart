@@ -102,9 +102,10 @@ class LiveController extends Notifier<LiveState> {
     state = state.copyWith(searchCategories: search);
   }
 
-  void selectChannel(LiveChannel channel) {
+  bool selectChannel(LiveChannel channel) {
     final playlist = ref
         .read(m3UPlaylistControllerProvider.select((s) => s.selectedPlaylist));
+    if (state.selectedChannel == channel) return false;
     // playerNotifier.stop();
     _playerNotifier.openMedia(
         "${playlist?.url}${playlist?.username}/${playlist?.password}/${channel.streamId}");
@@ -113,6 +114,7 @@ class LiveController extends Notifier<LiveState> {
     state = state.copyWith(selectedChannel: channel);
     LiveServices.changeCurrentChannel(state.selectedChannel!);
     commitSelectedCategory();
+    return true;
   }
 
   void selectCategory(Category category) {

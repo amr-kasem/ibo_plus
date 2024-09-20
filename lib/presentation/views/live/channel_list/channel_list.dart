@@ -30,6 +30,15 @@ class ChannelList extends ConsumerWidget {
               ListHighlighter(highlighted: channelList.isNotEmpty),
               ChannelListRemoteControl(
                 channelList: channelList,
+                visible: visible,
+                onSelect: (channel) {
+                  return ref
+                      .read(liveControllerProvider.notifier)
+                      .selectChannel(channel);
+                },
+                onClose: () {
+                  onSelect();
+                },
               ),
             ],
           ),
