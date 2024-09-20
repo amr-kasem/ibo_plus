@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../data/models/category.dart';
+import '../../../providers/app_state.dart';
 import '../../../providers/live_state.dart';
 import '../../../widgets/list_highlighter.dart';
 import 'category_list_header.dart';
@@ -21,6 +22,7 @@ class CategoryList extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     List<Category> categoryList =
         ref.watch(liveControllerProvider.select((s) => s.categories));
+    bool highlight = !ref.watch(AppState.traversalBar);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -28,7 +30,8 @@ class CategoryList extends ConsumerWidget {
         Expanded(
           child: Stack(
             children: [
-              ListHighlighter(highlighted: categoryList.isNotEmpty),
+              ListHighlighter(
+                  highlighted: categoryList.isNotEmpty && highlight),
               CategoryListRemoteControl(
                 scrollKey: scrollKey,
                 categoryList: categoryList,

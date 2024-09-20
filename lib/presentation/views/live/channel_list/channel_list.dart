@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../data/models/live_channel.dart';
+import '../../../providers/app_state.dart';
 import '../../../providers/live_state.dart';
 import '../../../widgets/list_highlighter.dart';
 import 'channel_list_header.dart';
@@ -22,6 +23,7 @@ class ChannelList extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     List<LiveChannel> channelList =
         ref.watch(liveControllerProvider.select((s) => s.channels));
+    bool highlight = !ref.watch(AppState.traversalBar);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -29,7 +31,7 @@ class ChannelList extends ConsumerWidget {
         Expanded(
           child: Stack(
             children: [
-              ListHighlighter(highlighted: channelList.isNotEmpty),
+              ListHighlighter(highlighted: channelList.isNotEmpty && highlight),
               ChannelListRemoteControl(
                 channelList: channelList,
                 visible: visible,

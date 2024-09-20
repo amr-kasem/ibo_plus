@@ -5,6 +5,7 @@ import 'package:gradient_borders/gradient_borders.dart';
 import 'package:intl/intl.dart' as intl;
 
 import '../../../../../data/models/live_channel.dart';
+import '../../../../providers/app_state.dart';
 import '../../../../providers/live_state.dart';
 
 class ChannelTile extends StatelessWidget {
@@ -25,16 +26,17 @@ class ChannelTile extends StatelessWidget {
         bool selected = ref.watch(
                 liveControllerProvider.select((s) => s.selectedChannelIndex)) ==
             index;
+        bool highlight = !ref.watch(AppState.traversalBar);
         return Container(
           margin: const EdgeInsetsDirectional.only(start: 20),
-          decoration: selected
+          decoration: selected && highlight
               ? BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
                       Colors.orange.withOpacity(0.5),
                       Colors.transparent,
                     ],
-                    stops: [0, selected ? 0.6 : 0.35],
+                    stops: const [0, 0.6],
                   ),
                   border: const GradientBoxBorder(
                     width: 3,

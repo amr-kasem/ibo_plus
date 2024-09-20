@@ -12,7 +12,7 @@ class InfoRemoteControl extends ConsumerStatefulWidget {
     required this.setInfoMode,
   });
 
-  final AnimatedOpacity infoWidget;
+  final Widget infoWidget;
   final bool Function(bool visible) setInfoVisibility;
   final bool Function(bool categories) setInfoMode;
 
