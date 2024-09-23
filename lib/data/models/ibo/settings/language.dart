@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:isar/isar.dart';
 
-import '../../utils/app_utils.dart';
+import '../../../../utils/app_utils.dart';
 
 part 'language.g.dart';
 

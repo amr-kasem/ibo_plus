@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../../../../data/models/live_channel.dart';
+import '../../../../../data/models/ibo/live/live_channel.dart';
 import 'list_widget.dart';
 
 class ChannelListRemoteControl extends StatefulWidget {

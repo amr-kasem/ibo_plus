@@ -17,8 +17,10 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$LiveState {
   List<LiveChannel> get allChannels => throw _privateConstructorUsedError;
+  List<LiveChannel> get channels => throw _privateConstructorUsedError;
   String get searchChannels => throw _privateConstructorUsedError;
   List<Category> get allCategoris => throw _privateConstructorUsedError;
+  List<Category> get categories => throw _privateConstructorUsedError;
   String get searchCategories => throw _privateConstructorUsedError;
   LiveChannel? get selectedChannel => throw _privateConstructorUsedError;
   Category? get selectedCategory => throw _privateConstructorUsedError;
@@ -41,8 +43,10 @@ abstract class $LiveStateCopyWith<$Res> {
   @useResult
   $Res call(
       {List<LiveChannel> allChannels,
+      List<LiveChannel> channels,
       String searchChannels,
       List<Category> allCategoris,
+      List<Category> categories,
       String searchCategories,
       LiveChannel? selectedChannel,
       Category? selectedCategory,
@@ -68,8 +72,10 @@ class _$LiveStateCopyWithImpl<$Res, $Val extends LiveState>
   @override
   $Res call({
     Object? allChannels = null,
+    Object? channels = null,
     Object? searchChannels = null,
     Object? allCategoris = null,
+    Object? categories = null,
     Object? searchCategories = null,
     Object? selectedChannel = freezed,
     Object? selectedCategory = freezed,
@@ -85,6 +91,10 @@ class _$LiveStateCopyWithImpl<$Res, $Val extends LiveState>
           ? _value.allChannels
           : allChannels // ignore: cast_nullable_to_non_nullable
               as List<LiveChannel>,
+      channels: null == channels
+          ? _value.channels
+          : channels // ignore: cast_nullable_to_non_nullable
+              as List<LiveChannel>,
       searchChannels: null == searchChannels
           ? _value.searchChannels
           : searchChannels // ignore: cast_nullable_to_non_nullable
@@ -92,6 +102,10 @@ class _$LiveStateCopyWithImpl<$Res, $Val extends LiveState>
       allCategoris: null == allCategoris
           ? _value.allCategoris
           : allCategoris // ignore: cast_nullable_to_non_nullable
+              as List<Category>,
+      categories: null == categories
+          ? _value.categories
+          : categories // ignore: cast_nullable_to_non_nullable
               as List<Category>,
       searchCategories: null == searchCategories
           ? _value.searchCategories
@@ -140,8 +154,10 @@ abstract class _$$LiveStateImplCopyWith<$Res>
   @useResult
   $Res call(
       {List<LiveChannel> allChannels,
+      List<LiveChannel> channels,
       String searchChannels,
       List<Category> allCategoris,
+      List<Category> categories,
       String searchCategories,
       LiveChannel? selectedChannel,
       Category? selectedCategory,
@@ -165,8 +181,10 @@ class __$$LiveStateImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? allChannels = null,
+    Object? channels = null,
     Object? searchChannels = null,
     Object? allCategoris = null,
+    Object? categories = null,
     Object? searchCategories = null,
     Object? selectedChannel = freezed,
     Object? selectedCategory = freezed,
@@ -182,6 +200,10 @@ class __$$LiveStateImplCopyWithImpl<$Res>
           ? _value._allChannels
           : allChannels // ignore: cast_nullable_to_non_nullable
               as List<LiveChannel>,
+      channels: null == channels
+          ? _value._channels
+          : channels // ignore: cast_nullable_to_non_nullable
+              as List<LiveChannel>,
       searchChannels: null == searchChannels
           ? _value.searchChannels
           : searchChannels // ignore: cast_nullable_to_non_nullable
@@ -189,6 +211,10 @@ class __$$LiveStateImplCopyWithImpl<$Res>
       allCategoris: null == allCategoris
           ? _value._allCategoris
           : allCategoris // ignore: cast_nullable_to_non_nullable
+              as List<Category>,
+      categories: null == categories
+          ? _value._categories
+          : categories // ignore: cast_nullable_to_non_nullable
               as List<Category>,
       searchCategories: null == searchCategories
           ? _value.searchCategories
@@ -232,8 +258,10 @@ class __$$LiveStateImplCopyWithImpl<$Res>
 class _$LiveStateImpl extends _LiveState {
   const _$LiveStateImpl(
       {final List<LiveChannel> allChannels = const [],
+      final List<LiveChannel> channels = const [],
       this.searchChannels = '',
       final List<Category> allCategoris = const [],
+      final List<Category> categories = const [],
       this.searchCategories = '',
       this.selectedChannel,
       this.selectedCategory,
@@ -244,7 +272,9 @@ class _$LiveStateImpl extends _LiveState {
       this.notify = false,
       this.onlyFavoriteCategories = false})
       : _allChannels = allChannels,
+        _channels = channels,
         _allCategoris = allCategoris,
+        _categories = categories,
         super._();
 
   final List<LiveChannel> _allChannels;
@@ -254,6 +284,15 @@ class _$LiveStateImpl extends _LiveState {
     if (_allChannels is EqualUnmodifiableListView) return _allChannels;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_allChannels);
+  }
+
+  final List<LiveChannel> _channels;
+  @override
+  @JsonKey()
+  List<LiveChannel> get channels {
+    if (_channels is EqualUnmodifiableListView) return _channels;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_channels);
   }
 
   @override
@@ -266,6 +305,15 @@ class _$LiveStateImpl extends _LiveState {
     if (_allCategoris is EqualUnmodifiableListView) return _allCategoris;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_allCategoris);
+  }
+
+  final List<Category> _categories;
+  @override
+  @JsonKey()
+  List<Category> get categories {
+    if (_categories is EqualUnmodifiableListView) return _categories;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_categories);
   }
 
   @override
@@ -293,7 +341,7 @@ class _$LiveStateImpl extends _LiveState {
 
   @override
   String toString() {
-    return 'LiveState(allChannels: $allChannels, searchChannels: $searchChannels, allCategoris: $allCategoris, searchCategories: $searchCategories, selectedChannel: $selectedChannel, selectedCategory: $selectedCategory, hoverChannel: $hoverChannel, hoverCategory: $hoverCategory, isLoading: $isLoading, error: $error, notify: $notify, onlyFavoriteCategories: $onlyFavoriteCategories)';
+    return 'LiveState(allChannels: $allChannels, channels: $channels, searchChannels: $searchChannels, allCategoris: $allCategoris, categories: $categories, searchCategories: $searchCategories, selectedChannel: $selectedChannel, selectedCategory: $selectedCategory, hoverChannel: $hoverChannel, hoverCategory: $hoverCategory, isLoading: $isLoading, error: $error, notify: $notify, onlyFavoriteCategories: $onlyFavoriteCategories)';
   }
 
   @override
@@ -303,10 +351,13 @@ class _$LiveStateImpl extends _LiveState {
             other is _$LiveStateImpl &&
             const DeepCollectionEquality()
                 .equals(other._allChannels, _allChannels) &&
+            const DeepCollectionEquality().equals(other._channels, _channels) &&
             (identical(other.searchChannels, searchChannels) ||
                 other.searchChannels == searchChannels) &&
             const DeepCollectionEquality()
                 .equals(other._allCategoris, _allCategoris) &&
+            const DeepCollectionEquality()
+                .equals(other._categories, _categories) &&
             (identical(other.searchCategories, searchCategories) ||
                 other.searchCategories == searchCategories) &&
             (identical(other.selectedChannel, selectedChannel) ||
@@ -329,8 +380,10 @@ class _$LiveStateImpl extends _LiveState {
   int get hashCode => Object.hash(
       runtimeType,
       const DeepCollectionEquality().hash(_allChannels),
+      const DeepCollectionEquality().hash(_channels),
       searchChannels,
       const DeepCollectionEquality().hash(_allCategoris),
+      const DeepCollectionEquality().hash(_categories),
       searchCategories,
       selectedChannel,
       selectedCategory,
@@ -351,8 +404,10 @@ class _$LiveStateImpl extends _LiveState {
 abstract class _LiveState extends LiveState {
   const factory _LiveState(
       {final List<LiveChannel> allChannels,
+      final List<LiveChannel> channels,
       final String searchChannels,
       final List<Category> allCategoris,
+      final List<Category> categories,
       final String searchCategories,
       final LiveChannel? selectedChannel,
       final Category? selectedCategory,
@@ -367,9 +422,13 @@ abstract class _LiveState extends LiveState {
   @override
   List<LiveChannel> get allChannels;
   @override
+  List<LiveChannel> get channels;
+  @override
   String get searchChannels;
   @override
   List<Category> get allCategoris;
+  @override
+  List<Category> get categories;
   @override
   String get searchCategories;
   @override

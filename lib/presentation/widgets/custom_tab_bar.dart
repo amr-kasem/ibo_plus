@@ -82,10 +82,10 @@ class _CustomTabBarState extends ConsumerState<CustomTabBar> {
       renderBox = context.findRenderObject() as RenderBox;
     });
     final index = ref.watch(AppState.homeIndex);
-    final traversalBar = ref.watch(AppState.traversalBar);
+    final hideBar = ref.watch(AppState.hideBar);
 
     return AnimatedOpacity(
-      opacity: traversalBar ? 1 : 0,
+      opacity: hideBar ? 0 : 1,
       duration: Durations.medium1,
       child: Container(
         decoration: const BoxDecoration(
@@ -102,8 +102,9 @@ class _CustomTabBarState extends ConsumerState<CustomTabBar> {
         ),
         child: Focus(
           focusNode: AppState.navBar,
-          skipTraversal: !traversalBar,
+          canRequestFocus: !hideBar,
           autofocus: true,
+          skipTraversal: hideBar,
           onFocusChange: (v) {
             setState(() {
               focused = v;

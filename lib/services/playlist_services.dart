@@ -1,4 +1,4 @@
-import '../data/models/m3u_playlist.dart';
+import '../data/models/ibo/playlist/m3u_playlist.dart';
 import '../data/repositories/playlist_repository.dart';
 import '../data/repositories/user_repository.dart';
 import '../presentation/providers/playlist_state.dart';

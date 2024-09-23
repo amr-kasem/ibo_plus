@@ -1,13 +1,14 @@
 import 'dart:developer';
 
-import 'package:ibo_plus/data/models/movie.dart';
+import 'package:ibo_plus/data/models/ibo/movies/movie.dart';
 
 import '../../utils/category_type.dart';
 import '../data_sources/isar_db.dart';
 import '../data_sources/playlist_remote_datasource.dart';
-import '../models/category.dart';
-import '../models/data_event.dart';
-import '../models/live_channel.dart';
+import '../data_sources/tmdb_datasource.dart';
+import '../models/ibo/category/category.dart';
+import '../models/ibo/settings/data_event.dart';
+import '../models/ibo/live/live_channel.dart';
 import 'user_repository.dart';
 
 class PlaylistRepository {
@@ -39,6 +40,24 @@ class PlaylistRepository {
         m3uPlaylist: (await UserRepository.selectedPlaylist)!,
       );
       IsarDB.instance.storeMovies(movies);
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
+  static Future<void> refreshMovieDetails(Movie movie) async {
+    try {
+      final movieDetails = await PlaylistRemoteDatasource.getMovieDetails(
+        m3uPlaylist: (await UserRepository.selectedPlaylist)!,
+        id: movie.streamId,
+      );
+      final tmdbId = int.tryParse('${movieDetails['info']?['tmdb_id']}');
+      if (tmdbId != null) {
+        final tmdbData = await TMDBDatasource.getMovieInfo(tmdbId);
+        log(tmdbData.toString());
+        // TODO: store movie details in movie object
+        // IsarDB.instance.storeMovieDetails(movieDetails);
+      }
     } catch (e) {
       log(e.toString());
     }
@@ -119,5 +138,9 @@ class PlaylistRepository {
 
   static void updateCategory(Category category) async {
     IsarDB.instance.updateCategory(category);
+  }
+
+  static void updateMovie(Movie movie) async {
+    IsarDB.instance.updateMovie(movie);
   }
 }

@@ -1,5 +1,5 @@
-import '../data/models/category.dart';
-import '../data/models/live_channel.dart';
+import '../data/models/ibo/category/category.dart';
+import '../data/models/ibo/live/live_channel.dart';
 import '../data/repositories/playlist_repository.dart';
 import '../data/repositories/user_repository.dart';
 import '../utils/category_type.dart';

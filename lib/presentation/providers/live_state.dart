@@ -1,10 +1,11 @@
 import 'dart:developer';
 
+import 'package:collection/collection.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../data/models/category.dart';
-import '../../data/models/live_channel.dart';
+import '../../data/models/ibo/category/category.dart';
+import '../../data/models/ibo/live/live_channel.dart';
 import '../../services/live_services.dart';
 import 'player_state.dart';
 import 'playlist_state.dart';
@@ -15,8 +16,10 @@ part 'live_state.freezed.dart';
 class LiveState with _$LiveState {
   const factory LiveState({
     @Default([]) List<LiveChannel> allChannels,
+    @Default([]) List<LiveChannel> channels,
     @Default('') String searchChannels,
     @Default([]) List<Category> allCategoris,
+    @Default([]) List<Category> categories,
     @Default('') String searchCategories,
     LiveChannel? selectedChannel,
     Category? selectedCategory,
@@ -31,22 +34,6 @@ class LiveState with _$LiveState {
   const LiveState._(); // Added for custom getters
 
   // Custom Getters
-  List<LiveChannel> get channels => allChannels.where((c) {
-        return (int.tryParse(c.categoryId ?? '') == hoverCategory?.categoryId ||
-                hoverCategory?.categoryId == -2 ||
-                (hoverCategory?.categoryId == -1 && c.isFavorite)) &&
-            c.name.toLowerCase().contains(searchChannels.toLowerCase());
-      }).toList();
-
-  List<Category> get categories => allCategoris
-      .where(
-        (c) =>
-            c.categoryName.toLowerCase().contains(
-                  searchCategories.toLowerCase(),
-                ) &&
-            (!onlyFavoriteCategories || c.isFavorite),
-      )
-      .toList();
 
   int get selectedChannelIndex =>
       selectedChannel == null ? 0 : channels.indexOf(selectedChannel!);
@@ -58,6 +45,7 @@ class LiveState with _$LiveState {
 class LiveController extends Notifier<LiveState> {
   late final _playerNotifier = ref.read(playerControllerProvider.notifier);
   LiveState get stateSnapshot => state;
+  final equality = const ListEquality();
   @override
   LiveState build() => const LiveState(
         isLoading: true,
@@ -86,12 +74,43 @@ class LiveController extends Notifier<LiveState> {
         isLoading: false, // Loading finished
         hoverCategory: selectedCategory ?? categories.first,
       );
+      applyChannelsFilter();
+      applyCategoriesFilter();
     } catch (e) {
       // Handle errors by updating the error state
       state = state.copyWith(
         isLoading: false, // Stop loading
         error: e, // Store the error
       );
+    }
+  }
+
+  void applyChannelsFilter() {
+    final newChannels = state.allChannels
+        .where((c) =>
+            (int.tryParse(c.categoryId ?? '') ==
+                    state.hoverCategory?.categoryId ||
+                state.hoverCategory?.categoryId == -2 ||
+                (state.hoverCategory?.categoryId == -1 && c.isFavorite)) &&
+            c.name.toLowerCase().contains(state.searchChannels.toLowerCase()))
+        .toList();
+
+    if (!equality.equals(newChannels, state.channels)) {
+      state = state.copyWith(channels: newChannels);
+    }
+  }
+
+  void applyCategoriesFilter() {
+    final newCategories = state.allCategoris
+        .where((c) =>
+            c.categoryName.toLowerCase().contains(
+                  state.searchCategories.toLowerCase(),
+                ) &&
+            (!state.onlyFavoriteCategories || c.isFavorite))
+        .toList();
+
+    if (!equality.equals(newCategories, state.categories)) {
+      state = state.copyWith(categories: newCategories);
     }
   }
 
@@ -124,6 +143,7 @@ class LiveController extends Notifier<LiveState> {
 
   void selectHoverChannel(LiveChannel channel) {
     state = state.copyWith(hoverChannel: channel);
+    applyChannelsFilter();
   }
 
   int resetCategry() {
@@ -148,12 +168,14 @@ class LiveController extends Notifier<LiveState> {
     state = state.copyWith(
       searchChannels: v,
     );
+    applyChannelsFilter();
   }
 
   void searchCategories(String v) async {
     state = state.copyWith(
       searchCategories: v,
     );
+    applyCategoriesFilter();
   }
 
   void toggleFavoriteCategory() {
@@ -178,6 +200,7 @@ class LiveController extends Notifier<LiveState> {
     state = state.copyWith(
       onlyFavoriteCategories: !state.onlyFavoriteCategories,
     );
+    applyCategoriesFilter();
   }
 }
 

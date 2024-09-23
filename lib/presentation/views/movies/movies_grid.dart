@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../data/models/category.dart';
-import '../../../data/models/movie.dart';
+import '../../../data/models/ibo/category/category.dart';
+import '../../../data/models/ibo/movies/movie.dart';
 import '../../providers/movie_state.dart';
 import '../../widgets/two_level_list/horizontal_list.dart';
 import '../../widgets/two_level_list/two_level_list_controller.dart';
@@ -60,6 +60,7 @@ class _MoviesGridState extends ConsumerState<MoviesGrid> {
       ) {
         return Consumer(
           builder: (_, WidgetRef ref, __) {
+            final controlelr = ref.watch(moviesControllerProvider.notifier);
             final movies = ref.watch(
               moviesControllerProvider.select((s) => s.getMovies(category)),
             );
@@ -77,8 +78,10 @@ class _MoviesGridState extends ConsumerState<MoviesGrid> {
                 ),
               ),
               items: movies,
-              itemBuilder: (BuildContext context, Movie movie, bool selected) =>
-                  MovieTile(selected: selected, movie: movie),
+              itemBuilder: (BuildContext context, Movie movie, bool selected) {
+                controlelr.enrichMovieDetails(movie);
+                return MovieTile(selected: selected, movie: movie);
+              },
             );
           },
         );

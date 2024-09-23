@@ -22,42 +22,38 @@ class InfoRemoteControl extends ConsumerStatefulWidget {
 
 class _InfoRemoteControlState extends ConsumerState<InfoRemoteControl> {
   bool shouldExit = false;
+  late final hideBarNotifier = ref.read(AppState.hideBar.notifier);
 
   @override
   Widget build(BuildContext context) {
     return Focus(
       skipTraversal: true,
       onFocusChange: (value) {
-        setState(() {});
-        final traversalBarNotifier = ref.read(AppState.traversalBar.notifier);
-        if (value) {
-          if (traversalBarNotifier.state) {
-            traversalBarNotifier.update((_) => false);
-          }
-        } else {
-          if (!traversalBarNotifier.state) {
-            traversalBarNotifier.update((_) => true);
-          }
-        }
+        hideBarNotifier.update((_) => value);
       },
       onKeyEvent: (node, event) {
         if (event is KeyDownEvent) {
           if (widget.setInfoVisibility(true)) {
             return KeyEventResult.handled;
           }
-        }
-        if (event is KeyDownEvent) {
           switch (event.logicalKey) {
             case LogicalKeyboardKey.arrowUp:
               return KeyEventResult.handled;
 
             case LogicalKeyboardKey.arrowLeft:
-              widget.setInfoMode(true);
+              return KeyEventResult.handled;
 
             case LogicalKeyboardKey.goBack:
             case LogicalKeyboardKey.escape:
-              if (!widget.setInfoMode(true)) {
-                shouldExit = true;
+              if (shouldExit) {
+                widget.setInfoVisibility(false);
+                widget.setInfoMode(false);
+                AppState.navBar.skipTraversal = false;
+                AppState.navBar.canRequestFocus = true;
+                AppState.navBar.requestFocus();
+                hideBarNotifier.update((_) => false);
+                shouldExit = false;
+                return KeyEventResult.handled;
               }
             default:
           }
@@ -65,15 +61,15 @@ class _InfoRemoteControlState extends ConsumerState<InfoRemoteControl> {
           switch (event.logicalKey) {
             case LogicalKeyboardKey.goBack:
             case LogicalKeyboardKey.escape:
-              if (shouldExit) {
-                widget.setInfoMode(false);
-                widget.setInfoVisibility(false);
-                shouldExit = false;
-                return KeyEventResult.ignored;
+              if (!widget.setInfoMode(true)) {
+                shouldExit = true;
               }
               return KeyEventResult.handled;
 
             case LogicalKeyboardKey.arrowLeft:
+              if (!widget.setInfoMode(true)) {
+                shouldExit = true;
+              }
             case LogicalKeyboardKey.arrowRight:
               return KeyEventResult.handled;
             default:

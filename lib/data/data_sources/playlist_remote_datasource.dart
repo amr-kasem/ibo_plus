@@ -4,10 +4,10 @@ import 'package:dio/dio.dart';
 
 import '../../services/external_services.dart';
 import '../../utils/category_type.dart';
-import '../models/category.dart';
-import '../models/live_channel.dart';
-import '../models/m3u_playlist.dart';
-import '../models/movie.dart';
+import '../models/ibo/category/category.dart';
+import '../models/ibo/live/live_channel.dart';
+import '../models/ibo/playlist/m3u_playlist.dart';
+import '../models/ibo/movies/movie.dart';
 
 class PlaylistRemoteDatasource {
   static Duration _getRemainingSubscriptionDuration(Map data) {
@@ -150,5 +150,31 @@ class PlaylistRemoteDatasource {
       return data;
     }
     return Future.error(res);
+  }
+
+  static Future<Map<String, dynamic>> getMovieDetails({
+    required int id,
+    required M3UPlaylist m3uPlaylist,
+  }) async {
+    try {
+      final res = await ExternalServices.dio.get(
+        '${m3uPlaylist.url}player_api.php',
+        queryParameters: {
+          "password": m3uPlaylist.password,
+          "username": m3uPlaylist.username,
+          "action": "get_vod_info",
+          "vod_id": id,
+        },
+      );
+
+      if ((res.statusCode ?? 900) < 300) {
+        final jsonData = res.data as Map<String, dynamic>;
+        return jsonData;
+      } else {
+        throw Exception('Failed to load movie details');
+      }
+    } catch (e) {
+      throw Exception("Couldn't reach server, please try again later.");
+    }
   }
 }

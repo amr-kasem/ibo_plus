@@ -1,11 +1,12 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:ibo_plus/presentation/providers/player_state.dart';
-import 'package:ibo_plus/utils/app_utils.dart';
+import 'package:flutter/services.dart';
 
 import '../../data/repositories/user_repository.dart';
+import '../../utils/app_utils.dart';
 import '../../utils/translation_asset_loader.dart';
+import '../providers/player_state.dart';
 import 'ibo_app.dart';
 
 class AppParent extends StatefulWidget {
@@ -34,6 +35,9 @@ class _AppParentState extends State<AppParent> {
       },
       onShow: () {
         playerController.play();
+      },
+      onPause: () {
+        SystemNavigator.pop();
       },
     );
     if (_state != null) {

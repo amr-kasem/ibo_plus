@@ -8,13 +8,7 @@ import 'search_categories.dart';
 class CategoryOptionsParent extends StatefulWidget {
   const CategoryOptionsParent({
     super.key,
-    required this.focused,
-    required this.focusable,
-    required this.showFavoriteButton,
   });
-  final bool focused;
-  final bool focusable;
-  final bool showFavoriteButton;
   @override
   State<CategoryOptionsParent> createState() => _CategoryOptionsState();
 }
@@ -35,42 +29,37 @@ class _CategoryOptionsState extends State<CategoryOptionsParent> {
         goBack: () => updateState(1),
       ),
       CategoryOptions(
-        focused: widget.focused,
+        focused: true,
         updateViewIndex: updateState,
-        showFavoriteButton: widget.showFavoriteButton,
+        showFavoriteButton: true,
       ),
-      CategorySettings(focused: widget.focused)
+      const CategorySettings(focused: true)
     ];
-    return Focus(
+    return FocusScope(
+      node: fsn,
       skipTraversal: true,
-      descendantsAreFocusable: widget.focusable,
-      child: FocusScope(
-        node: fsn,
-        skipTraversal: true,
-        onKeyEvent: (node, event) {
-          if (event is KeyDownEvent) {
-            if (event.logicalKey == LogicalKeyboardKey.goBack ||
-                event.logicalKey == LogicalKeyboardKey.escape) {
-              if (index == 1) return KeyEventResult.ignored;
-              setState(() {
-                index = 1;
-              });
-
-              return KeyEventResult.handled;
-            }
-          }
-          return KeyEventResult.ignored;
-        },
-        onFocusChange: (f) {
-          if (!f) {
+      onKeyEvent: (node, event) {
+        if (event is KeyDownEvent) {
+          if (event.logicalKey == LogicalKeyboardKey.goBack ||
+              event.logicalKey == LogicalKeyboardKey.escape) {
+            if (index == 1) return KeyEventResult.ignored;
             setState(() {
               index = 1;
             });
+
+            return KeyEventResult.handled;
           }
-        },
-        child:
-            AnimatedSwitcher(duration: Durations.short1, child: views[index]),
-      ),
+        }
+        return KeyEventResult.ignored;
+      },
+      onFocusChange: (f) {
+        if (!f) {
+          setState(() {
+            index = 1;
+          });
+        }
+      },
+      child: AnimatedSwitcher(duration: Durations.short1, child: views[index]),
     );
   }
 }

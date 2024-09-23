@@ -13,5 +13,5 @@ class AppState {
       StateProvider<AppStates>((_) => AppStates.init);
   static final homeIndex = StateProvider((_) => 0);
   static final navBar = FocusNode();
-  static final traversalBar = StateProvider((_) => true);
+  static final hideBar = StateProvider((_) => false);
 }

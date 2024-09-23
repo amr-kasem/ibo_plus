@@ -36,6 +36,8 @@ class RouterInitializationListenable with ChangeNotifier {
         appStateNotifier.update((s) => AppStates.initialized);
         notifyListeners();
       }
-    } catch (_) {}
+    } catch (e) {
+      log('error initializing router $e');
+    }
   }
 }

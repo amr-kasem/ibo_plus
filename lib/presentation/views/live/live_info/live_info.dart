@@ -17,12 +17,12 @@ class LiveInfo extends StatefulWidget {
 class _LiveInfoState extends State<LiveInfo> {
   bool categories = false;
   bool visible = false;
+
+  Timer? infoTimer;
   PageStorageKey channelListScrollKey =
       const PageStorageKey('channelListScrollKey');
   PageStorageKey categoryListScrollKey =
       const PageStorageKey('categoryListScrollKey');
-
-  Timer? infoTimer;
   @override
   Widget build(BuildContext context) {
     return InfoRemoteControl(
@@ -45,8 +45,8 @@ class _LiveInfoState extends State<LiveInfo> {
       },
       infoWidget: Consumer(
         builder: (_, WidgetRef ref, child) {
-          final traversalBarFocused = ref.watch(AppState.traversalBar);
-          visible = !traversalBarFocused && visible;
+          final hideBar = ref.watch(AppState.hideBar);
+          visible = hideBar && visible;
           return AnimatedOpacity(
             duration: Durations.medium3,
             opacity: visible ? 1 : 0,

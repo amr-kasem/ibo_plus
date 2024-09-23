@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:isar/isar.dart';
 
-import 'm3u_playlist.dart';
+import '../playlist/m3u_playlist.dart';
 
 part 'user.g.dart';
 
@@ -22,7 +22,7 @@ class User {
   }
 
   @ignore
-  final Map<String, int?> currentLiveCategoryId = {};
+  final Map<String, int> currentLiveCategoryId = {};
   String get isarCurrentLiveCategoryId => jsonEncode(currentLiveCategoryId);
   set isarCurrentLiveCategoryId(String j) {
     currentLiveCategoryId.clear();

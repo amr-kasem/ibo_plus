@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../../../../data/models/category.dart';
+import '../../../../../data/models/ibo/category/category.dart';
 import 'category_list_widget.dart';
 
 class CategoryListRemoteControl extends StatefulWidget {
@@ -33,6 +33,7 @@ class _CategoryListRemoteControlState extends State<CategoryListRemoteControl> {
 
   bool wantToSelect = false;
   bool moving = false;
+  bool showSettings = false;
 
   Timer? visibilityTimer;
 
@@ -61,10 +62,7 @@ class _CategoryListRemoteControlState extends State<CategoryListRemoteControl> {
               return KeyEventResult.handled;
 
             case LogicalKeyboardKey.arrowRight:
-              final f = node.traversalDescendants.firstOrNull;
-              if (f != null) {
-                f.requestFocus();
-              }
+              widget.onSelect(widget.categoryList[itemIndex]);
               break;
             case LogicalKeyboardKey.arrowLeft:
               if (!fn.hasPrimaryFocus) {
@@ -76,22 +74,21 @@ class _CategoryListRemoteControlState extends State<CategoryListRemoteControl> {
                 fn.requestFocus();
                 return KeyEventResult.handled;
               }
+
               break;
             case LogicalKeyboardKey.select:
             case LogicalKeyboardKey.space:
               if (event is KeyRepeatEvent) {
                 if (fn.hasPrimaryFocus) {
                   wantToSelect = false;
-                  final f = node.traversalDescendants.firstOrNull;
-                  if (f != null) {
-                    f.requestFocus();
-                  } else {
-                    wantToSelect = true;
-                  }
+                  setState(() {
+                    showSettings = true;
+                  });
                 }
               } else {
                 wantToSelect = true;
               }
+
               break;
             default:
           }
@@ -103,6 +100,7 @@ class _CategoryListRemoteControlState extends State<CategoryListRemoteControl> {
                 widget.onSelect(widget.categoryList[itemIndex]);
                 return KeyEventResult.handled;
               }
+
               break;
             default:
           }
@@ -110,6 +108,7 @@ class _CategoryListRemoteControlState extends State<CategoryListRemoteControl> {
         return KeyEventResult.ignored;
       },
       child: CategoryListWidget(
+        showSettings: showSettings,
         scrollKey: widget.scrollKey,
         verticalScrollController: verticalScrollController,
         categoryList: widget.categoryList,

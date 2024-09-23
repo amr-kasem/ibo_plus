@@ -14,8 +14,10 @@ class ExternalServices {
     );
     _tmdb = TMDB(
       //TMDB instance
-      ApiKeys('Your API KEY',
-          'apiReadAccessTokenv4'), //ApiKeys instance with your keys,
+      ApiKeys(
+        'a3c79068cd6961a3526ba1b516c50c39',
+        'apiReadAccessTokenv4',
+      ), //ApiKeys instance with your keys,
       dio: _dio,
     );
     await IsarDB.initialize();

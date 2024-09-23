@@ -8,9 +8,9 @@ import 'package:dio/dio.dart';
 import '../../utils/api_utils.dart';
 import '../data_sources/ibo_remote_datasource.dart';
 import '../data_sources/isar_db.dart';
-import '../models/data_event.dart';
-import '../models/language.dart';
-import '../models/m3u_playlist.dart';
+import '../models/ibo/playlist/m3u_playlist.dart';
+import '../models/ibo/settings/data_event.dart';
+import '../models/ibo/settings/language.dart';
 
 class UserRepository {
   static final Queue<String> _domains = Queue();
@@ -94,7 +94,7 @@ class UserRepository {
     IsarDB.instance.updateSettings(
       updateFunction: (userSettings) async => userSettings
         ..currentLiveCategoryId[(await selectedPlaylist)!.isarId.toString()] =
-            categoryId,
+            categoryId ?? -2,
       callback: () {
         IsarDB.instance.notifyCurrentLiveCategory();
       },

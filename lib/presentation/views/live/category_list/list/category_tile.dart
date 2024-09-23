@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gradient_borders/gradient_borders.dart';
 import 'package:intl/intl.dart' as intl;
 
-import '../../../../../data/models/category.dart';
+import '../../../../../data/models/ibo/category/category.dart';
 import '../../../../providers/app_state.dart';
 import '../../../../providers/live_state.dart';
 
@@ -24,7 +24,7 @@ class CategoryTile extends StatelessWidget {
       builder: (_, WidgetRef ref, child) {
         bool selected = ref.watch(liveControllerProvider
             .select((s) => s.selectedCategory == category));
-        bool highlight = !ref.watch(AppState.traversalBar);
+        bool highlight = ref.watch(AppState.hideBar);
 
         return Container(
           margin: const EdgeInsetsDirectional.only(start: 20),

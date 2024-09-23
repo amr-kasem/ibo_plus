@@ -63,7 +63,7 @@ class TwoLevelListControllerState<T> extends State<TwoLevelListController<T>> {
                         clampDouble(verticalController.selectedItem - 1, 0,
                                 double.infinity)
                             .toInt(),
-                        duration: Durations.medium1,
+                        duration: Durations.short1,
                         curve: Curves.easeInOut,
                       )
                       .then((_) => moving = false);
@@ -80,7 +80,7 @@ class TwoLevelListControllerState<T> extends State<TwoLevelListController<T>> {
                           0,
                           double.infinity,
                         ).toInt(),
-                        duration: Durations.medium1,
+                        duration: Durations.short1,
                         curve: Curves.easeInOut,
                       )
                       .then((_) => moving = false);
@@ -97,7 +97,7 @@ class TwoLevelListControllerState<T> extends State<TwoLevelListController<T>> {
                       ?.animateToItem(
                         clampDouble(hc.selectedItem - 1, 0, double.infinity)
                             .toInt(),
-                        duration: Durations.medium1,
+                        duration: Durations.short1,
                         curve: Curves.easeInOut,
                       )
                       .then((_) => moving = false);
@@ -113,7 +113,7 @@ class TwoLevelListControllerState<T> extends State<TwoLevelListController<T>> {
                       ?.animateToItem(
                         clampDouble(hc.selectedItem + 1, 0, double.infinity)
                             .toInt(),
-                        duration: Durations.medium1,
+                        duration: Durations.short1,
                         curve: Curves.easeInOut,
                       )
                       .then((_) => moving = false);

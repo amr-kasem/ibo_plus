@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gradient_borders/gradient_borders.dart';
 import 'package:intl/intl.dart' as intl;
 
-import '../../../../../data/models/live_channel.dart';
+import '../../../../../data/models/ibo/live/live_channel.dart';
 import '../../../../providers/app_state.dart';
 import '../../../../providers/live_state.dart';
 
@@ -26,7 +26,7 @@ class ChannelTile extends StatelessWidget {
         bool selected = ref.watch(
                 liveControllerProvider.select((s) => s.selectedChannelIndex)) ==
             index;
-        bool highlight = !ref.watch(AppState.traversalBar);
+        bool highlight = ref.watch(AppState.hideBar);
         return Container(
           margin: const EdgeInsetsDirectional.only(start: 20),
           decoration: selected && highlight

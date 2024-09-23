@@ -1,8 +1,8 @@
 import 'package:isar/isar.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-import '../../utils/app_utils.dart';
-import '../../utils/category_type.dart';
+import '../../../../utils/app_utils.dart';
+import '../../../../utils/category_type.dart';
 
 part 'category.g.dart';
 

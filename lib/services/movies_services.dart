@@ -1,5 +1,5 @@
-import '../data/models/category.dart';
-import '../data/models/movie.dart';
+import '../data/models/ibo/category/category.dart';
+import '../data/models/ibo/movies/movie.dart';
 import '../data/repositories/playlist_repository.dart';
 import '../utils/category_type.dart';
 
@@ -12,6 +12,10 @@ class MoviesServices {
   static Future<List<Movie>> getMovies() async {
     // return [];
     return await PlaylistRepository.getMovies();
+  }
+
+  static Future<void> enrichMovieDetails(Movie movie) async {
+    await PlaylistRepository.refreshMovieDetails(movie);
   }
 
   static void refreshCategories() {

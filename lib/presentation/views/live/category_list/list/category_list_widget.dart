@@ -2,9 +2,10 @@ import 'package:collection/collection.dart';
 import 'package:fading_edge_scrollview/fading_edge_scrollview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:ibo_plus/presentation/views/live/category_list/options/category_options_parent.dart';
 import 'package:intl/intl.dart' as intl;
 
-import '../../../../../data/models/category.dart';
+import '../../../../../data/models/ibo/category/category.dart';
 import '../../../../providers/live_state.dart';
 import 'category_tile.dart';
 
@@ -14,12 +15,13 @@ class CategoryListWidget extends ConsumerStatefulWidget {
     required this.verticalScrollController,
     required this.categoryList,
     required this.scrollKey,
+    required this.showSettings,
   });
 
   final FixedExtentScrollController verticalScrollController;
   final List<Category> categoryList;
   final PageStorageKey scrollKey;
-
+  final bool showSettings;
   @override
   ConsumerState<CategoryListWidget> createState() => _CategoryListWidgetState();
 }
@@ -85,6 +87,11 @@ class _CategoryListWidgetState extends ConsumerState<CategoryListWidget> {
               ),
             ),
           ),
+        ),
+        Expanded(
+          child: widget.showSettings
+              ? const CategoryOptionsParent()
+              : const SizedBox.shrink(),
         ),
       ],
     );

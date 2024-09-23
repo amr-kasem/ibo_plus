@@ -5,13 +5,13 @@ import 'package:path_provider/path_provider.dart';
 
 import '../../utils/app_utils.dart';
 import '../../utils/category_type.dart';
-import '../models/category.dart';
-import '../models/data_event.dart';
-import '../models/language.dart';
-import '../models/live_channel.dart';
-import '../models/m3u_playlist.dart';
-import '../models/movie.dart';
-import '../models/user.dart';
+import '../models/ibo/category/category.dart';
+import '../models/ibo/settings/data_event.dart';
+import '../models/ibo/settings/language.dart';
+import '../models/ibo/live/live_channel.dart';
+import '../models/ibo/playlist/m3u_playlist.dart';
+import '../models/ibo/movies/movie.dart';
+import '../models/ibo/settings/user.dart';
 
 class IsarDB {
   static late final IsarDB instance;
@@ -315,6 +315,14 @@ class IsarDB {
     _isar.writeTxn(
       () async {
         _isar.liveChannels.put(channel);
+      },
+    );
+  }
+
+  void updateMovie(Movie movie) {
+    _isar.writeTxn(
+      () async {
+        _isar.movies.put(movie);
       },
     );
   }

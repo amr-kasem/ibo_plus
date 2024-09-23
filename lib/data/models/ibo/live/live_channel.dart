@@ -1,52 +1,61 @@
 import 'package:isar/isar.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-import '../../utils/app_utils.dart';
+import '../../../../utils/app_utils.dart';
+import 'epg.dart';
 
-part 'movie.g.dart';
+part 'live_channel.g.dart';
 
 @collection
 @JsonSerializable(fieldRename: FieldRename.snake)
-class Movie {
+class LiveChannel {
   @JsonKey(name: 'num')
-  final int? movieNum;
+  final int? channelNum;
   final String name;
   final String streamType;
   @Index(composite: [CompositeIndex('playlistId')])
   final int streamId;
   final String? streamIcon;
-  @JsonKey(fromJson: AppUtils.toDouble, toJson: AppUtils.numToString)
-  final double? rating;
-  final double? rating5Based;
+  final String? epgChannelId;
   final String? added;
-  @JsonKey(fromJson: AppUtils.toInt, toJson: AppUtils.numToString)
-  final int? categoryId;
-  final String? containerExtension;
-  @JsonKey(fromJson: AppUtils.toInt, toJson: AppUtils.numToString)
-  final int? customSid;
-  // final bool? directSource;
+  final String? categoryId;
+  final String? customSid;
+  final int? tvArchive;
+  final String? directSource;
+  @JsonKey(fromJson: AppUtils.toStr)
+  final String? tvArchiveDuration;
+
+  final List<EPG>? epgListings;
+  @JsonKey(
+      fromJson: AppUtils.intToNullableBool, toJson: AppUtils.boolToNullableInt)
+  final bool? isAdult;
+
   @JsonKey(includeFromJson: false, includeToJson: false)
   bool isFavorite;
   @Index()
   @JsonKey(includeFromJson: false, includeToJson: false)
   late int playlistId;
-  Movie({
-    required this.movieNum,
+
+  factory LiveChannel.fromJson(Map<String, dynamic> json) =>
+      _$LiveChannelFromJson(json);
+
+  LiveChannel({
+    required this.channelNum,
     required this.name,
-    required this.streamType,
     required this.streamId,
+    required this.streamType,
     required this.streamIcon,
-    required this.rating,
-    required this.rating5Based,
+    required this.epgChannelId,
     required this.added,
     required this.categoryId,
-    this.containerExtension = "mp4",
     required this.customSid,
-    // required this.directSource,
+    required this.tvArchive,
+    required this.directSource,
+    required this.tvArchiveDuration,
+    required this.epgListings,
+    required this.isAdult,
     this.isFavorite = false,
   });
-  // Factory method for JSON deserialization
-  factory Movie.fromJson(Map<String, dynamic> json) => _$MovieFromJson(json);
 
   Id get isarId => AppUtils.fastHash('$playlistId$streamId');
   @override
@@ -54,7 +63,7 @@ class Movie {
 
   @override
   bool operator ==(Object other) {
-    if (other is! Movie) return false;
+    if (other is! LiveChannel) return false;
     return hashCode == other.hashCode;
   }
 }
