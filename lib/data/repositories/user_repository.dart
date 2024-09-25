@@ -9,8 +9,7 @@ import '../../utils/api_utils.dart';
 import '../data_sources/ibo_remote_datasource.dart';
 import '../data_sources/isar_db.dart';
 import '../models/ibo/playlist/m3u_playlist.dart';
-import '../models/ibo/settings/data_event.dart';
-import '../models/ibo/settings/language.dart';
+import '../models/ibo/json/data_event.dart';
 
 class UserRepository {
   static final Queue<String> _domains = Queue();

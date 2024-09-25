@@ -1,7 +1,5 @@
 import 'dart:developer';
 
-import 'package:ibo_plus/data/models/tmdb/movie_details_tmdb.dart';
-
 import '../../services/external_services.dart';
 
 class TMDBDatasource {

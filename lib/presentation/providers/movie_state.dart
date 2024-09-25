@@ -2,7 +2,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../data/models/ibo/category/category.dart';
-import '../../data/models/ibo/movies/movie.dart';
 import '../../services/movies_services.dart';
 
 part 'movie_state.freezed.dart';

@@ -5,13 +5,13 @@ import 'package:path_provider/path_provider.dart';
 
 import '../../utils/app_utils.dart';
 import '../../utils/category_type.dart';
-import '../models/ibo/category/category.dart';
-import '../models/ibo/settings/data_event.dart';
-import '../models/ibo/settings/language.dart';
-import '../models/ibo/live/live_channel.dart';
-import '../models/ibo/playlist/m3u_playlist.dart';
-import '../models/ibo/movies/movie.dart';
-import '../models/ibo/settings/user.dart';
+import '../models/ibo/isar/category.dart';
+import '../models/ibo/isar/data_event.dart';
+import '../models/ibo/isar/language.dart';
+import '../models/ibo/isar/live_channel.dart';
+import '../models/ibo/isar/m3u_playlist.dart';
+import '../models/ibo/isar/movie.dart';
+import '../models/ibo/isar/user.dart';
 
 class IsarDB {
   static late final IsarDB instance;

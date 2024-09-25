@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../data/models/ibo/category/category.dart';
-import '../../../data/models/ibo/movies/movie.dart';
 import '../../providers/movie_state.dart';
 import '../../widgets/two_level_list/horizontal_list.dart';
 import '../../widgets/two_level_list/two_level_list_controller.dart';

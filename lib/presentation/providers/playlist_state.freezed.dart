@@ -168,8 +168,8 @@ class _$M3UPlaylistStateImpl extends _M3UPlaylistState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$M3UPlaylistStateImpl &&
-            (identical(other.selectedPlaylist, selectedPlaylist) ||
-                other.selectedPlaylist == selectedPlaylist) &&
+            const DeepCollectionEquality()
+                .equals(other.selectedPlaylist, selectedPlaylist) &&
             const DeepCollectionEquality()
                 .equals(other._playlists, _playlists) &&
             (identical(other.isLoading, isLoading) ||
@@ -178,8 +178,12 @@ class _$M3UPlaylistStateImpl extends _M3UPlaylistState {
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, selectedPlaylist,
-      const DeepCollectionEquality().hash(_playlists), isLoading, error);
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(selectedPlaylist),
+      const DeepCollectionEquality().hash(_playlists),
+      isLoading,
+      error);
 
   @JsonKey(ignore: true)
   @override

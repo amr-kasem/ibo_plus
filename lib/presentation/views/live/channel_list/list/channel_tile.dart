@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gradient_borders/gradient_borders.dart';
 import 'package:intl/intl.dart' as intl;
 
-import '../../../../../data/models/ibo/live/live_channel.dart';
+import '../../../../../data/models/ibo/isar/live_channel.dart';
 import '../../../../providers/app_state.dart';
 import '../../../../providers/live_state.dart';
 

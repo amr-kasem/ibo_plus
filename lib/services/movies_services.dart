@@ -1,5 +1,4 @@
 import '../data/models/ibo/category/category.dart';
-import '../data/models/ibo/movies/movie.dart';
 import '../data/repositories/playlist_repository.dart';
 import '../utils/category_type.dart';
 

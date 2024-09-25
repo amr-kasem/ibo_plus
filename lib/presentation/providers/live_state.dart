@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../data/models/ibo/category/category.dart';
-import '../../data/models/ibo/live/live_channel.dart';
+import '../../data/models/ibo/isar/live_channel.dart';
 import '../../services/live_services.dart';
 import 'player_state.dart';
 import 'playlist_state.dart';

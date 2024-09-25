@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../data/models/ibo/live/live_channel.dart';
+import '../../../../data/models/ibo/isar/live_channel.dart';
 import '../../../providers/app_state.dart';
 import '../../../providers/live_state.dart';
 import '../../../widgets/list_highlighter.dart';

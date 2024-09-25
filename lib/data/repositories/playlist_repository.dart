@@ -1,14 +1,12 @@
 import 'dart:developer';
 
-import 'package:ibo_plus/data/models/ibo/movies/movie.dart';
-
 import '../../utils/category_type.dart';
 import '../data_sources/isar_db.dart';
 import '../data_sources/playlist_remote_datasource.dart';
 import '../data_sources/tmdb_datasource.dart';
 import '../models/ibo/category/category.dart';
-import '../models/ibo/settings/data_event.dart';
-import '../models/ibo/live/live_channel.dart';
+import '../models/ibo/json/data_event.dart';
+import '../models/ibo/isar/live_channel.dart';
 import 'user_repository.dart';
 
 class PlaylistRepository {

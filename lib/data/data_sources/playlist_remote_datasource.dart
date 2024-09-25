@@ -5,9 +5,8 @@ import 'package:dio/dio.dart';
 import '../../services/external_services.dart';
 import '../../utils/category_type.dart';
 import '../models/ibo/category/category.dart';
-import '../models/ibo/live/live_channel.dart';
+import '../models/ibo/isar/live_channel.dart';
 import '../models/ibo/playlist/m3u_playlist.dart';
-import '../models/ibo/movies/movie.dart';
 
 class PlaylistRemoteDatasource {
   static Duration _getRemainingSubscriptionDuration(Map data) {

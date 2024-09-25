@@ -362,12 +362,12 @@ class _$LiveStateImpl extends _LiveState {
                 other.searchCategories == searchCategories) &&
             (identical(other.selectedChannel, selectedChannel) ||
                 other.selectedChannel == selectedChannel) &&
-            (identical(other.selectedCategory, selectedCategory) ||
-                other.selectedCategory == selectedCategory) &&
+            const DeepCollectionEquality()
+                .equals(other.selectedCategory, selectedCategory) &&
             (identical(other.hoverChannel, hoverChannel) ||
                 other.hoverChannel == hoverChannel) &&
-            (identical(other.hoverCategory, hoverCategory) ||
-                other.hoverCategory == hoverCategory) &&
+            const DeepCollectionEquality()
+                .equals(other.hoverCategory, hoverCategory) &&
             (identical(other.isLoading, isLoading) ||
                 other.isLoading == isLoading) &&
             const DeepCollectionEquality().equals(other.error, error) &&
@@ -386,9 +386,9 @@ class _$LiveStateImpl extends _LiveState {
       const DeepCollectionEquality().hash(_categories),
       searchCategories,
       selectedChannel,
-      selectedCategory,
+      const DeepCollectionEquality().hash(selectedCategory),
       hoverChannel,
-      hoverCategory,
+      const DeepCollectionEquality().hash(hoverCategory),
       isLoading,
       const DeepCollectionEquality().hash(error),
       notify,
