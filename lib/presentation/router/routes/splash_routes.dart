@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../views/splash/splash.dart';
+import '../../views/pages/splash/splash.dart';
 import '../router_utils.dart';
 
 final splashRoutes = [

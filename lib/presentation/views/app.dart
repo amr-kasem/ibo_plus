@@ -1,198 +1,72 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 
-import '../providers/app_state.dart';
-import '../widgets/custom_tab_bar.dart';
-import '../widgets/ibo_textfield/text_field.dart';
-import 'home/home_tabview.dart';
-import 'live/live_tabview.dart';
-import 'movies/movies_tabview.dart';
-import 'settings/settings_tabview.dart';
+import '../../data/repositories_impl/user_repository_impl.dart';
+import '../utils/translation_asset_loader.dart';
+import 'widgets/ibo_app.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class App extends StatefulWidget {
+  const App({
+    super.key,
+  });
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<App> createState() => _AppState();
 }
 
-class _HomePageState extends State<HomePage> {
-  bool disableHeader = false;
+class _AppState extends State<App> {
+  late final AppLifecycleListener _listener;
+  final List<String> _states = <String>[];
+  late AppLifecycleState? _state;
+
+  @override
+  void initState() {
+    super.initState();
+    _state = SchedulerBinding.instance.lifecycleState;
+    // final playerController =
+    //     AppUtils.providerContainer.read(playerControllerProvider.notifier);
+    _listener = AppLifecycleListener(
+      onHide: () {
+        // playerController.stop();
+      },
+      onShow: () {
+        // playerController.play();
+      },
+      onPause: () {
+        SystemNavigator.pop();
+      },
+    );
+    if (_state != null) {
+      _states.add(_state!.name);
+    }
+  }
+
+  @override
+  void dispose() {
+    _listener.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    Localizations.localeOf(context); //subscribe language change event
-    return Scaffold(
-      body: Stack(
-        children: [
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            child: AspectRatio(
-              aspectRatio: 3,
-              child: Stack(
-                children: [
-                  Positioned.directional(
-                    end: 0,
-                    top: 0,
-                    bottom: 0,
-                    textDirection: Directionality.of(context),
-                    child: Consumer(
-                      builder: (_, WidgetRef ref, __) {
-                        return AnimatedSwitcher(
-                          duration: Durations.medium1,
-                          child: getBackground(
-                            ref.watch(AppState.homeIndex),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                  Positioned.directional(
-                    end: 0,
-                    top: 0,
-                    bottom: 0,
-                    textDirection: Directionality.of(context),
-                    child: const AspectRatio(
-                      aspectRatio: 16 / 9,
-                      child: DecoratedBox(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                              colors: [Colors.black, Colors.transparent],
-                              stops: [0, 0.2]),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          const Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            child: AspectRatio(
-              aspectRatio: 3,
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [Colors.black, Colors.transparent],
-                    stops: [0.1, 1],
-                    begin: Alignment.bottomCenter,
-                    end: Alignment.topCenter,
-                  ),
-                ),
-                // child: PreviewWidget(),
-              ),
-            ),
-          ),
-          Positioned.fill(
-            child: Column(
-              children: [
-                AnimatedSize(
-                  duration: Durations.medium1,
-                  child: Consumer(
-                    builder: (_, WidgetRef ref, __) {
-                      return AnimatedSwitcher(
-                        duration: Durations.medium1,
-                        child: getHeader(
-                          ref.watch(AppState.homeIndex),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                Expanded(
-                  child: Stack(
-                    children: [
-                      Positioned.fill(
-                        child: Consumer(
-                          builder: (_, WidgetRef ref, __) {
-                            return Focus(
-                              skipTraversal: true,
-                              onFocusChange: (v) {
-                                if (v != disableHeader) {
-                                  setState(() {
-                                    // disableHeader = v;
-                                  });
-                                }
-                              },
-                              child: AnimatedSwitcher(
-                                duration: Durations.medium1,
-                                child: getBody(
-                                  ref.watch(AppState.homeIndex),
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                      const Positioned(
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        height: 80,
-                        child: CustomTabBar(),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
+    final locales = UserRepository.locales.keys
+        .map(
+          (k) => Locale(k.toString().toLowerCase()),
+        )
+        .toList();
+    if (locales.isEmpty) locales.add(const Locale('en'));
+    return EasyLocalization(
+      key: UniqueKey(),
+      assetLoader: TranslationAssetLoader(
+        assetLoaderProvider: UserRepository.loadTranslation,
       ),
+      supportedLocales: locales,
+      path: 'assets/translations',
+      fallbackLocale: const Locale('en'),
+      useOnlyLangCode: true,
+      child: const IboApp(),
     );
-  }
-
-  Widget getHeader(int i) {
-    switch (i) {
-      case 0:
-      case 2:
-      case 3:
-        return const AspectRatio(aspectRatio: 4);
-    }
-    return const SizedBox.shrink();
-  }
-
-  Widget getBackground(int i) {
-    switch (i) {
-      case 0:
-      case 2:
-      case 3:
-        return AspectRatio(
-          aspectRatio: 16 / 9,
-          child: Image.network(
-            'https://static01.nyt.com/images/2016/01/28/arts/kung/kung-superJumbo.jpg?quality=75&auto=webp',
-            fit: BoxFit.cover,
-          ),
-        );
-    }
-    return const SizedBox.shrink();
-  }
-
-  Widget getBody(int i) {
-    switch (i) {
-      case 0:
-        return const HomeTabView();
-
-      case 1:
-        return const LiveTabView();
-
-      case 2:
-        return const MoviesTabView();
-      case 3:
-        return Center(
-          child: IboTextField(
-            onSubmit: (v) {},
-          ),
-        );
-      case 4:
-        return const Placeholder();
-      case 5:
-        return const SettingsTabView();
-    }
-    return const SizedBox.shrink();
   }
 }

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../providers/app_state.dart';
-import '../../views/app.dart';
+import '../../views/widgets/app_layout.dart';
 import '../router_utils.dart';
 
 final homeRoutes = [
