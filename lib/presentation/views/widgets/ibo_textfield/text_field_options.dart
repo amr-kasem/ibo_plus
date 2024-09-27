@@ -2,7 +2,7 @@ import 'package:fading_edge_scrollview/fading_edge_scrollview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../../utils/app_utils.dart';
+import '../../../utils/listing_utils.dart';
 
 class IboTextFieldOptions extends StatefulWidget {
   const IboTextFieldOptions({
@@ -115,7 +115,7 @@ class _IboTextFieldOptionsState extends State<IboTextFieldOptions> {
               if (!moving) {
                 horizontalController
                     .animateToItem(
-                      AppUtils.clamp(
+                      ListingUtils.clamp(
                         horizontalController.selectedItem - 1,
                         icons.length,
                       ),
@@ -130,7 +130,7 @@ class _IboTextFieldOptionsState extends State<IboTextFieldOptions> {
               if (!moving) {
                 horizontalController
                     .animateToItem(
-                      AppUtils.clamp(
+                      ListingUtils.clamp(
                         horizontalController.selectedItem + 1,
                         icons.length,
                       ),

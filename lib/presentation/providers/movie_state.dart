@@ -1,118 +1,118 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
+// import 'package:flutter_riverpod/flutter_riverpod.dart';
+// import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../data/models/ibo/category/category.dart';
-import '../../services/movies_services.dart';
+// import '../../data/models/ibo/category/category.dart';
+// import '../../services/movies_services.dart';
 
-part 'movie_state.freezed.dart';
+// part 'movie_state.freezed.dart';
 
-@freezed
-class MovieState with _$MovieState {
-  const factory MovieState({
-    @Default([]) List<Movie> allMovies,
-    @Default('') String searchMovies,
-    @Default([]) List<Category> allCategoris,
-    @Default('') String searchCategories,
-    @Default(false) bool isLoading,
-    Object? error,
-    @Default(false) bool notify,
-    @Default(false) bool onlyFavoriteCategories,
-  }) = _MovieState;
+// @freezed
+// class MovieState with _$MovieState {
+//   const factory MovieState({
+//     @Default([]) List<Movie> allMovies,
+//     @Default('') String searchMovies,
+//     @Default([]) List<Category> allCategoris,
+//     @Default('') String searchCategories,
+//     @Default(false) bool isLoading,
+//     Object? error,
+//     @Default(false) bool notify,
+//     @Default(false) bool onlyFavoriteCategories,
+//   }) = _MovieState;
 
-  const MovieState._(); // Added for custom getters
+//   const MovieState._(); // Added for custom getters
 
-  // Custom Getters
-  List<Movie> getMovies(Category category) => allMovies.where((c) {
-        return (c.categoryId == category.categoryId ||
-                category.categoryId == -2 ||
-                (category.categoryId == -1 && c.isFavorite)) &&
-            c.name.toLowerCase().contains(searchMovies.toLowerCase());
-      }).toList();
+//   // Custom Getters
+//   List<Movie> getMovies(Category category) => allMovies.where((c) {
+//         return (c.categoryId == category.categoryId ||
+//                 category.categoryId == -2 ||
+//                 (category.categoryId == -1 && c.isFavorite)) &&
+//             c.name.toLowerCase().contains(searchMovies.toLowerCase());
+//       }).toList();
 
-  List<Category> get categories => allCategoris
-      .where(
-        (c) =>
-            c.categoryName.toLowerCase().contains(
-                  searchCategories.toLowerCase(),
-                ) &&
-            (!onlyFavoriteCategories || c.isFavorite),
-      )
-      .toList();
-}
+//   List<Category> get categories => allCategoris
+//       .where(
+//         (c) =>
+//             c.categoryName.toLowerCase().contains(
+//                   searchCategories.toLowerCase(),
+//                 ) &&
+//             (!onlyFavoriteCategories || c.isFavorite),
+//       )
+//       .toList();
+// }
 
-class LiveController extends Notifier<MovieState> {
-  MovieState get stateSnapshot => state;
-  @override
-  MovieState build() => const MovieState(
-        isLoading: true,
-        error: null,
-      );
+// class LiveController extends Notifier<MovieState> {
+//   MovieState get stateSnapshot => state;
+//   @override
+//   MovieState build() => const MovieState(
+//         isLoading: true,
+//         error: null,
+//       );
 
-  Future<void> init() async {
-    try {
-      final movies = await MoviesServices.getMovies();
-      final categories = await MoviesServices.getMoviesCategories();
+//   Future<void> init() async {
+//     try {
+//       final movies = await MoviesServices.getMovies();
+//       final categories = await MoviesServices.getMoviesCategories();
 
-      // Update the state with the fetched data
-      state = state.copyWith(
-        allMovies: movies,
-        allCategoris: categories,
-        isLoading: false, // Loading finished
-      );
-    } catch (e) {
-      // Handle errors by updating the error state
-      state = state.copyWith(
-        isLoading: false, // Stop loading
-        error: e, // Store the error
-      );
-    }
-  }
+//       // Update the state with the fetched data
+//       state = state.copyWith(
+//         allMovies: movies,
+//         allCategoris: categories,
+//         isLoading: false, // Loading finished
+//       );
+//     } catch (e) {
+//       // Handle errors by updating the error state
+//       state = state.copyWith(
+//         isLoading: false, // Stop loading
+//         error: e, // Store the error
+//       );
+//     }
+//   }
 
-  void updateSearchmovies(String search) {
-    state = state.copyWith(searchMovies: search);
-  }
+//   void updateSearchmovies(String search) {
+//     state = state.copyWith(searchMovies: search);
+//   }
 
-  void updateSearchCategories(String search) {
-    state = state.copyWith(searchCategories: search);
-  }
+//   void updateSearchCategories(String search) {
+//     state = state.copyWith(searchCategories: search);
+//   }
 
-  void searchmovies(String v) async {
-    state = state.copyWith(
-      searchMovies: v,
-    );
-  }
+//   void searchmovies(String v) async {
+//     state = state.copyWith(
+//       searchMovies: v,
+//     );
+//   }
 
-  void searchCategories(String v) async {
-    state = state.copyWith(
-      searchCategories: v,
-    );
-  }
+//   void searchCategories(String v) async {
+//     state = state.copyWith(
+//       searchCategories: v,
+//     );
+//   }
 
-  void toggleFavoriteCategory(Category category) {
-    MoviesServices.toggleFavoriteCategory(category);
-    state = state.copyWith(
-      notify: !state.notify,
-    );
-  }
+//   void toggleFavoriteCategory(Category category) {
+//     MoviesServices.toggleFavoriteCategory(category);
+//     state = state.copyWith(
+//       notify: !state.notify,
+//     );
+//   }
 
-  void toggleFavoriteChannel(Movie channel) {
-    MoviesServices.toggleFavoriteChannel(channel);
-    state = state.copyWith(
-      notify: !state.notify,
-    );
-  }
+//   void toggleFavoriteChannel(Movie channel) {
+//     MoviesServices.toggleFavoriteChannel(channel);
+//     state = state.copyWith(
+//       notify: !state.notify,
+//     );
+//   }
 
-  void toggleShowOnlyFavoriteCategories() {
-    state = state.copyWith(
-      onlyFavoriteCategories: !state.onlyFavoriteCategories,
-    );
-  }
+//   void toggleShowOnlyFavoriteCategories() {
+//     state = state.copyWith(
+//       onlyFavoriteCategories: !state.onlyFavoriteCategories,
+//     );
+//   }
 
-  void enrichMovieDetails(Movie movie) async {
-    await MoviesServices.enrichMovieDetails(movie);
-  }
-}
+//   void enrichMovieDetails(Movie movie) async {
+//     await MoviesServices.enrichMovieDetails(movie);
+//   }
+// }
 
-final moviesControllerProvider = NotifierProvider<LiveController, MovieState>(
-  () => LiveController(),
-);
+// final moviesControllerProvider = NotifierProvider<LiveController, MovieState>(
+//   () => LiveController(),
+// );

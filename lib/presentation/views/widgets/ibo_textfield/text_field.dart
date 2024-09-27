@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gradient_borders/gradient_borders.dart';
 
-import '../../../utils/app_utils.dart';
+import '../../../utils/listing_utils.dart';
 import '../faded_widget.dart';
 import 'text_field_options.dart';
 
@@ -321,7 +321,7 @@ class _IboTextFieldState extends State<IboTextField> {
     if (!moving) {
       verticalScrollController
           .animateToItem(
-            AppUtils.cycle(
+            ListingUtils.cycle(
               newIndex,
               letters.length,
             ),

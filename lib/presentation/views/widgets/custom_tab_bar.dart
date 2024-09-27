@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../providers/app_state.dart';
+import '../../providers/app_state.dart';
 
 class CustomTabBar extends ConsumerStatefulWidget {
   const CustomTabBar({
@@ -63,12 +63,9 @@ class _CustomTabBarState extends ConsumerState<CustomTabBar> {
   @override
   void initState() {
     indexNotifier = ref.read(AppState.homeIndex.notifier);
-    Future.delayed(Duration.zero).then((_) {
-      if (mounted) {
-        children = findRenderBoxesByType<CustomTab>(context);
-        renderBox = context.findRenderObject() as RenderBox;
-        moveIndicator(indexNotifier.state, updateUIOnly: true);
-      }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      children = findRenderBoxesByType<CustomTab>(context);
+      renderBox = context.findRenderObject() as RenderBox;
     });
     super.initState();
   }
@@ -77,7 +74,7 @@ class _CustomTabBarState extends ConsumerState<CustomTabBar> {
 
   @override
   Widget build(BuildContext context) {
-    Future.delayed(Duration.zero).then((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       children = findRenderBoxesByType<CustomTab>(context);
       renderBox = context.findRenderObject() as RenderBox;
     });

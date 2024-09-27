@@ -2,37 +2,29 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get_it/get_it.dart';
 
-import '../../data/repositories/user_repository.dart';
-import '../../services/live_services.dart';
-import '../../services/movies_services.dart';
-import '../../services/playlist_services.dart';
-import '../../utils/app_utils.dart';
+import '../../domain/usecases/login.dart';
+import '../../shared/types/no_parameters.dart';
 import 'app_state.dart';
 
 class RouterInitializationListenable with ChangeNotifier {
-  static final instance =
-      ChangeNotifierProvider<RouterInitializationListenable>(
-    (ref) => RouterInitializationListenable(),
-  );
-
+  final _getIt = GetIt.instance;
+  late final providerContainer = _getIt.get<ProviderContainer>();
+  late final login = _getIt.get<Login>();
   RouterInitializationListenable() {
     Future.delayed(Duration.zero).then((_) => init());
   }
 
-  // Method to refresh the list
   Future<void> init() async {
     try {
       final appStateNotifier =
-          AppUtils.providerContainer.read(AppState.appStateProvider.notifier);
+          providerContainer.read(AppState.appStateProvider.notifier);
       appStateNotifier.update((s) => AppStates.initPlaylistsMetadata);
       notifyListeners();
       if (appStateNotifier.state != AppStates.initialized) {
         log('app initialized');
-        await UserRepository.initialize();
-        await PlaylistServices.initialize();
-        await LiveServices.initialize();
-        await MoviesServices.initialize();
+        login(NoParameters());
         appStateNotifier.update((s) => AppStates.initialized);
         notifyListeners();
       }
@@ -41,3 +33,8 @@ class RouterInitializationListenable with ChangeNotifier {
     }
   }
 }
+
+final routerInitializationListenable =
+    ChangeNotifierProvider<RouterInitializationListenable>(
+  (ref) => RouterInitializationListenable(),
+);

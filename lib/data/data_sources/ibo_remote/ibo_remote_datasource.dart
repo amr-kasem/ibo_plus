@@ -1,57 +1,87 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 
+import '../../../bootstrap/config/app_config.dart';
+import '../../../domain/entities/device_id.dart';
+import '../../dtos/ibo/ibo_info/ibo_info.dart';
 import '../../helpers/ibo_api_helper.dart';
 
-class IboRemoteDatasource {
+abstract class IboRemoteDatasource {
+  Future<List<String>> getDomains({
+    required DeviceId deviceId,
+  });
+  Future<IboInfoJsonModel> getUserData({
+    required DeviceId deviceId,
+    required String domain,
+  });
+}
+
+class IboRemoteDatasourceImpl implements IboRemoteDatasource {
   final _getit = GetIt.instance;
   late final _dio = _getit.get<Dio>();
   late final _iboApiHelper = _getit.get<IboApiHelper>();
-  Future<Map> getDomains(String deviceId) async {
-    final data = {
-      // 'mac_address': 'fc:03:9f:93:03:d0',
-      // 'mac_address': '45:34:15:38:43:52',
-      'device_id': deviceId,
+  late final _appConfig = _getit.get<AppConfig>();
+  @override
+  Future<List<String>> getDomains({required DeviceId deviceId}) async {
+    final params = {
+      'device_id': deviceId.toString(),
       'app_type': 'plus',
       'version': '1.0.0',
     };
-    final res = await _dio
-        .post(
-          '/playlist_info',
-          data: FormData.fromMap(
-            {
-              'data': _iboApiHelper.encryptRequest(data),
-            },
-          ),
-        )
-        .timeout(const Duration(seconds: 4));
-    final resData = _iboApiHelper.decryptResponse(res.data['data']);
+    final response = await _dio.post(
+      '${_appConfig.iboBaseUrl}/playlist_info',
+      data: FormData.fromMap(
+        {
+          'data': _iboApiHelper.encryptRequest(params),
+        },
+      ),
+    );
+    final data = _iboApiHelper.decryptResponse(response.data['data']);
 
-    return resData;
+    return (data["domains"] as List).cast<String>();
   }
 
-  Future<Response?> getIboData(String domain, String deviceId) async {
-    final data2 = {
-      // 'mac_address': deviceId,
-      'mac_address': '1c:93:c4:ea:19:f5',
-      // 'mac_address': 'fc:03:9f:93:03:d0',
-      // 'mac_address': '45:dz:15:38:43:52',
+  @override
+  Future<IboInfoJsonModel> getUserData({
+    required DeviceId deviceId,
+    required String domain,
+  }) async {
+    final params = {
+      'mac_address': deviceId.toString(),
       'app_type': 'plus',
       'version': '1.0.0',
     };
-    Response? res2;
-    try {
-      res2 = await _dio
-          .post(
-            'https://$domain/api/playlist_info',
-            data: FormData.fromMap(
-              {
-                'data': _iboApiHelper.encryptRequest(data2),
-              },
-            ),
-          )
-          .timeout(const Duration(seconds: 4));
-    } catch (_) {}
-    return res2;
+    Response? response;
+
+    response = await _dio.post(
+      'https://$domain/api/playlist_info',
+      data: FormData.fromMap(
+        {
+          'data': _iboApiHelper.encryptRequest(params),
+        },
+      ),
+    );
+
+    final data = _iboApiHelper.decryptResponse(response.data['data']);
+    final formatedData = {
+      'mac_address': data['mac_address'],
+      'device_key': data['device_key'],
+      'languages': data['languages'],
+      'tmdb_api_key': data['tmdb_api_key'],
+      'urls': data['urls'],
+      'notifications': [
+        data['notification'],
+      ],
+      'user': {
+        'mac_registered': data['mac_registered'],
+        'has_own_playlist': data['has_own_playlist'],
+        'trial_days': data['trial_days'],
+        'parent_pin': data['parent_pin'],
+        'is_trial': data['is_trial'],
+        'expiray_date': data['expire_date'],
+      }
+    };
+    final iboInfo = IboInfoJsonModel.fromJson(formatedData);
+    return iboInfo;
   }
 }
