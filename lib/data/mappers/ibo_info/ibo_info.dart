@@ -4,9 +4,10 @@ import '../../../domain/entities/device_id.dart';
 import '../../../domain/entities/ibo_info.dart';
 import '../../../domain/value_objects/ibo/ibo_info_data.dart';
 import '../../dtos/ibo/ibo_info/ibo_info.dart';
+import '../../dtos/ibo/m3u_playlist/m3u_playlist.dart';
+import '../playlist/playlist.dart';
 import 'ibo_language.dart';
 import 'ibo_notification.dart';
-import 'playlist.dart';
 import 'user.dart';
 
 class IboInfoMapper {
@@ -42,8 +43,9 @@ class IboInfoMapper {
           .map(_iboNotificationMapper.toEntity)
           .toList(),
       user: _userMapper.toEntity(iboInfoJsonModel.user),
-      playlists:
-          iboInfoJsonModel.playlists.map(_playlistMapper.toEntity).toList(),
+      playlists: iboInfoJsonModel.playlists
+          .map(_playlistMapper.toEntity<M3uPlaylistJsonModel>)
+          .toList(),
     );
   }
 }

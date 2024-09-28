@@ -1,45 +1,55 @@
-// import 'dart:developer';
-
-// import '../../domain/types/category_type.dart';
-// import '../data_sources/isar_db.dart';
-// import '../data_sources/playlist_remote_datasource.dart';
-// import '../data_sources/tmdb_datasource.dart';
-// import '../dtos/isar/ibo/user/data_event.dart';
-// import '../dtos/isar/playlist/live_channel/live_channel.dart';
-// import '../dtos/isar/playlist/movie/movie.dart';
-// import '../dtos/isar/playlist/category/category.dart';
-// import 'user_repository_impl.dart';
-
 import 'package:get_it/get_it.dart';
-import 'package:ibo_plus/data/data_sources/iptv_remote/playlist_remote_datasource.dart';
-import 'package:ibo_plus/domain/entities/playlist.dart';
 
+import '../../domain/entities/playlist.dart';
 import '../../domain/repositories/playlist_repository.dart';
+import '../data_sources/iptv_remote/playlist_remote_datasource.dart';
 import '../data_sources/isar_local/playlist_datasource.dart';
+import '../dtos/ibo/m3u_playlist/m3u_playlist_status.dart';
+import '../dtos/isar/playlist/m3u_playlist/m3u_playlist.dart';
+import '../mappers/playlist/playlist.dart';
+import '../mappers/playlist/playlist_status.dart';
 
 class PlaylistRepositoryImpl implements PlaylistRepository {
   final _getIt = GetIt.instance;
   late final _playlistRemoteDatasource = _getIt.get<PlaylistRemoteDatasource>();
   late final _playlistLocalDatasource = _getIt.get<PlaylistLocalDatasource>();
+  late final _playlistStatusMapper = _getIt.get<PlaylistStatusMapper>();
+  late final _playlistMapper = _getIt.get<PlaylistMapper>();
   @override
-  Future<List<Playlist>> getAllPlaylists() {
-    return _playlistLocalDatasource.getPlaylists();
+  Future<List<Playlist>> getAllPlaylists() async {
+    final playlists = await _playlistLocalDatasource.getPlaylists();
+    return playlists
+        .map(_playlistMapper.toEntity<M3uPlaylistIsarModel>)
+        .toList();
   }
 
   @override
   Future<void> initializePlaylists(List<Playlist> playlists) async {
-    final futures = playlists.map((playlist) {
-      Future(() {
-        final status = _playlistRemoteDatasource.initPlaylist(playlist.data);
-        _playlistLocalDatasource.updatePlaylistStatus(status);
-      });
-    });
+    final futures = playlists
+        .map(
+          (playlist) => Future<Playlist>(
+            () async {
+              final statusJsonModel =
+                  await _playlistRemoteDatasource.initPlaylist(playlist.data);
+              final status = _playlistStatusMapper
+                  .toEntity<M3uPlaylistStatusJsonModel>(statusJsonModel);
+              final playlistIsarModel = _playlistMapper.toIsarModel(playlist);
+              final p = _playlistLocalDatasource.updatePlaylistStatus(
+                playlistIsarModel,
+                status,
+              );
+              return _playlistMapper.toEntity<M3uPlaylistIsarModel>(p);
+            },
+          ),
+        )
+        .toList();
+    await Future.wait(futures);
   }
 
   @override
-  Future<void> storePlaylists(List<Playlist> playlists) {
-    // TODO: implement storePlaylists
-    throw UnimplementedError();
+  Future<void> storePlaylists(List<Playlist> playlists) async {
+    final playlistModels = playlists.map(_playlistMapper.toIsarModel).toList();
+    _playlistLocalDatasource.storePlaylists(playlistModels);
   }
 }
 //   static Future<void> initPlaylistsMetadata() async {

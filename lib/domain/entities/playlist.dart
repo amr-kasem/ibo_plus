@@ -1,9 +1,11 @@
 import '../value_objects/media/playlist/playlist_data.dart';
+import '../value_objects/media/playlist/playlist_status_data.dart';
 
 class Playlist {
-  final PlaylistData data;
+  PlaylistData data;
+  PlaylistStatusData status;
 
-  Playlist({required this.data});
+  Playlist({required this.data, required this.status});
 
   @override
   String toString() => 'Playlist{id:${data.id} , name: ${data.playlistName}}';

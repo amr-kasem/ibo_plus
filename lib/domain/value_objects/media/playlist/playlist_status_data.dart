@@ -8,4 +8,5 @@ class PlaylistStatusData with _$PlaylistStatusData {
     required bool activeSubscription,
     required Duration expirayDuration,
   }) = _PlaylistStatusData;
+  const PlaylistStatusData._();
 }

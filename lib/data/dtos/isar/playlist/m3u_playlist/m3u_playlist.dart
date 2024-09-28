@@ -23,10 +23,9 @@ class M3uPlaylistIsarModel {
   final String originUrl;
 
   @ignore
-  late Duration expiray;
-  late bool connected;
-  late bool active;
-  int get isarExpiary => expiray.inSeconds;
+  late Duration? expiray;
+  late bool? active;
+  int get isarExpiary => expiray?.inSeconds ?? -1;
   set isarExpiary(int i) => expiray = Duration(seconds: i);
 
   M3uPlaylistIsarModel({
@@ -41,7 +40,6 @@ class M3uPlaylistIsarModel {
     required this.originType,
     required this.originUrl,
   }) {
-    connected = false;
     active = false;
     expiray = Duration.zero;
   }

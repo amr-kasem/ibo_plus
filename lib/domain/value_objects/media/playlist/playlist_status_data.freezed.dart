@@ -102,9 +102,10 @@ class __$$PlaylistStatusDataImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$PlaylistStatusDataImpl implements _PlaylistStatusData {
+class _$PlaylistStatusDataImpl extends _PlaylistStatusData {
   const _$PlaylistStatusDataImpl(
-      {required this.activeSubscription, required this.expirayDuration});
+      {required this.activeSubscription, required this.expirayDuration})
+      : super._();
 
   @override
   final bool activeSubscription;
@@ -139,10 +140,11 @@ class _$PlaylistStatusDataImpl implements _PlaylistStatusData {
           this, _$identity);
 }
 
-abstract class _PlaylistStatusData implements PlaylistStatusData {
+abstract class _PlaylistStatusData extends PlaylistStatusData {
   const factory _PlaylistStatusData(
       {required final bool activeSubscription,
       required final Duration expirayDuration}) = _$PlaylistStatusDataImpl;
+  const _PlaylistStatusData._() : super._();
 
   @override
   bool get activeSubscription;

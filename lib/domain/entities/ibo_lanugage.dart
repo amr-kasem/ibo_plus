@@ -1,7 +1,7 @@
 import '../value_objects/ibo/ibo_language_data.dart';
 
 class IboLanguage {
-  final IboLanguageData data;
+  IboLanguageData data;
 
   IboLanguage({required this.data});
 

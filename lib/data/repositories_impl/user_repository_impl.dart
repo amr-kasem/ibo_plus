@@ -35,7 +35,6 @@ class UserRepositoryImpl implements UserRepository {
     late final IboInfo iboInfo;
     try {
       final iboInfoJsonModel = await Future.any(futures);
-      _logger.i(iboInfoJsonModel);
       iboInfo = _iboInfoMapper.toEntity(iboInfoJsonModel);
       return iboInfo;
     } catch (e) {

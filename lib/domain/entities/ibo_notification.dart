@@ -1,7 +1,7 @@
 import '../value_objects/ibo/ibo_notification_data.dart';
 
 class IboNotification {
-  final IboNotificationData data;
+  IboNotificationData data;
 
   IboNotification({required this.data});
 

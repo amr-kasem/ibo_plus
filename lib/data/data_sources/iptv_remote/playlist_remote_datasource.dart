@@ -4,9 +4,13 @@ import 'package:get_it/get_it.dart';
 import '../../../domain/value_objects/media/playlist/playlist_data.dart';
 import '../../dtos/ibo/m3u_playlist/m3u_playlist_status.dart';
 
-class PlaylistRemoteDatasource {
+abstract class PlaylistRemoteDatasource {
+  Future<M3uPlaylistStatusJsonModel> initPlaylist(PlaylistData playlist);
+}
+
+class PlaylistRemoteDatasourceImpl implements PlaylistRemoteDatasource {
   final Dio _dio = GetIt.instance.get<Dio>();
-  Duration _getRemainingSubscriptionDuration(Map data) {
+  int _getRemainingSubscriptionDuration(Map data) {
     // Extract the current timestamp and expiration timestamp
     int currentTimestamp =
         int.tryParse('${data['server_info']?['timestamp_now']}') ?? 0;
@@ -14,7 +18,7 @@ class PlaylistRemoteDatasource {
 
     // Calculate the remaining duration in seconds
     int remainingDurationInSeconds = expTimestamp - currentTimestamp;
-    return Duration(seconds: remainingDurationInSeconds);
+    return remainingDurationInSeconds * 1000;
   }
 
   Future<M3uPlaylistStatusJsonModel> initPlaylist(
@@ -40,7 +44,7 @@ class PlaylistRemoteDatasource {
       final jsonData = res.data as Map;
       // playlist.connected = true;
       bool active = (jsonData['user_info']?['auth'] ?? 0) == 1;
-      Duration expiray = _getRemainingSubscriptionDuration(jsonData);
+      int expiray = _getRemainingSubscriptionDuration(jsonData);
       // log('workin playlist ${playlist.playlistName}');
       return M3uPlaylistStatusJsonModel.fromJson({
         'active_subscription': active,

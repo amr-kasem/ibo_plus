@@ -6,12 +6,12 @@ import 'playlist.dart';
 import 'user.dart';
 
 class IboInfo {
-  final DeviceId deviceId;
-  final List<IboNotification> notifications;
-  final List<IboLanguage> languages;
-  final User user;
-  final IboInfoData data;
-  final List<Playlist> playlists;
+  DeviceId deviceId;
+  List<IboNotification> notifications;
+  List<IboLanguage> languages;
+  User user;
+  IboInfoData data;
+  List<Playlist> playlists;
 
   IboInfo({
     required this.deviceId,

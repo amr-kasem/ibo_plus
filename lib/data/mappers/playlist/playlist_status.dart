@@ -1,37 +1,44 @@
-import '../../../domain/entities/playlist.dart';
-import '../../../domain/value_objects/media/playlist/playlist_data.dart';
-import '../../dtos/ibo/m3u_playlist/m3u_playlist.dart';
+import '../../../domain/value_objects/media/playlist/playlist_status_data.dart';
+import '../../dtos/ibo/m3u_playlist/m3u_playlist_status.dart';
+import '../../dtos/isar/playlist/m3u_playlist/m3u_playlist.dart';
 
-class PlaylistMapper {
-  M3uPlaylistJsonModel toJsonModel(Playlist playlist) {
-    return M3uPlaylistJsonModel(
-      id: playlist.data.id,
-      username: playlist.data.username,
-      password: playlist.data.password,
-      url: playlist.data.url,
-      epgUrl: playlist.data.epgUrl,
-      playlistName: playlist.data.playlistName,
-      isProtected: playlist.data.isProtected,
-      playlistType: playlist.data.playlistType,
-      originType: playlist.data.originType,
-      originUrl: playlist.data.originUrl,
+class PlaylistStatusMapper {
+  M3uPlaylistStatusJsonModel toJsonModel(PlaylistStatusData status) {
+    return M3uPlaylistStatusJsonModel(
+      activeSubscription: status.activeSubscription,
+      expirayDuration: status.expirayDuration,
     );
   }
 
-  Playlist toEntity(M3uPlaylistJsonModel playlistJsonModel) {
-    return Playlist(
-      data: PlaylistData(
-        isProtected: playlistJsonModel.isProtected,
-        id: playlistJsonModel.id,
-        url: playlistJsonModel.url,
-        playlistName: playlistJsonModel.playlistName,
-        username: playlistJsonModel.username,
-        password: playlistJsonModel.password,
-        epgUrl: playlistJsonModel.epgUrl,
-        playlistType: playlistJsonModel.playlistType,
-        originType: playlistJsonModel.originType,
-        originUrl: playlistJsonModel.originUrl,
-      ),
+  PlaylistStatusData toEntity<T>(T playlistJsonModel) {
+    final defaultStatus = PlaylistStatusData(
+        activeSubscription: false, expirayDuration: Duration.zero);
+    if (playlistJsonModel is M3uPlaylistStatusJsonModel) {
+      return _playlistStatusJsonModelToEntity(playlistJsonModel);
+    } else if (playlistJsonModel is M3uPlaylistIsarModel) {
+      return _playlistIsarModelToEntity(playlistJsonModel) ?? defaultStatus;
+    } else {
+      return defaultStatus;
+    }
+  }
+
+  PlaylistStatusData _playlistStatusJsonModelToEntity(
+      M3uPlaylistStatusJsonModel playlistJsonModel) {
+    return PlaylistStatusData(
+      activeSubscription: playlistJsonModel.activeSubscription,
+      expirayDuration: playlistJsonModel.expirayDuration,
     );
+  }
+
+  PlaylistStatusData? _playlistIsarModelToEntity(
+      M3uPlaylistIsarModel playlist) {
+    if (playlist.active != null && playlist.expiray != null) {
+      return PlaylistStatusData(
+        activeSubscription: playlist.active!,
+        expirayDuration: playlist.expiray!,
+      );
+    } else {
+      return null;
+    }
   }
 }
