@@ -9,13 +9,13 @@ part of 'category.dart';
 // coverage:ignore-file
 // ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
 
-extension GetCategoryCollection on Isar {
-  IsarCollection<Category> get categorys => this.collection();
+extension GetCategoryIsarModelCollection on Isar {
+  IsarCollection<CategoryIsarModel> get categoryIsarModels => this.collection();
 }
 
-const CategorySchema = CollectionSchema(
-  name: r'Category',
-  id: 5751694338128944171,
+const CategoryIsarModelSchema = CollectionSchema(
+  name: r'CategoryIsarModel',
+  id: -7763797637460357684,
   properties: {
     r'categoryId': PropertySchema(
       id: 0,
@@ -32,32 +32,27 @@ const CategorySchema = CollectionSchema(
       name: r'hashCode',
       type: IsarType.long,
     ),
-    r'isFavorite': PropertySchema(
-      id: 3,
-      name: r'isFavorite',
-      type: IsarType.bool,
-    ),
     r'parentId': PropertySchema(
-      id: 4,
+      id: 3,
       name: r'parentId',
       type: IsarType.long,
     ),
     r'playlistId': PropertySchema(
-      id: 5,
+      id: 4,
       name: r'playlistId',
       type: IsarType.long,
     ),
     r'type': PropertySchema(
-      id: 6,
+      id: 5,
       name: r'type',
       type: IsarType.byte,
-      enumMap: _CategorytypeEnumValueMap,
+      enumMap: _CategoryIsarModeltypeEnumValueMap,
     )
   },
-  estimateSize: _categoryEstimateSize,
-  serialize: _categorySerialize,
-  deserialize: _categoryDeserialize,
-  deserializeProp: _categoryDeserializeProp,
+  estimateSize: _categoryIsarModelEstimateSize,
+  serialize: _categoryIsarModelSerialize,
+  deserialize: _categoryIsarModelDeserialize,
+  deserializeProp: _categoryIsarModelDeserializeProp,
   idName: r'isarId',
   indexes: {
     r'categoryId_playlistId': IndexSchema(
@@ -112,14 +107,14 @@ const CategorySchema = CollectionSchema(
   },
   links: {},
   embeddedSchemas: {},
-  getId: _categoryGetId,
-  getLinks: _categoryGetLinks,
-  attach: _categoryAttach,
+  getId: _categoryIsarModelGetId,
+  getLinks: _categoryIsarModelGetLinks,
+  attach: _categoryIsarModelAttach,
   version: '3.1.0+1',
 );
 
-int _categoryEstimateSize(
-  Category object,
+int _categoryIsarModelEstimateSize(
+  CategoryIsarModel object,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
@@ -128,8 +123,8 @@ int _categoryEstimateSize(
   return bytesCount;
 }
 
-void _categorySerialize(
-  Category object,
+void _categoryIsarModelSerialize(
+  CategoryIsarModel object,
   IsarWriter writer,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
@@ -137,31 +132,30 @@ void _categorySerialize(
   writer.writeLong(offsets[0], object.categoryId);
   writer.writeString(offsets[1], object.categoryName);
   writer.writeLong(offsets[2], object.hashCode);
-  writer.writeBool(offsets[3], object.isFavorite);
-  writer.writeLong(offsets[4], object.parentId);
-  writer.writeLong(offsets[5], object.playlistId);
-  writer.writeByte(offsets[6], object.type.index);
+  writer.writeLong(offsets[3], object.parentId);
+  writer.writeLong(offsets[4], object.playlistId);
+  writer.writeByte(offsets[5], object.type.index);
 }
 
-Category _categoryDeserialize(
+CategoryIsarModel _categoryIsarModelDeserialize(
   Id id,
   IsarReader reader,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  final object = Category(
+  final object = CategoryIsarModel(
     categoryId: reader.readLong(offsets[0]),
     categoryName: reader.readString(offsets[1]),
-    isFavorite: reader.readBoolOrNull(offsets[3]) ?? false,
-    parentId: reader.readLong(offsets[4]),
+    parentId: reader.readLong(offsets[3]),
   );
-  object.playlistId = reader.readLong(offsets[5]);
-  object.type = _CategorytypeValueEnumMap[reader.readByteOrNull(offsets[6])] ??
-      CategoryType.liveChannels;
+  object.playlistId = reader.readLong(offsets[4]);
+  object.type =
+      _CategoryIsarModeltypeValueEnumMap[reader.readByteOrNull(offsets[5])] ??
+          CategoryType.liveChannels;
   return object;
 }
 
-P _categoryDeserializeProp<P>(
+P _categoryIsarModelDeserializeProp<P>(
   IsarReader reader,
   int propertyId,
   int offset,
@@ -175,48 +169,51 @@ P _categoryDeserializeProp<P>(
     case 2:
       return (reader.readLong(offset)) as P;
     case 3:
-      return (reader.readBoolOrNull(offset) ?? false) as P;
+      return (reader.readLong(offset)) as P;
     case 4:
       return (reader.readLong(offset)) as P;
     case 5:
-      return (reader.readLong(offset)) as P;
-    case 6:
-      return (_CategorytypeValueEnumMap[reader.readByteOrNull(offset)] ??
+      return (_CategoryIsarModeltypeValueEnumMap[
+              reader.readByteOrNull(offset)] ??
           CategoryType.liveChannels) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
 }
 
-const _CategorytypeEnumValueMap = {
+const _CategoryIsarModeltypeEnumValueMap = {
   'liveChannels': 0,
   'movies': 1,
   'series': 2,
 };
-const _CategorytypeValueEnumMap = {
+const _CategoryIsarModeltypeValueEnumMap = {
   0: CategoryType.liveChannels,
   1: CategoryType.movies,
   2: CategoryType.series,
 };
 
-Id _categoryGetId(Category object) {
+Id _categoryIsarModelGetId(CategoryIsarModel object) {
   return object.isarId;
 }
 
-List<IsarLinkBase<dynamic>> _categoryGetLinks(Category object) {
+List<IsarLinkBase<dynamic>> _categoryIsarModelGetLinks(
+    CategoryIsarModel object) {
   return [];
 }
 
-void _categoryAttach(IsarCollection<dynamic> col, Id id, Category object) {}
+void _categoryIsarModelAttach(
+    IsarCollection<dynamic> col, Id id, CategoryIsarModel object) {}
 
-extension CategoryQueryWhereSort on QueryBuilder<Category, Category, QWhere> {
-  QueryBuilder<Category, Category, QAfterWhere> anyIsarId() {
+extension CategoryIsarModelQueryWhereSort
+    on QueryBuilder<CategoryIsarModel, CategoryIsarModel, QWhere> {
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterWhere> anyIsarId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
     });
   }
 
-  QueryBuilder<Category, Category, QAfterWhere> anyCategoryIdPlaylistId() {
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterWhere>
+      anyCategoryIdPlaylistId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
         const IndexWhereClause.any(indexName: r'categoryId_playlistId'),
@@ -224,7 +221,7 @@ extension CategoryQueryWhereSort on QueryBuilder<Category, Category, QWhere> {
     });
   }
 
-  QueryBuilder<Category, Category, QAfterWhere> anyType() {
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterWhere> anyType() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
         const IndexWhereClause.any(indexName: r'type'),
@@ -232,7 +229,8 @@ extension CategoryQueryWhereSort on QueryBuilder<Category, Category, QWhere> {
     });
   }
 
-  QueryBuilder<Category, Category, QAfterWhere> anyPlaylistIdType() {
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterWhere>
+      anyPlaylistIdType() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
         const IndexWhereClause.any(indexName: r'playlistId_type'),
@@ -241,8 +239,10 @@ extension CategoryQueryWhereSort on QueryBuilder<Category, Category, QWhere> {
   }
 }
 
-extension CategoryQueryWhere on QueryBuilder<Category, Category, QWhereClause> {
-  QueryBuilder<Category, Category, QAfterWhereClause> isarIdEqualTo(Id isarId) {
+extension CategoryIsarModelQueryWhere
+    on QueryBuilder<CategoryIsarModel, CategoryIsarModel, QWhereClause> {
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterWhereClause>
+      isarIdEqualTo(Id isarId) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IdWhereClause.between(
         lower: isarId,
@@ -251,8 +251,8 @@ extension CategoryQueryWhere on QueryBuilder<Category, Category, QWhereClause> {
     });
   }
 
-  QueryBuilder<Category, Category, QAfterWhereClause> isarIdNotEqualTo(
-      Id isarId) {
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterWhereClause>
+      isarIdNotEqualTo(Id isarId) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
@@ -274,9 +274,8 @@ extension CategoryQueryWhere on QueryBuilder<Category, Category, QWhereClause> {
     });
   }
 
-  QueryBuilder<Category, Category, QAfterWhereClause> isarIdGreaterThan(
-      Id isarId,
-      {bool include = false}) {
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterWhereClause>
+      isarIdGreaterThan(Id isarId, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
         IdWhereClause.greaterThan(lower: isarId, includeLower: include),
@@ -284,8 +283,8 @@ extension CategoryQueryWhere on QueryBuilder<Category, Category, QWhereClause> {
     });
   }
 
-  QueryBuilder<Category, Category, QAfterWhereClause> isarIdLessThan(Id isarId,
-      {bool include = false}) {
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterWhereClause>
+      isarIdLessThan(Id isarId, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
         IdWhereClause.lessThan(upper: isarId, includeUpper: include),
@@ -293,7 +292,8 @@ extension CategoryQueryWhere on QueryBuilder<Category, Category, QWhereClause> {
     });
   }
 
-  QueryBuilder<Category, Category, QAfterWhereClause> isarIdBetween(
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterWhereClause>
+      isarIdBetween(
     Id lowerIsarId,
     Id upperIsarId, {
     bool includeLower = true,
@@ -309,7 +309,7 @@ extension CategoryQueryWhere on QueryBuilder<Category, Category, QWhereClause> {
     });
   }
 
-  QueryBuilder<Category, Category, QAfterWhereClause>
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterWhereClause>
       categoryIdEqualToAnyPlaylistId(int categoryId) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IndexWhereClause.equalTo(
@@ -319,7 +319,7 @@ extension CategoryQueryWhere on QueryBuilder<Category, Category, QWhereClause> {
     });
   }
 
-  QueryBuilder<Category, Category, QAfterWhereClause>
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterWhereClause>
       categoryIdNotEqualToAnyPlaylistId(int categoryId) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
@@ -354,7 +354,7 @@ extension CategoryQueryWhere on QueryBuilder<Category, Category, QWhereClause> {
     });
   }
 
-  QueryBuilder<Category, Category, QAfterWhereClause>
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterWhereClause>
       categoryIdGreaterThanAnyPlaylistId(
     int categoryId, {
     bool include = false,
@@ -369,7 +369,7 @@ extension CategoryQueryWhere on QueryBuilder<Category, Category, QWhereClause> {
     });
   }
 
-  QueryBuilder<Category, Category, QAfterWhereClause>
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterWhereClause>
       categoryIdLessThanAnyPlaylistId(
     int categoryId, {
     bool include = false,
@@ -384,7 +384,7 @@ extension CategoryQueryWhere on QueryBuilder<Category, Category, QWhereClause> {
     });
   }
 
-  QueryBuilder<Category, Category, QAfterWhereClause>
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterWhereClause>
       categoryIdBetweenAnyPlaylistId(
     int lowerCategoryId,
     int upperCategoryId, {
@@ -402,7 +402,7 @@ extension CategoryQueryWhere on QueryBuilder<Category, Category, QWhereClause> {
     });
   }
 
-  QueryBuilder<Category, Category, QAfterWhereClause>
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterWhereClause>
       categoryIdPlaylistIdEqualTo(int categoryId, int playlistId) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IndexWhereClause.equalTo(
@@ -412,7 +412,7 @@ extension CategoryQueryWhere on QueryBuilder<Category, Category, QWhereClause> {
     });
   }
 
-  QueryBuilder<Category, Category, QAfterWhereClause>
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterWhereClause>
       categoryIdEqualToPlaylistIdNotEqualTo(int categoryId, int playlistId) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
@@ -447,7 +447,7 @@ extension CategoryQueryWhere on QueryBuilder<Category, Category, QWhereClause> {
     });
   }
 
-  QueryBuilder<Category, Category, QAfterWhereClause>
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterWhereClause>
       categoryIdEqualToPlaylistIdGreaterThan(
     int categoryId,
     int playlistId, {
@@ -463,7 +463,7 @@ extension CategoryQueryWhere on QueryBuilder<Category, Category, QWhereClause> {
     });
   }
 
-  QueryBuilder<Category, Category, QAfterWhereClause>
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterWhereClause>
       categoryIdEqualToPlaylistIdLessThan(
     int categoryId,
     int playlistId, {
@@ -479,7 +479,7 @@ extension CategoryQueryWhere on QueryBuilder<Category, Category, QWhereClause> {
     });
   }
 
-  QueryBuilder<Category, Category, QAfterWhereClause>
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterWhereClause>
       categoryIdEqualToPlaylistIdBetween(
     int categoryId,
     int lowerPlaylistId,
@@ -498,8 +498,8 @@ extension CategoryQueryWhere on QueryBuilder<Category, Category, QWhereClause> {
     });
   }
 
-  QueryBuilder<Category, Category, QAfterWhereClause> typeEqualTo(
-      CategoryType type) {
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterWhereClause>
+      typeEqualTo(CategoryType type) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IndexWhereClause.equalTo(
         indexName: r'type',
@@ -508,8 +508,8 @@ extension CategoryQueryWhere on QueryBuilder<Category, Category, QWhereClause> {
     });
   }
 
-  QueryBuilder<Category, Category, QAfterWhereClause> typeNotEqualTo(
-      CategoryType type) {
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterWhereClause>
+      typeNotEqualTo(CategoryType type) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
@@ -543,7 +543,8 @@ extension CategoryQueryWhere on QueryBuilder<Category, Category, QWhereClause> {
     });
   }
 
-  QueryBuilder<Category, Category, QAfterWhereClause> typeGreaterThan(
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterWhereClause>
+      typeGreaterThan(
     CategoryType type, {
     bool include = false,
   }) {
@@ -557,7 +558,8 @@ extension CategoryQueryWhere on QueryBuilder<Category, Category, QWhereClause> {
     });
   }
 
-  QueryBuilder<Category, Category, QAfterWhereClause> typeLessThan(
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterWhereClause>
+      typeLessThan(
     CategoryType type, {
     bool include = false,
   }) {
@@ -571,7 +573,8 @@ extension CategoryQueryWhere on QueryBuilder<Category, Category, QWhereClause> {
     });
   }
 
-  QueryBuilder<Category, Category, QAfterWhereClause> typeBetween(
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterWhereClause>
+      typeBetween(
     CategoryType lowerType,
     CategoryType upperType, {
     bool includeLower = true,
@@ -588,8 +591,8 @@ extension CategoryQueryWhere on QueryBuilder<Category, Category, QWhereClause> {
     });
   }
 
-  QueryBuilder<Category, Category, QAfterWhereClause> playlistIdEqualToAnyType(
-      int playlistId) {
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterWhereClause>
+      playlistIdEqualToAnyType(int playlistId) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IndexWhereClause.equalTo(
         indexName: r'playlistId_type',
@@ -598,7 +601,7 @@ extension CategoryQueryWhere on QueryBuilder<Category, Category, QWhereClause> {
     });
   }
 
-  QueryBuilder<Category, Category, QAfterWhereClause>
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterWhereClause>
       playlistIdNotEqualToAnyType(int playlistId) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
@@ -633,7 +636,7 @@ extension CategoryQueryWhere on QueryBuilder<Category, Category, QWhereClause> {
     });
   }
 
-  QueryBuilder<Category, Category, QAfterWhereClause>
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterWhereClause>
       playlistIdGreaterThanAnyType(
     int playlistId, {
     bool include = false,
@@ -648,7 +651,8 @@ extension CategoryQueryWhere on QueryBuilder<Category, Category, QWhereClause> {
     });
   }
 
-  QueryBuilder<Category, Category, QAfterWhereClause> playlistIdLessThanAnyType(
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterWhereClause>
+      playlistIdLessThanAnyType(
     int playlistId, {
     bool include = false,
   }) {
@@ -662,7 +666,8 @@ extension CategoryQueryWhere on QueryBuilder<Category, Category, QWhereClause> {
     });
   }
 
-  QueryBuilder<Category, Category, QAfterWhereClause> playlistIdBetweenAnyType(
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterWhereClause>
+      playlistIdBetweenAnyType(
     int lowerPlaylistId,
     int upperPlaylistId, {
     bool includeLower = true,
@@ -679,8 +684,8 @@ extension CategoryQueryWhere on QueryBuilder<Category, Category, QWhereClause> {
     });
   }
 
-  QueryBuilder<Category, Category, QAfterWhereClause> playlistIdTypeEqualTo(
-      int playlistId, CategoryType type) {
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterWhereClause>
+      playlistIdTypeEqualTo(int playlistId, CategoryType type) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IndexWhereClause.equalTo(
         indexName: r'playlistId_type',
@@ -689,7 +694,7 @@ extension CategoryQueryWhere on QueryBuilder<Category, Category, QWhereClause> {
     });
   }
 
-  QueryBuilder<Category, Category, QAfterWhereClause>
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterWhereClause>
       playlistIdEqualToTypeNotEqualTo(int playlistId, CategoryType type) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
@@ -724,7 +729,7 @@ extension CategoryQueryWhere on QueryBuilder<Category, Category, QWhereClause> {
     });
   }
 
-  QueryBuilder<Category, Category, QAfterWhereClause>
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterWhereClause>
       playlistIdEqualToTypeGreaterThan(
     int playlistId,
     CategoryType type, {
@@ -740,7 +745,7 @@ extension CategoryQueryWhere on QueryBuilder<Category, Category, QWhereClause> {
     });
   }
 
-  QueryBuilder<Category, Category, QAfterWhereClause>
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterWhereClause>
       playlistIdEqualToTypeLessThan(
     int playlistId,
     CategoryType type, {
@@ -756,7 +761,7 @@ extension CategoryQueryWhere on QueryBuilder<Category, Category, QWhereClause> {
     });
   }
 
-  QueryBuilder<Category, Category, QAfterWhereClause>
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterWhereClause>
       playlistIdEqualToTypeBetween(
     int playlistId,
     CategoryType lowerType,
@@ -776,10 +781,10 @@ extension CategoryQueryWhere on QueryBuilder<Category, Category, QWhereClause> {
   }
 }
 
-extension CategoryQueryFilter
-    on QueryBuilder<Category, Category, QFilterCondition> {
-  QueryBuilder<Category, Category, QAfterFilterCondition> categoryIdEqualTo(
-      int value) {
+extension CategoryIsarModelQueryFilter
+    on QueryBuilder<CategoryIsarModel, CategoryIsarModel, QFilterCondition> {
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterFilterCondition>
+      categoryIdEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'categoryId',
@@ -788,7 +793,8 @@ extension CategoryQueryFilter
     });
   }
 
-  QueryBuilder<Category, Category, QAfterFilterCondition> categoryIdGreaterThan(
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterFilterCondition>
+      categoryIdGreaterThan(
     int value, {
     bool include = false,
   }) {
@@ -801,7 +807,8 @@ extension CategoryQueryFilter
     });
   }
 
-  QueryBuilder<Category, Category, QAfterFilterCondition> categoryIdLessThan(
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterFilterCondition>
+      categoryIdLessThan(
     int value, {
     bool include = false,
   }) {
@@ -814,7 +821,8 @@ extension CategoryQueryFilter
     });
   }
 
-  QueryBuilder<Category, Category, QAfterFilterCondition> categoryIdBetween(
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterFilterCondition>
+      categoryIdBetween(
     int lower,
     int upper, {
     bool includeLower = true,
@@ -831,7 +839,8 @@ extension CategoryQueryFilter
     });
   }
 
-  QueryBuilder<Category, Category, QAfterFilterCondition> categoryNameEqualTo(
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterFilterCondition>
+      categoryNameEqualTo(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -844,7 +853,7 @@ extension CategoryQueryFilter
     });
   }
 
-  QueryBuilder<Category, Category, QAfterFilterCondition>
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterFilterCondition>
       categoryNameGreaterThan(
     String value, {
     bool include = false,
@@ -860,7 +869,8 @@ extension CategoryQueryFilter
     });
   }
 
-  QueryBuilder<Category, Category, QAfterFilterCondition> categoryNameLessThan(
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterFilterCondition>
+      categoryNameLessThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -875,7 +885,8 @@ extension CategoryQueryFilter
     });
   }
 
-  QueryBuilder<Category, Category, QAfterFilterCondition> categoryNameBetween(
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterFilterCondition>
+      categoryNameBetween(
     String lower,
     String upper, {
     bool includeLower = true,
@@ -894,7 +905,7 @@ extension CategoryQueryFilter
     });
   }
 
-  QueryBuilder<Category, Category, QAfterFilterCondition>
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterFilterCondition>
       categoryNameStartsWith(
     String value, {
     bool caseSensitive = true,
@@ -908,7 +919,8 @@ extension CategoryQueryFilter
     });
   }
 
-  QueryBuilder<Category, Category, QAfterFilterCondition> categoryNameEndsWith(
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterFilterCondition>
+      categoryNameEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -921,9 +933,8 @@ extension CategoryQueryFilter
     });
   }
 
-  QueryBuilder<Category, Category, QAfterFilterCondition> categoryNameContains(
-      String value,
-      {bool caseSensitive = true}) {
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterFilterCondition>
+      categoryNameContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
         property: r'categoryName',
@@ -933,9 +944,8 @@ extension CategoryQueryFilter
     });
   }
 
-  QueryBuilder<Category, Category, QAfterFilterCondition> categoryNameMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterFilterCondition>
+      categoryNameMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
         property: r'categoryName',
@@ -945,7 +955,7 @@ extension CategoryQueryFilter
     });
   }
 
-  QueryBuilder<Category, Category, QAfterFilterCondition>
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterFilterCondition>
       categoryNameIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -955,7 +965,7 @@ extension CategoryQueryFilter
     });
   }
 
-  QueryBuilder<Category, Category, QAfterFilterCondition>
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterFilterCondition>
       categoryNameIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
@@ -965,8 +975,8 @@ extension CategoryQueryFilter
     });
   }
 
-  QueryBuilder<Category, Category, QAfterFilterCondition> hashCodeEqualTo(
-      int value) {
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterFilterCondition>
+      hashCodeEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'hashCode',
@@ -975,7 +985,8 @@ extension CategoryQueryFilter
     });
   }
 
-  QueryBuilder<Category, Category, QAfterFilterCondition> hashCodeGreaterThan(
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterFilterCondition>
+      hashCodeGreaterThan(
     int value, {
     bool include = false,
   }) {
@@ -988,7 +999,8 @@ extension CategoryQueryFilter
     });
   }
 
-  QueryBuilder<Category, Category, QAfterFilterCondition> hashCodeLessThan(
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterFilterCondition>
+      hashCodeLessThan(
     int value, {
     bool include = false,
   }) {
@@ -1001,7 +1013,8 @@ extension CategoryQueryFilter
     });
   }
 
-  QueryBuilder<Category, Category, QAfterFilterCondition> hashCodeBetween(
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterFilterCondition>
+      hashCodeBetween(
     int lower,
     int upper, {
     bool includeLower = true,
@@ -1018,18 +1031,8 @@ extension CategoryQueryFilter
     });
   }
 
-  QueryBuilder<Category, Category, QAfterFilterCondition> isFavoriteEqualTo(
-      bool value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'isFavorite',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Category, Category, QAfterFilterCondition> isarIdEqualTo(
-      Id value) {
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterFilterCondition>
+      isarIdEqualTo(Id value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'isarId',
@@ -1038,7 +1041,8 @@ extension CategoryQueryFilter
     });
   }
 
-  QueryBuilder<Category, Category, QAfterFilterCondition> isarIdGreaterThan(
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterFilterCondition>
+      isarIdGreaterThan(
     Id value, {
     bool include = false,
   }) {
@@ -1051,7 +1055,8 @@ extension CategoryQueryFilter
     });
   }
 
-  QueryBuilder<Category, Category, QAfterFilterCondition> isarIdLessThan(
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterFilterCondition>
+      isarIdLessThan(
     Id value, {
     bool include = false,
   }) {
@@ -1064,7 +1069,8 @@ extension CategoryQueryFilter
     });
   }
 
-  QueryBuilder<Category, Category, QAfterFilterCondition> isarIdBetween(
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterFilterCondition>
+      isarIdBetween(
     Id lower,
     Id upper, {
     bool includeLower = true,
@@ -1081,8 +1087,8 @@ extension CategoryQueryFilter
     });
   }
 
-  QueryBuilder<Category, Category, QAfterFilterCondition> parentIdEqualTo(
-      int value) {
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterFilterCondition>
+      parentIdEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'parentId',
@@ -1091,7 +1097,8 @@ extension CategoryQueryFilter
     });
   }
 
-  QueryBuilder<Category, Category, QAfterFilterCondition> parentIdGreaterThan(
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterFilterCondition>
+      parentIdGreaterThan(
     int value, {
     bool include = false,
   }) {
@@ -1104,7 +1111,8 @@ extension CategoryQueryFilter
     });
   }
 
-  QueryBuilder<Category, Category, QAfterFilterCondition> parentIdLessThan(
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterFilterCondition>
+      parentIdLessThan(
     int value, {
     bool include = false,
   }) {
@@ -1117,7 +1125,8 @@ extension CategoryQueryFilter
     });
   }
 
-  QueryBuilder<Category, Category, QAfterFilterCondition> parentIdBetween(
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterFilterCondition>
+      parentIdBetween(
     int lower,
     int upper, {
     bool includeLower = true,
@@ -1134,8 +1143,8 @@ extension CategoryQueryFilter
     });
   }
 
-  QueryBuilder<Category, Category, QAfterFilterCondition> playlistIdEqualTo(
-      int value) {
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterFilterCondition>
+      playlistIdEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'playlistId',
@@ -1144,7 +1153,8 @@ extension CategoryQueryFilter
     });
   }
 
-  QueryBuilder<Category, Category, QAfterFilterCondition> playlistIdGreaterThan(
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterFilterCondition>
+      playlistIdGreaterThan(
     int value, {
     bool include = false,
   }) {
@@ -1157,7 +1167,8 @@ extension CategoryQueryFilter
     });
   }
 
-  QueryBuilder<Category, Category, QAfterFilterCondition> playlistIdLessThan(
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterFilterCondition>
+      playlistIdLessThan(
     int value, {
     bool include = false,
   }) {
@@ -1170,7 +1181,8 @@ extension CategoryQueryFilter
     });
   }
 
-  QueryBuilder<Category, Category, QAfterFilterCondition> playlistIdBetween(
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterFilterCondition>
+      playlistIdBetween(
     int lower,
     int upper, {
     bool includeLower = true,
@@ -1187,8 +1199,8 @@ extension CategoryQueryFilter
     });
   }
 
-  QueryBuilder<Category, Category, QAfterFilterCondition> typeEqualTo(
-      CategoryType value) {
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterFilterCondition>
+      typeEqualTo(CategoryType value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'type',
@@ -1197,7 +1209,8 @@ extension CategoryQueryFilter
     });
   }
 
-  QueryBuilder<Category, Category, QAfterFilterCondition> typeGreaterThan(
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterFilterCondition>
+      typeGreaterThan(
     CategoryType value, {
     bool include = false,
   }) {
@@ -1210,7 +1223,8 @@ extension CategoryQueryFilter
     });
   }
 
-  QueryBuilder<Category, Category, QAfterFilterCondition> typeLessThan(
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterFilterCondition>
+      typeLessThan(
     CategoryType value, {
     bool include = false,
   }) {
@@ -1223,7 +1237,8 @@ extension CategoryQueryFilter
     });
   }
 
-  QueryBuilder<Category, Category, QAfterFilterCondition> typeBetween(
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterFilterCondition>
+      typeBetween(
     CategoryType lower,
     CategoryType upper, {
     bool includeLower = true,
@@ -1241,288 +1256,286 @@ extension CategoryQueryFilter
   }
 }
 
-extension CategoryQueryObject
-    on QueryBuilder<Category, Category, QFilterCondition> {}
+extension CategoryIsarModelQueryObject
+    on QueryBuilder<CategoryIsarModel, CategoryIsarModel, QFilterCondition> {}
 
-extension CategoryQueryLinks
-    on QueryBuilder<Category, Category, QFilterCondition> {}
+extension CategoryIsarModelQueryLinks
+    on QueryBuilder<CategoryIsarModel, CategoryIsarModel, QFilterCondition> {}
 
-extension CategoryQuerySortBy on QueryBuilder<Category, Category, QSortBy> {
-  QueryBuilder<Category, Category, QAfterSortBy> sortByCategoryId() {
+extension CategoryIsarModelQuerySortBy
+    on QueryBuilder<CategoryIsarModel, CategoryIsarModel, QSortBy> {
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterSortBy>
+      sortByCategoryId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'categoryId', Sort.asc);
     });
   }
 
-  QueryBuilder<Category, Category, QAfterSortBy> sortByCategoryIdDesc() {
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterSortBy>
+      sortByCategoryIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'categoryId', Sort.desc);
     });
   }
 
-  QueryBuilder<Category, Category, QAfterSortBy> sortByCategoryName() {
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterSortBy>
+      sortByCategoryName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'categoryName', Sort.asc);
     });
   }
 
-  QueryBuilder<Category, Category, QAfterSortBy> sortByCategoryNameDesc() {
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterSortBy>
+      sortByCategoryNameDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'categoryName', Sort.desc);
     });
   }
 
-  QueryBuilder<Category, Category, QAfterSortBy> sortByHashCode() {
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterSortBy>
+      sortByHashCode() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'hashCode', Sort.asc);
     });
   }
 
-  QueryBuilder<Category, Category, QAfterSortBy> sortByHashCodeDesc() {
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterSortBy>
+      sortByHashCodeDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'hashCode', Sort.desc);
     });
   }
 
-  QueryBuilder<Category, Category, QAfterSortBy> sortByIsFavorite() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isFavorite', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Category, Category, QAfterSortBy> sortByIsFavoriteDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isFavorite', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Category, Category, QAfterSortBy> sortByParentId() {
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterSortBy>
+      sortByParentId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'parentId', Sort.asc);
     });
   }
 
-  QueryBuilder<Category, Category, QAfterSortBy> sortByParentIdDesc() {
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterSortBy>
+      sortByParentIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'parentId', Sort.desc);
     });
   }
 
-  QueryBuilder<Category, Category, QAfterSortBy> sortByPlaylistId() {
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterSortBy>
+      sortByPlaylistId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'playlistId', Sort.asc);
     });
   }
 
-  QueryBuilder<Category, Category, QAfterSortBy> sortByPlaylistIdDesc() {
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterSortBy>
+      sortByPlaylistIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'playlistId', Sort.desc);
     });
   }
 
-  QueryBuilder<Category, Category, QAfterSortBy> sortByType() {
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterSortBy>
+      sortByType() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'type', Sort.asc);
     });
   }
 
-  QueryBuilder<Category, Category, QAfterSortBy> sortByTypeDesc() {
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterSortBy>
+      sortByTypeDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'type', Sort.desc);
     });
   }
 }
 
-extension CategoryQuerySortThenBy
-    on QueryBuilder<Category, Category, QSortThenBy> {
-  QueryBuilder<Category, Category, QAfterSortBy> thenByCategoryId() {
+extension CategoryIsarModelQuerySortThenBy
+    on QueryBuilder<CategoryIsarModel, CategoryIsarModel, QSortThenBy> {
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterSortBy>
+      thenByCategoryId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'categoryId', Sort.asc);
     });
   }
 
-  QueryBuilder<Category, Category, QAfterSortBy> thenByCategoryIdDesc() {
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterSortBy>
+      thenByCategoryIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'categoryId', Sort.desc);
     });
   }
 
-  QueryBuilder<Category, Category, QAfterSortBy> thenByCategoryName() {
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterSortBy>
+      thenByCategoryName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'categoryName', Sort.asc);
     });
   }
 
-  QueryBuilder<Category, Category, QAfterSortBy> thenByCategoryNameDesc() {
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterSortBy>
+      thenByCategoryNameDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'categoryName', Sort.desc);
     });
   }
 
-  QueryBuilder<Category, Category, QAfterSortBy> thenByHashCode() {
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterSortBy>
+      thenByHashCode() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'hashCode', Sort.asc);
     });
   }
 
-  QueryBuilder<Category, Category, QAfterSortBy> thenByHashCodeDesc() {
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterSortBy>
+      thenByHashCodeDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'hashCode', Sort.desc);
     });
   }
 
-  QueryBuilder<Category, Category, QAfterSortBy> thenByIsFavorite() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isFavorite', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Category, Category, QAfterSortBy> thenByIsFavoriteDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isFavorite', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Category, Category, QAfterSortBy> thenByIsarId() {
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterSortBy>
+      thenByIsarId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isarId', Sort.asc);
     });
   }
 
-  QueryBuilder<Category, Category, QAfterSortBy> thenByIsarIdDesc() {
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterSortBy>
+      thenByIsarIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isarId', Sort.desc);
     });
   }
 
-  QueryBuilder<Category, Category, QAfterSortBy> thenByParentId() {
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterSortBy>
+      thenByParentId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'parentId', Sort.asc);
     });
   }
 
-  QueryBuilder<Category, Category, QAfterSortBy> thenByParentIdDesc() {
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterSortBy>
+      thenByParentIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'parentId', Sort.desc);
     });
   }
 
-  QueryBuilder<Category, Category, QAfterSortBy> thenByPlaylistId() {
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterSortBy>
+      thenByPlaylistId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'playlistId', Sort.asc);
     });
   }
 
-  QueryBuilder<Category, Category, QAfterSortBy> thenByPlaylistIdDesc() {
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterSortBy>
+      thenByPlaylistIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'playlistId', Sort.desc);
     });
   }
 
-  QueryBuilder<Category, Category, QAfterSortBy> thenByType() {
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterSortBy>
+      thenByType() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'type', Sort.asc);
     });
   }
 
-  QueryBuilder<Category, Category, QAfterSortBy> thenByTypeDesc() {
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterSortBy>
+      thenByTypeDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'type', Sort.desc);
     });
   }
 }
 
-extension CategoryQueryWhereDistinct
-    on QueryBuilder<Category, Category, QDistinct> {
-  QueryBuilder<Category, Category, QDistinct> distinctByCategoryId() {
+extension CategoryIsarModelQueryWhereDistinct
+    on QueryBuilder<CategoryIsarModel, CategoryIsarModel, QDistinct> {
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QDistinct>
+      distinctByCategoryId() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'categoryId');
     });
   }
 
-  QueryBuilder<Category, Category, QDistinct> distinctByCategoryName(
-      {bool caseSensitive = true}) {
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QDistinct>
+      distinctByCategoryName({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'categoryName', caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<Category, Category, QDistinct> distinctByHashCode() {
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QDistinct>
+      distinctByHashCode() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'hashCode');
     });
   }
 
-  QueryBuilder<Category, Category, QDistinct> distinctByIsFavorite() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'isFavorite');
-    });
-  }
-
-  QueryBuilder<Category, Category, QDistinct> distinctByParentId() {
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QDistinct>
+      distinctByParentId() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'parentId');
     });
   }
 
-  QueryBuilder<Category, Category, QDistinct> distinctByPlaylistId() {
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QDistinct>
+      distinctByPlaylistId() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'playlistId');
     });
   }
 
-  QueryBuilder<Category, Category, QDistinct> distinctByType() {
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QDistinct>
+      distinctByType() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'type');
     });
   }
 }
 
-extension CategoryQueryProperty
-    on QueryBuilder<Category, Category, QQueryProperty> {
-  QueryBuilder<Category, int, QQueryOperations> isarIdProperty() {
+extension CategoryIsarModelQueryProperty
+    on QueryBuilder<CategoryIsarModel, CategoryIsarModel, QQueryProperty> {
+  QueryBuilder<CategoryIsarModel, int, QQueryOperations> isarIdProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'isarId');
     });
   }
 
-  QueryBuilder<Category, int, QQueryOperations> categoryIdProperty() {
+  QueryBuilder<CategoryIsarModel, int, QQueryOperations> categoryIdProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'categoryId');
     });
   }
 
-  QueryBuilder<Category, String, QQueryOperations> categoryNameProperty() {
+  QueryBuilder<CategoryIsarModel, String, QQueryOperations>
+      categoryNameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'categoryName');
     });
   }
 
-  QueryBuilder<Category, int, QQueryOperations> hashCodeProperty() {
+  QueryBuilder<CategoryIsarModel, int, QQueryOperations> hashCodeProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'hashCode');
     });
   }
 
-  QueryBuilder<Category, bool, QQueryOperations> isFavoriteProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'isFavorite');
-    });
-  }
-
-  QueryBuilder<Category, int, QQueryOperations> parentIdProperty() {
+  QueryBuilder<CategoryIsarModel, int, QQueryOperations> parentIdProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'parentId');
     });
   }
 
-  QueryBuilder<Category, int, QQueryOperations> playlistIdProperty() {
+  QueryBuilder<CategoryIsarModel, int, QQueryOperations> playlistIdProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'playlistId');
     });
   }
 
-  QueryBuilder<Category, CategoryType, QQueryOperations> typeProperty() {
+  QueryBuilder<CategoryIsarModel, CategoryType, QQueryOperations>
+      typeProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'type');
     });

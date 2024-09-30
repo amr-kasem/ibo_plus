@@ -2,12 +2,12 @@ import 'package:get_it/get_it.dart';
 import 'package:isar/isar.dart';
 
 import '../../../../../shared/types/category_type.dart';
-import '../../../../helpers/isar_helper.dart';
+import '../../../../services/isar_helper.dart';
 
 part 'category.g.dart';
 
 @collection
-class Category {
+class CategoryIsarModel {
   @ignore
   final _isarHelper = GetIt.instance.get<IsarHelper>();
 
@@ -20,17 +20,15 @@ class Category {
   late CategoryType type;
   @Index(composite: [CompositeIndex('type')])
   late int playlistId;
-  bool isFavorite;
-  Category({
+  CategoryIsarModel({
     required this.categoryId,
     required this.categoryName,
     required this.parentId,
-    this.isFavorite = false,
   });
 
   @override
   bool operator ==(Object other) {
-    if (other is! Category) return false;
+    if (other is! CategoryIsarModel) return false;
     return hashCode == other.hashCode;
   }
 

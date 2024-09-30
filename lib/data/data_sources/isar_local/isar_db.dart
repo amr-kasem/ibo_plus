@@ -27,7 +27,7 @@ class IsarDB {
         LanguageSchema,
         LiveChannelSchema,
         MovieSchema,
-        CategorySchema,
+        CategoryIsarModelSchema,
         SettingsIsarModelSchema,
       ],
       directory: dir.path,

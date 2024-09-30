@@ -1,10 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 
-import '../../../shared/types/category_type.dart';
+import '../../../domain/entities/playlist.dart';
 import '../../../domain/value_objects/media/playlist/playlist_data.dart';
+import '../../../shared/types/category_type.dart';
 import '../../dtos/iptv/category/category.dart';
-import '../../helpers/playlist_api_helper.dart';
+import '../../services/playlist_api_helper.dart';
 
 class CategoriesRemoteDatasource {
   final _getIt = GetIt.instance;
@@ -13,15 +14,15 @@ class CategoriesRemoteDatasource {
 
   Future<List<CategoryJsonModel>> getCategories({
     required CategoryType categoryType,
-    required PlaylistData playlistData,
+    required Playlist playlist,
   }) async {
     late final Response res;
     try {
       res = await _dio.get(
-        '${playlistData.url}player_api.php',
+        '${playlist.data.url}player_api.php',
         queryParameters: {
-          'username': playlistData.username,
-          'password': playlistData.password,
+          'username': playlist.data.username,
+          'password': playlist.data.password,
           'action': (categoryType),
         },
       ).timeout(const Duration(seconds: 4));

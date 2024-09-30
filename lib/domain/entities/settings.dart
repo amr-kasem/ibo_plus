@@ -1,6 +1,11 @@
 import 'device_id.dart';
+import 'playlist.dart';
 
 class Settings {
   final DeviceId deviceId;
-  Settings({required this.deviceId});
+  final Playlist? selectedPlaylist;
+  Settings({
+    required this.deviceId,
+    this.selectedPlaylist,
+  });
 }

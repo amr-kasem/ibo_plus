@@ -1,5 +1,5 @@
 import 'package:get_it/get_it.dart';
-import 'package:ibo_plus/data/helpers/isar_helper.dart';
+import 'package:ibo_plus/data/services/isar_helper.dart';
 import 'package:isar/isar.dart';
 
 import 'epg.dart';

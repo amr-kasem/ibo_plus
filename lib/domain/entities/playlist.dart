@@ -1,11 +1,12 @@
+import 'package:ibo_plus/domain/entities/playlist_status.dart';
+
 import '../value_objects/media/playlist/playlist_data.dart';
-import '../value_objects/media/playlist/playlist_status_data.dart';
 
 class Playlist {
   PlaylistData data;
-  PlaylistStatusData status;
+  PlaylistStatus? status;
 
-  Playlist({required this.data, required this.status});
+  Playlist({required this.data, this.status});
 
   @override
   String toString() => 'Playlist{id:${data.id} , name: ${data.playlistName}}';

@@ -1,8 +1,8 @@
 import 'package:get_it/get_it.dart';
 
-import '../../data/helpers/ibo_api_helper.dart';
-import '../../data/helpers/isar_helper.dart';
-import '../../data/helpers/playlist_api_helper.dart';
+import '../../data/services/ibo_api_helper.dart';
+import '../../data/services/isar_helper.dart';
+import '../../data/services/playlist_api_helper.dart';
 import 'dependencies_group.dart';
 
 class DataHelpers extends DependenciesGroup {

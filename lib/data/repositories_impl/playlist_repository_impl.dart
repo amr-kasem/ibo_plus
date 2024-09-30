@@ -24,7 +24,7 @@ class PlaylistRepositoryImpl implements PlaylistRepository {
   }
 
   @override
-  Future<void> initializePlaylists(List<Playlist> playlists) async {
+  Future<List<Playlist>> initializePlaylists(List<Playlist> playlists) async {
     final futures = playlists
         .map(
           (playlist) => Future<Playlist>(
@@ -33,17 +33,19 @@ class PlaylistRepositoryImpl implements PlaylistRepository {
                   await _playlistRemoteDatasource.initPlaylist(playlist.data);
               final status = _playlistStatusMapper
                   .toEntity<M3uPlaylistStatusJsonModel>(statusJsonModel);
-              final playlistIsarModel = _playlistMapper.toIsarModel(playlist);
-              final p = _playlistLocalDatasource.updatePlaylistStatus(
-                playlistIsarModel,
-                status,
-              );
-              return _playlistMapper.toEntity<M3uPlaylistIsarModel>(p);
+
+              playlist.status = status;
+              return playlist;
             },
           ),
         )
         .toList();
-    await Future.wait(futures);
+    final res = await Future.wait(futures);
+    final isarStatus = res
+        .map((p) => _playlistStatusMapper.toIsarModel(p.data.id, p.status!))
+        .toList();
+    _playlistLocalDatasource.storePlaylistsStatus(isarStatus);
+    return res;
   }
 
   @override

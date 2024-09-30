@@ -18,68 +18,58 @@ const M3uPlaylistIsarModelSchema = CollectionSchema(
   name: r'M3uPlaylistIsarModel',
   id: 6598386317236361721,
   properties: {
-    r'active': PropertySchema(
-      id: 0,
-      name: r'active',
-      type: IsarType.bool,
-    ),
     r'epgUrl': PropertySchema(
-      id: 1,
+      id: 0,
       name: r'epgUrl',
       type: IsarType.string,
     ),
     r'hashCode': PropertySchema(
-      id: 2,
+      id: 1,
       name: r'hashCode',
       type: IsarType.long,
     ),
     r'id': PropertySchema(
-      id: 3,
+      id: 2,
       name: r'id',
       type: IsarType.string,
     ),
     r'isProtected': PropertySchema(
-      id: 4,
+      id: 3,
       name: r'isProtected',
       type: IsarType.bool,
     ),
-    r'isarExpiary': PropertySchema(
-      id: 5,
-      name: r'isarExpiary',
-      type: IsarType.long,
-    ),
     r'originType': PropertySchema(
-      id: 6,
+      id: 4,
       name: r'originType',
       type: IsarType.string,
     ),
     r'originUrl': PropertySchema(
-      id: 7,
+      id: 5,
       name: r'originUrl',
       type: IsarType.string,
     ),
     r'password': PropertySchema(
-      id: 8,
+      id: 6,
       name: r'password',
       type: IsarType.string,
     ),
     r'playlistName': PropertySchema(
-      id: 9,
+      id: 7,
       name: r'playlistName',
       type: IsarType.string,
     ),
     r'playlistType': PropertySchema(
-      id: 10,
+      id: 8,
       name: r'playlistType',
       type: IsarType.string,
     ),
     r'url': PropertySchema(
-      id: 11,
+      id: 9,
       name: r'url',
       type: IsarType.string,
     ),
     r'username': PropertySchema(
-      id: 12,
+      id: 10,
       name: r'username',
       type: IsarType.string,
     )
@@ -122,19 +112,17 @@ void _m3uPlaylistIsarModelSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeBool(offsets[0], object.active);
-  writer.writeString(offsets[1], object.epgUrl);
-  writer.writeLong(offsets[2], object.hashCode);
-  writer.writeString(offsets[3], object.id);
-  writer.writeBool(offsets[4], object.isProtected);
-  writer.writeLong(offsets[5], object.isarExpiary);
-  writer.writeString(offsets[6], object.originType);
-  writer.writeString(offsets[7], object.originUrl);
-  writer.writeString(offsets[8], object.password);
-  writer.writeString(offsets[9], object.playlistName);
-  writer.writeString(offsets[10], object.playlistType);
-  writer.writeString(offsets[11], object.url);
-  writer.writeString(offsets[12], object.username);
+  writer.writeString(offsets[0], object.epgUrl);
+  writer.writeLong(offsets[1], object.hashCode);
+  writer.writeString(offsets[2], object.id);
+  writer.writeBool(offsets[3], object.isProtected);
+  writer.writeString(offsets[4], object.originType);
+  writer.writeString(offsets[5], object.originUrl);
+  writer.writeString(offsets[6], object.password);
+  writer.writeString(offsets[7], object.playlistName);
+  writer.writeString(offsets[8], object.playlistType);
+  writer.writeString(offsets[9], object.url);
+  writer.writeString(offsets[10], object.username);
 }
 
 M3uPlaylistIsarModel _m3uPlaylistIsarModelDeserialize(
@@ -144,19 +132,17 @@ M3uPlaylistIsarModel _m3uPlaylistIsarModelDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = M3uPlaylistIsarModel(
-    epgUrl: reader.readString(offsets[1]),
-    id: reader.readString(offsets[3]),
-    isProtected: reader.readBool(offsets[4]),
-    originType: reader.readString(offsets[6]),
-    originUrl: reader.readString(offsets[7]),
-    password: reader.readString(offsets[8]),
-    playlistName: reader.readString(offsets[9]),
-    playlistType: reader.readString(offsets[10]),
-    url: reader.readString(offsets[11]),
-    username: reader.readString(offsets[12]),
+    epgUrl: reader.readString(offsets[0]),
+    id: reader.readString(offsets[2]),
+    isProtected: reader.readBool(offsets[3]),
+    originType: reader.readString(offsets[4]),
+    originUrl: reader.readString(offsets[5]),
+    password: reader.readString(offsets[6]),
+    playlistName: reader.readString(offsets[7]),
+    playlistType: reader.readString(offsets[8]),
+    url: reader.readString(offsets[9]),
+    username: reader.readString(offsets[10]),
   );
-  object.active = reader.readBoolOrNull(offsets[0]);
-  object.isarExpiary = reader.readLong(offsets[5]);
   return object;
 }
 
@@ -168,17 +154,17 @@ P _m3uPlaylistIsarModelDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readBoolOrNull(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 1:
-      return (reader.readString(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 2:
-      return (reader.readLong(offset)) as P;
-    case 3:
       return (reader.readString(offset)) as P;
-    case 4:
+    case 3:
       return (reader.readBool(offset)) as P;
+    case 4:
+      return (reader.readString(offset)) as P;
     case 5:
-      return (reader.readLong(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 6:
       return (reader.readString(offset)) as P;
     case 7:
@@ -188,10 +174,6 @@ P _m3uPlaylistIsarModelDeserializeProp<P>(
     case 9:
       return (reader.readString(offset)) as P;
     case 10:
-      return (reader.readString(offset)) as P;
-    case 11:
-      return (reader.readString(offset)) as P;
-    case 12:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -293,34 +275,6 @@ extension M3uPlaylistIsarModelQueryWhere
 
 extension M3uPlaylistIsarModelQueryFilter on QueryBuilder<M3uPlaylistIsarModel,
     M3uPlaylistIsarModel, QFilterCondition> {
-  QueryBuilder<M3uPlaylistIsarModel, M3uPlaylistIsarModel,
-      QAfterFilterCondition> activeIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'active',
-      ));
-    });
-  }
-
-  QueryBuilder<M3uPlaylistIsarModel, M3uPlaylistIsarModel,
-      QAfterFilterCondition> activeIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'active',
-      ));
-    });
-  }
-
-  QueryBuilder<M3uPlaylistIsarModel, M3uPlaylistIsarModel,
-      QAfterFilterCondition> activeEqualTo(bool? value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'active',
-        value: value,
-      ));
-    });
-  }
-
   QueryBuilder<M3uPlaylistIsarModel, M3uPlaylistIsarModel,
       QAfterFilterCondition> epgUrlEqualTo(
     String value, {
@@ -659,62 +613,6 @@ extension M3uPlaylistIsarModelQueryFilter on QueryBuilder<M3uPlaylistIsarModel,
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'isProtected',
         value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<M3uPlaylistIsarModel, M3uPlaylistIsarModel,
-      QAfterFilterCondition> isarExpiaryEqualTo(int value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'isarExpiary',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<M3uPlaylistIsarModel, M3uPlaylistIsarModel,
-      QAfterFilterCondition> isarExpiaryGreaterThan(
-    int value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'isarExpiary',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<M3uPlaylistIsarModel, M3uPlaylistIsarModel,
-      QAfterFilterCondition> isarExpiaryLessThan(
-    int value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'isarExpiary',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<M3uPlaylistIsarModel, M3uPlaylistIsarModel,
-      QAfterFilterCondition> isarExpiaryBetween(
-    int lower,
-    int upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'isarExpiary',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
       ));
     });
   }
@@ -1751,20 +1649,6 @@ extension M3uPlaylistIsarModelQueryLinks on QueryBuilder<M3uPlaylistIsarModel,
 extension M3uPlaylistIsarModelQuerySortBy
     on QueryBuilder<M3uPlaylistIsarModel, M3uPlaylistIsarModel, QSortBy> {
   QueryBuilder<M3uPlaylistIsarModel, M3uPlaylistIsarModel, QAfterSortBy>
-      sortByActive() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'active', Sort.asc);
-    });
-  }
-
-  QueryBuilder<M3uPlaylistIsarModel, M3uPlaylistIsarModel, QAfterSortBy>
-      sortByActiveDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'active', Sort.desc);
-    });
-  }
-
-  QueryBuilder<M3uPlaylistIsarModel, M3uPlaylistIsarModel, QAfterSortBy>
       sortByEpgUrl() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'epgUrl', Sort.asc);
@@ -1817,20 +1701,6 @@ extension M3uPlaylistIsarModelQuerySortBy
       sortByIsProtectedDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isProtected', Sort.desc);
-    });
-  }
-
-  QueryBuilder<M3uPlaylistIsarModel, M3uPlaylistIsarModel, QAfterSortBy>
-      sortByIsarExpiary() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isarExpiary', Sort.asc);
-    });
-  }
-
-  QueryBuilder<M3uPlaylistIsarModel, M3uPlaylistIsarModel, QAfterSortBy>
-      sortByIsarExpiaryDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isarExpiary', Sort.desc);
     });
   }
 
@@ -1936,20 +1806,6 @@ extension M3uPlaylistIsarModelQuerySortBy
 extension M3uPlaylistIsarModelQuerySortThenBy
     on QueryBuilder<M3uPlaylistIsarModel, M3uPlaylistIsarModel, QSortThenBy> {
   QueryBuilder<M3uPlaylistIsarModel, M3uPlaylistIsarModel, QAfterSortBy>
-      thenByActive() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'active', Sort.asc);
-    });
-  }
-
-  QueryBuilder<M3uPlaylistIsarModel, M3uPlaylistIsarModel, QAfterSortBy>
-      thenByActiveDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'active', Sort.desc);
-    });
-  }
-
-  QueryBuilder<M3uPlaylistIsarModel, M3uPlaylistIsarModel, QAfterSortBy>
       thenByEpgUrl() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'epgUrl', Sort.asc);
@@ -2002,20 +1858,6 @@ extension M3uPlaylistIsarModelQuerySortThenBy
       thenByIsProtectedDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isProtected', Sort.desc);
-    });
-  }
-
-  QueryBuilder<M3uPlaylistIsarModel, M3uPlaylistIsarModel, QAfterSortBy>
-      thenByIsarExpiary() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isarExpiary', Sort.asc);
-    });
-  }
-
-  QueryBuilder<M3uPlaylistIsarModel, M3uPlaylistIsarModel, QAfterSortBy>
-      thenByIsarExpiaryDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isarExpiary', Sort.desc);
     });
   }
 
@@ -2135,13 +1977,6 @@ extension M3uPlaylistIsarModelQuerySortThenBy
 extension M3uPlaylistIsarModelQueryWhereDistinct
     on QueryBuilder<M3uPlaylistIsarModel, M3uPlaylistIsarModel, QDistinct> {
   QueryBuilder<M3uPlaylistIsarModel, M3uPlaylistIsarModel, QDistinct>
-      distinctByActive() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'active');
-    });
-  }
-
-  QueryBuilder<M3uPlaylistIsarModel, M3uPlaylistIsarModel, QDistinct>
       distinctByEpgUrl({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'epgUrl', caseSensitive: caseSensitive);
@@ -2166,13 +2001,6 @@ extension M3uPlaylistIsarModelQueryWhereDistinct
       distinctByIsProtected() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'isProtected');
-    });
-  }
-
-  QueryBuilder<M3uPlaylistIsarModel, M3uPlaylistIsarModel, QDistinct>
-      distinctByIsarExpiary() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'isarExpiary');
     });
   }
 
@@ -2234,12 +2062,6 @@ extension M3uPlaylistIsarModelQueryProperty on QueryBuilder<
     });
   }
 
-  QueryBuilder<M3uPlaylistIsarModel, bool?, QQueryOperations> activeProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'active');
-    });
-  }
-
   QueryBuilder<M3uPlaylistIsarModel, String, QQueryOperations>
       epgUrlProperty() {
     return QueryBuilder.apply(this, (query) {
@@ -2263,13 +2085,6 @@ extension M3uPlaylistIsarModelQueryProperty on QueryBuilder<
       isProtectedProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'isProtected');
-    });
-  }
-
-  QueryBuilder<M3uPlaylistIsarModel, int, QQueryOperations>
-      isarExpiaryProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'isarExpiary');
     });
   }
 

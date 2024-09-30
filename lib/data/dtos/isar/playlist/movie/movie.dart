@@ -1,7 +1,7 @@
 import 'package:get_it/get_it.dart';
 import 'package:isar/isar.dart';
 
-import '../../../../helpers/isar_helper.dart';
+import '../../../../services/isar_helper.dart';
 
 part 'movie.g.dart';
 

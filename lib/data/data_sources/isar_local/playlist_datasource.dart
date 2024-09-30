@@ -1,17 +1,15 @@
 import 'package:get_it/get_it.dart';
 import 'package:isar/isar.dart';
 
-import '../../../domain/value_objects/media/playlist/playlist_status_data.dart';
 import '../../dtos/isar/playlist/m3u_playlist/m3u_playlist.dart';
+import '../../dtos/isar/playlist/m3u_playlist/m3u_playlist_metadata.dart';
 import 'isar_db.dart';
 
 abstract class PlaylistLocalDatasource {
   Future<List<M3uPlaylistIsarModel>> getPlaylists();
-  M3uPlaylistIsarModel updatePlaylistStatus(
-    M3uPlaylistIsarModel playlist,
-    PlaylistStatusData data,
-  );
+  void updatePlaylistStatus(M3uPlaylistMetadataIsarModel data);
   void storePlaylists(List<M3uPlaylistIsarModel> playlists);
+  void storePlaylistsStatus(List<M3uPlaylistMetadataIsarModel> playlistsStatus);
 }
 
 class PlaylistLocalDatasourceImpl extends PlaylistLocalDatasource {
@@ -26,39 +24,26 @@ class PlaylistLocalDatasourceImpl extends PlaylistLocalDatasource {
   @override
   void storePlaylists(List<M3uPlaylistIsarModel> playlists) {
     _db.writeTxn(() async {
-      final oldPlaylists = await _db.m3uPlaylistIsarModels.where().findAll();
-      final updatedList = <M3uPlaylistIsarModel>[];
-      for (var playlist in playlists) {
-        final p = oldPlaylists.indexOf(playlist);
-        if (p == -1) {
-          updatedList.add(playlist);
-        } else {
-          updatedList.add(_updatePlaylist(playlist, oldPlaylists[p]));
-        }
-      }
-      await _db.m3uPlaylistIsarModels.putAll(updatedList);
+      await _db.m3uPlaylistIsarModels.where().deleteAll();
+      await _db.m3uPlaylistIsarModels.putAll(playlists);
     });
-  }
-
-  M3uPlaylistIsarModel _updatePlaylist(
-    M3uPlaylistIsarModel m3uPlaylist,
-    M3uPlaylistIsarModel oldM3uPlaylist,
-  ) {
-    m3uPlaylist.active ??= oldM3uPlaylist.active;
-    m3uPlaylist.expiray ??= oldM3uPlaylist.expiray;
-    return m3uPlaylist;
   }
 
   @override
-  M3uPlaylistIsarModel updatePlaylistStatus(
-    M3uPlaylistIsarModel playlist,
-    PlaylistStatusData data,
+  void updatePlaylistStatus(
+    M3uPlaylistMetadataIsarModel data,
   ) {
-    playlist.active = data.activeSubscription;
-    playlist.expiray = data.expirayDuration;
     _db.writeTxn(() async {
-      await _db.m3uPlaylistIsarModels.put(playlist);
+      await _db.m3uPlaylistMetadataIsarModels.put(data);
     });
-    return playlist;
+  }
+
+  @override
+  void storePlaylistsStatus(
+      List<M3uPlaylistMetadataIsarModel> playlistsStatus) {
+    _db.writeTxn(() async {
+      await _db.m3uPlaylistIsarModels.where().deleteAll();
+      await _db.m3uPlaylistMetadataIsarModels.putAll(playlistsStatus);
+    });
   }
 }

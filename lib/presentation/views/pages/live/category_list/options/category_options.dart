@@ -2,9 +2,9 @@ import 'package:fading_edge_scrollview/fading_edge_scrollview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:ibo_plus/presentation/utils/listing_utils.dart';
 
 import '../../../../../providers/live_state.dart';
+import '../../../../../utils/listing_utils.dart';
 
 class CategoryOptions extends ConsumerStatefulWidget {
   const CategoryOptions({
