@@ -1,8 +1,8 @@
-import '../value_objects/ibo/ibo_info_data.dart';
+import '../../value_objects/ibo/ibo_info_data.dart';
 import 'device_id.dart';
 import 'ibo_lanugage.dart';
 import 'ibo_notification.dart';
-import 'playlist.dart';
+import '../playlist/playlist.dart';
 import 'user.dart';
 
 class IboInfo {

@@ -1,8 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 
-import '../../../domain/entities/playlist.dart';
-import '../../../domain/value_objects/media/playlist/playlist_data.dart';
+import '../../../domain/entities/playlist/playlist.dart';
 import '../../../shared/types/category_type.dart';
 import '../../dtos/iptv/category/category.dart';
 import '../../services/playlist_api_helper.dart';

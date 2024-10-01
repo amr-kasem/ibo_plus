@@ -1,6 +1,6 @@
 import 'package:get_it/get_it.dart';
 
-import '../../domain/entities/playlist.dart';
+import '../../domain/entities/playlist/playlist.dart';
 import '../../domain/repositories/playlist_repository.dart';
 import '../data_sources/iptv_remote/playlist_remote_datasource.dart';
 import '../data_sources/isar_local/playlist_datasource.dart';

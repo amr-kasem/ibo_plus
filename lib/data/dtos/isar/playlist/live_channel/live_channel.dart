@@ -1,13 +1,13 @@
 import 'package:get_it/get_it.dart';
-import 'package:ibo_plus/data/services/isar_helper.dart';
 import 'package:isar/isar.dart';
 
+import '../../../../services/isar_helper.dart';
 import 'epg.dart';
 
 part 'live_channel.g.dart';
 
 @collection
-class LiveChannel {
+class LiveChannelIsarModel {
   @ignore
   final _isarHelper = GetIt.instance.get<IsarHelper>();
 
@@ -33,7 +33,7 @@ class LiveChannel {
   @Index()
   late int playlistId;
 
-  LiveChannel({
+  LiveChannelIsarModel({
     required this.channelNum,
     required this.name,
     required this.streamId,
@@ -57,7 +57,7 @@ class LiveChannel {
 
   @override
   bool operator ==(Object other) {
-    if (other is! LiveChannel) return false;
+    if (other is! LiveChannelIsarModel) return false;
     return hashCode == other.hashCode;
   }
 }

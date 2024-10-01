@@ -1,10 +1,11 @@
 import 'package:get_it/get_it.dart';
 
-import '../../domain/entities/category.dart';
-import '../../domain/entities/category_metadata.dart';
-import '../../domain/entities/playlist.dart';
+import '../../domain/entities/category/category.dart';
+import '../../domain/entities/category/category_metadata.dart';
+import '../../domain/entities/playlist/playlist.dart';
 import '../../domain/repositories/category_repository.dart';
 import '../../shared/types/category_type.dart';
+import '../../shared/types/stream_type.dart';
 import '../data_sources/iptv_remote/category_remote_datasource.dart';
 import '../data_sources/isar_local/category_datasource.dart';
 import '../dtos/iptv/category/category.dart';
@@ -18,7 +19,7 @@ class CategoryRepositoryImpl implements CategoryRepository {
   late final _categoryMapper = _getIt.get<CategoryMapper>();
   late final _categoryMetaMapper = _getIt.get<CategoryMetaMapper>();
   @override
-  Stream<void> getUpdateEventsStream() => _localDatasource.updateStream;
+  Stream<UpdateEvent> getUpdateEventsStream() => _localDatasource.updateStream;
 
   @override
   Future<List<Category>> readCategories({
@@ -70,6 +71,7 @@ class CategoryRepositoryImpl implements CategoryRepository {
     _localDatasource.storeCategories(
       playlist: playlist,
       categories: categoriesIsar.map(_categoryMapper.toIsarModel).toList(),
+      type: type,
     );
   }
 

@@ -1,4 +1,4 @@
-import '../../../domain/entities/ibo_lanugage.dart';
+import '../../../domain/entities/settings/ibo_lanugage.dart';
 import '../../../domain/value_objects/ibo/ibo_language_data.dart';
 import '../../dtos/ibo/language/language.dart';
 

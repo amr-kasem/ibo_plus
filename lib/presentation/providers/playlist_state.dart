@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../domain/entities/playlist.dart';
+import '../../domain/entities/playlist/playlist.dart';
 
 part 'playlist_state.freezed.dart';
 

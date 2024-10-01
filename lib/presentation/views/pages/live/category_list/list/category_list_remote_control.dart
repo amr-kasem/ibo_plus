@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../../../../../domain/entities/category.dart';
+import '../../../../../../domain/entities/category/category.dart';
 import 'category_list_widget.dart';
 
 class CategoryListRemoteControl extends StatefulWidget {

@@ -1,8 +1,7 @@
-import '../../dtos/isar/playlist/m3u_playlist/m3u_playlist_metadata.dart';
-
-import '../../../domain/entities/playlist_status.dart';
+import '../../../domain/entities/playlist/playlist_status.dart';
 import '../../../domain/value_objects/media/playlist/playlist_status_data.dart';
 import '../../dtos/ibo/m3u_playlist/m3u_playlist_status.dart';
+import '../../dtos/isar/playlist/m3u_playlist/m3u_playlist_metadata.dart';
 
 class PlaylistStatusMapper {
   M3uPlaylistStatusJsonModel toJsonModel(PlaylistStatus status) {

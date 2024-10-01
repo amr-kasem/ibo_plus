@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart' as intl;
 
-import '../../../../../../domain/entities/live_channel.dart';
+import '../../../../../../domain/entities/live_channel/live_channel.dart';
 import '../../../../../providers/live_state.dart';
 import '../options/channel_options_parent.dart';
 import 'channel_tile.dart';

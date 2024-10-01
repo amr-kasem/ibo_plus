@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 
 import '../../../bootstrap/config/app_config.dart';
-import '../../../domain/entities/device_id.dart';
+import '../../../domain/entities/settings/device_id.dart';
 import '../../dtos/ibo/ibo_info/ibo_info.dart';
 import '../../services/ibo_api_helper.dart';
 

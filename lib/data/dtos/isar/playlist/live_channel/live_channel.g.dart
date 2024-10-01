@@ -9,13 +9,14 @@ part of 'live_channel.dart';
 // coverage:ignore-file
 // ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
 
-extension GetLiveChannelCollection on Isar {
-  IsarCollection<LiveChannel> get liveChannels => this.collection();
+extension GetLiveChannelIsarModelCollection on Isar {
+  IsarCollection<LiveChannelIsarModel> get liveChannelIsarModels =>
+      this.collection();
 }
 
-const LiveChannelSchema = CollectionSchema(
-  name: r'LiveChannel',
-  id: -6395034737136214044,
+const LiveChannelIsarModelSchema = CollectionSchema(
+  name: r'LiveChannelIsarModel',
+  id: 4230314350020220682,
   properties: {
     r'added': PropertySchema(
       id: 0,
@@ -104,10 +105,10 @@ const LiveChannelSchema = CollectionSchema(
       type: IsarType.string,
     )
   },
-  estimateSize: _liveChannelEstimateSize,
-  serialize: _liveChannelSerialize,
-  deserialize: _liveChannelDeserialize,
-  deserializeProp: _liveChannelDeserializeProp,
+  estimateSize: _liveChannelIsarModelEstimateSize,
+  serialize: _liveChannelIsarModelSerialize,
+  deserialize: _liveChannelIsarModelDeserialize,
+  deserializeProp: _liveChannelIsarModelDeserializeProp,
   idName: r'isarId',
   indexes: {
     r'streamId_playlistId': IndexSchema(
@@ -144,14 +145,14 @@ const LiveChannelSchema = CollectionSchema(
   },
   links: {},
   embeddedSchemas: {r'EPG': EPGSchema},
-  getId: _liveChannelGetId,
-  getLinks: _liveChannelGetLinks,
-  attach: _liveChannelAttach,
+  getId: _liveChannelIsarModelGetId,
+  getLinks: _liveChannelIsarModelGetLinks,
+  attach: _liveChannelIsarModelAttach,
   version: '3.1.0+1',
 );
 
-int _liveChannelEstimateSize(
-  LiveChannel object,
+int _liveChannelIsarModelEstimateSize(
+  LiveChannelIsarModel object,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
@@ -216,8 +217,8 @@ int _liveChannelEstimateSize(
   return bytesCount;
 }
 
-void _liveChannelSerialize(
-  LiveChannel object,
+void _liveChannelIsarModelSerialize(
+  LiveChannelIsarModel object,
   IsarWriter writer,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
@@ -246,13 +247,13 @@ void _liveChannelSerialize(
   writer.writeString(offsets[16], object.tvArchiveDuration);
 }
 
-LiveChannel _liveChannelDeserialize(
+LiveChannelIsarModel _liveChannelIsarModelDeserialize(
   Id id,
   IsarReader reader,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  final object = LiveChannel(
+  final object = LiveChannelIsarModel(
     added: reader.readStringOrNull(offsets[0]),
     categoryId: reader.readStringOrNull(offsets[1]),
     channelNum: reader.readLongOrNull(offsets[2]),
@@ -278,7 +279,7 @@ LiveChannel _liveChannelDeserialize(
   return object;
 }
 
-P _liveChannelDeserializeProp<P>(
+P _liveChannelIsarModelDeserializeProp<P>(
   IsarReader reader,
   int propertyId,
   int offset,
@@ -329,26 +330,29 @@ P _liveChannelDeserializeProp<P>(
   }
 }
 
-Id _liveChannelGetId(LiveChannel object) {
+Id _liveChannelIsarModelGetId(LiveChannelIsarModel object) {
   return object.isarId;
 }
 
-List<IsarLinkBase<dynamic>> _liveChannelGetLinks(LiveChannel object) {
+List<IsarLinkBase<dynamic>> _liveChannelIsarModelGetLinks(
+    LiveChannelIsarModel object) {
   return [];
 }
 
-void _liveChannelAttach(
-    IsarCollection<dynamic> col, Id id, LiveChannel object) {}
+void _liveChannelIsarModelAttach(
+    IsarCollection<dynamic> col, Id id, LiveChannelIsarModel object) {}
 
-extension LiveChannelQueryWhereSort
-    on QueryBuilder<LiveChannel, LiveChannel, QWhere> {
-  QueryBuilder<LiveChannel, LiveChannel, QAfterWhere> anyIsarId() {
+extension LiveChannelIsarModelQueryWhereSort
+    on QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QWhere> {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterWhere>
+      anyIsarId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterWhere> anyStreamIdPlaylistId() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterWhere>
+      anyStreamIdPlaylistId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
         const IndexWhereClause.any(indexName: r'streamId_playlistId'),
@@ -356,7 +360,8 @@ extension LiveChannelQueryWhereSort
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterWhere> anyPlaylistId() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterWhere>
+      anyPlaylistId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
         const IndexWhereClause.any(indexName: r'playlistId'),
@@ -365,10 +370,10 @@ extension LiveChannelQueryWhereSort
   }
 }
 
-extension LiveChannelQueryWhere
-    on QueryBuilder<LiveChannel, LiveChannel, QWhereClause> {
-  QueryBuilder<LiveChannel, LiveChannel, QAfterWhereClause> isarIdEqualTo(
-      Id isarId) {
+extension LiveChannelIsarModelQueryWhere
+    on QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QWhereClause> {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterWhereClause>
+      isarIdEqualTo(Id isarId) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IdWhereClause.between(
         lower: isarId,
@@ -377,8 +382,8 @@ extension LiveChannelQueryWhere
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterWhereClause> isarIdNotEqualTo(
-      Id isarId) {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterWhereClause>
+      isarIdNotEqualTo(Id isarId) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
@@ -400,9 +405,8 @@ extension LiveChannelQueryWhere
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterWhereClause> isarIdGreaterThan(
-      Id isarId,
-      {bool include = false}) {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterWhereClause>
+      isarIdGreaterThan(Id isarId, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
         IdWhereClause.greaterThan(lower: isarId, includeLower: include),
@@ -410,9 +414,8 @@ extension LiveChannelQueryWhere
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterWhereClause> isarIdLessThan(
-      Id isarId,
-      {bool include = false}) {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterWhereClause>
+      isarIdLessThan(Id isarId, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
         IdWhereClause.lessThan(upper: isarId, includeUpper: include),
@@ -420,7 +423,8 @@ extension LiveChannelQueryWhere
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterWhereClause> isarIdBetween(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterWhereClause>
+      isarIdBetween(
     Id lowerIsarId,
     Id upperIsarId, {
     bool includeLower = true,
@@ -436,7 +440,7 @@ extension LiveChannelQueryWhere
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterWhereClause>
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterWhereClause>
       streamIdEqualToAnyPlaylistId(int streamId) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IndexWhereClause.equalTo(
@@ -446,7 +450,7 @@ extension LiveChannelQueryWhere
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterWhereClause>
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterWhereClause>
       streamIdNotEqualToAnyPlaylistId(int streamId) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
@@ -481,7 +485,7 @@ extension LiveChannelQueryWhere
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterWhereClause>
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterWhereClause>
       streamIdGreaterThanAnyPlaylistId(
     int streamId, {
     bool include = false,
@@ -496,7 +500,7 @@ extension LiveChannelQueryWhere
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterWhereClause>
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterWhereClause>
       streamIdLessThanAnyPlaylistId(
     int streamId, {
     bool include = false,
@@ -511,7 +515,7 @@ extension LiveChannelQueryWhere
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterWhereClause>
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterWhereClause>
       streamIdBetweenAnyPlaylistId(
     int lowerStreamId,
     int upperStreamId, {
@@ -529,7 +533,7 @@ extension LiveChannelQueryWhere
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterWhereClause>
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterWhereClause>
       streamIdPlaylistIdEqualTo(int streamId, int playlistId) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IndexWhereClause.equalTo(
@@ -539,7 +543,7 @@ extension LiveChannelQueryWhere
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterWhereClause>
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterWhereClause>
       streamIdEqualToPlaylistIdNotEqualTo(int streamId, int playlistId) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
@@ -574,7 +578,7 @@ extension LiveChannelQueryWhere
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterWhereClause>
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterWhereClause>
       streamIdEqualToPlaylistIdGreaterThan(
     int streamId,
     int playlistId, {
@@ -590,7 +594,7 @@ extension LiveChannelQueryWhere
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterWhereClause>
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterWhereClause>
       streamIdEqualToPlaylistIdLessThan(
     int streamId,
     int playlistId, {
@@ -606,7 +610,7 @@ extension LiveChannelQueryWhere
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterWhereClause>
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterWhereClause>
       streamIdEqualToPlaylistIdBetween(
     int streamId,
     int lowerPlaylistId,
@@ -625,8 +629,8 @@ extension LiveChannelQueryWhere
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterWhereClause> playlistIdEqualTo(
-      int playlistId) {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterWhereClause>
+      playlistIdEqualTo(int playlistId) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IndexWhereClause.equalTo(
         indexName: r'playlistId',
@@ -635,7 +639,7 @@ extension LiveChannelQueryWhere
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterWhereClause>
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterWhereClause>
       playlistIdNotEqualTo(int playlistId) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
@@ -670,7 +674,7 @@ extension LiveChannelQueryWhere
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterWhereClause>
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterWhereClause>
       playlistIdGreaterThan(
     int playlistId, {
     bool include = false,
@@ -685,7 +689,8 @@ extension LiveChannelQueryWhere
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterWhereClause> playlistIdLessThan(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterWhereClause>
+      playlistIdLessThan(
     int playlistId, {
     bool include = false,
   }) {
@@ -699,7 +704,8 @@ extension LiveChannelQueryWhere
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterWhereClause> playlistIdBetween(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterWhereClause>
+      playlistIdBetween(
     int lowerPlaylistId,
     int upperPlaylistId, {
     bool includeLower = true,
@@ -717,9 +723,10 @@ extension LiveChannelQueryWhere
   }
 }
 
-extension LiveChannelQueryFilter
-    on QueryBuilder<LiveChannel, LiveChannel, QFilterCondition> {
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition> addedIsNull() {
+extension LiveChannelIsarModelQueryFilter on QueryBuilder<LiveChannelIsarModel,
+    LiveChannelIsarModel, QFilterCondition> {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> addedIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
         property: r'added',
@@ -727,8 +734,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      addedIsNotNull() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> addedIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
         property: r'added',
@@ -736,7 +743,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition> addedEqualTo(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> addedEqualTo(
     String? value, {
     bool caseSensitive = true,
   }) {
@@ -749,8 +757,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      addedGreaterThan(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> addedGreaterThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -765,7 +773,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition> addedLessThan(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> addedLessThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -780,7 +789,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition> addedBetween(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> addedBetween(
     String? lower,
     String? upper, {
     bool includeLower = true,
@@ -799,7 +809,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition> addedStartsWith(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> addedStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -812,7 +823,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition> addedEndsWith(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> addedEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -825,9 +837,9 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition> addedContains(
-      String value,
-      {bool caseSensitive = true}) {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+          QAfterFilterCondition>
+      addedContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
         property: r'added',
@@ -837,9 +849,9 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition> addedMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+          QAfterFilterCondition>
+      addedMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
         property: r'added',
@@ -849,7 +861,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition> addedIsEmpty() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> addedIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'added',
@@ -858,8 +871,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      addedIsNotEmpty() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> addedIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'added',
@@ -868,8 +881,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      categoryIdIsNull() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> categoryIdIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
         property: r'categoryId',
@@ -877,8 +890,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      categoryIdIsNotNull() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> categoryIdIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
         property: r'categoryId',
@@ -886,8 +899,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      categoryIdEqualTo(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> categoryIdEqualTo(
     String? value, {
     bool caseSensitive = true,
   }) {
@@ -900,8 +913,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      categoryIdGreaterThan(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> categoryIdGreaterThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -916,8 +929,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      categoryIdLessThan(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> categoryIdLessThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -932,8 +945,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      categoryIdBetween(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> categoryIdBetween(
     String? lower,
     String? upper, {
     bool includeLower = true,
@@ -952,8 +965,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      categoryIdStartsWith(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> categoryIdStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -966,8 +979,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      categoryIdEndsWith(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> categoryIdEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -980,7 +993,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+          QAfterFilterCondition>
       categoryIdContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
@@ -991,7 +1005,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+          QAfterFilterCondition>
       categoryIdMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
@@ -1002,8 +1017,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      categoryIdIsEmpty() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> categoryIdIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'categoryId',
@@ -1012,8 +1027,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      categoryIdIsNotEmpty() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> categoryIdIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'categoryId',
@@ -1022,8 +1037,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      channelNumIsNull() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> channelNumIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
         property: r'channelNum',
@@ -1031,8 +1046,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      channelNumIsNotNull() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> channelNumIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
         property: r'channelNum',
@@ -1040,8 +1055,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      channelNumEqualTo(int? value) {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> channelNumEqualTo(int? value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'channelNum',
@@ -1050,8 +1065,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      channelNumGreaterThan(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> channelNumGreaterThan(
     int? value, {
     bool include = false,
   }) {
@@ -1064,8 +1079,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      channelNumLessThan(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> channelNumLessThan(
     int? value, {
     bool include = false,
   }) {
@@ -1078,8 +1093,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      channelNumBetween(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> channelNumBetween(
     int? lower,
     int? upper, {
     bool includeLower = true,
@@ -1096,8 +1111,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      customSidIsNull() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> customSidIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
         property: r'customSid',
@@ -1105,8 +1120,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      customSidIsNotNull() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> customSidIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
         property: r'customSid',
@@ -1114,8 +1129,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      customSidEqualTo(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> customSidEqualTo(
     String? value, {
     bool caseSensitive = true,
   }) {
@@ -1128,8 +1143,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      customSidGreaterThan(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> customSidGreaterThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -1144,8 +1159,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      customSidLessThan(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> customSidLessThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -1160,8 +1175,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      customSidBetween(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> customSidBetween(
     String? lower,
     String? upper, {
     bool includeLower = true,
@@ -1180,8 +1195,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      customSidStartsWith(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> customSidStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -1194,8 +1209,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      customSidEndsWith(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> customSidEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -1208,7 +1223,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+          QAfterFilterCondition>
       customSidContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
@@ -1219,7 +1235,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+          QAfterFilterCondition>
       customSidMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
@@ -1230,8 +1247,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      customSidIsEmpty() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> customSidIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'customSid',
@@ -1240,8 +1257,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      customSidIsNotEmpty() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> customSidIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'customSid',
@@ -1250,8 +1267,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      directSourceIsNull() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> directSourceIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
         property: r'directSource',
@@ -1259,8 +1276,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      directSourceIsNotNull() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> directSourceIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
         property: r'directSource',
@@ -1268,8 +1285,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      directSourceEqualTo(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> directSourceEqualTo(
     String? value, {
     bool caseSensitive = true,
   }) {
@@ -1282,8 +1299,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      directSourceGreaterThan(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> directSourceGreaterThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -1298,8 +1315,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      directSourceLessThan(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> directSourceLessThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -1314,8 +1331,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      directSourceBetween(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> directSourceBetween(
     String? lower,
     String? upper, {
     bool includeLower = true,
@@ -1334,8 +1351,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      directSourceStartsWith(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> directSourceStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -1348,8 +1365,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      directSourceEndsWith(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> directSourceEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -1362,7 +1379,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+          QAfterFilterCondition>
       directSourceContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
@@ -1373,7 +1391,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+          QAfterFilterCondition>
       directSourceMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
@@ -1384,8 +1403,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      directSourceIsEmpty() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> directSourceIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'directSource',
@@ -1394,8 +1413,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      directSourceIsNotEmpty() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> directSourceIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'directSource',
@@ -1404,8 +1423,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      epgChannelIdIsNull() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> epgChannelIdIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
         property: r'epgChannelId',
@@ -1413,8 +1432,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      epgChannelIdIsNotNull() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> epgChannelIdIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
         property: r'epgChannelId',
@@ -1422,8 +1441,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      epgChannelIdEqualTo(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> epgChannelIdEqualTo(
     String? value, {
     bool caseSensitive = true,
   }) {
@@ -1436,8 +1455,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      epgChannelIdGreaterThan(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> epgChannelIdGreaterThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -1452,8 +1471,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      epgChannelIdLessThan(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> epgChannelIdLessThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -1468,8 +1487,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      epgChannelIdBetween(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> epgChannelIdBetween(
     String? lower,
     String? upper, {
     bool includeLower = true,
@@ -1488,8 +1507,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      epgChannelIdStartsWith(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> epgChannelIdStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -1502,8 +1521,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      epgChannelIdEndsWith(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> epgChannelIdEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -1516,7 +1535,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+          QAfterFilterCondition>
       epgChannelIdContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
@@ -1527,7 +1547,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+          QAfterFilterCondition>
       epgChannelIdMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
@@ -1538,8 +1559,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      epgChannelIdIsEmpty() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> epgChannelIdIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'epgChannelId',
@@ -1548,8 +1569,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      epgChannelIdIsNotEmpty() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> epgChannelIdIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'epgChannelId',
@@ -1558,8 +1579,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      epgListingsIsNull() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> epgListingsIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
         property: r'epgListings',
@@ -1567,8 +1588,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      epgListingsIsNotNull() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> epgListingsIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
         property: r'epgListings',
@@ -1576,8 +1597,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      epgListingsLengthEqualTo(int length) {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> epgListingsLengthEqualTo(int length) {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
         r'epgListings',
@@ -1589,8 +1610,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      epgListingsIsEmpty() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> epgListingsIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
         r'epgListings',
@@ -1602,8 +1623,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      epgListingsIsNotEmpty() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> epgListingsIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
         r'epgListings',
@@ -1615,8 +1636,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      epgListingsLengthLessThan(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> epgListingsLengthLessThan(
     int length, {
     bool include = false,
   }) {
@@ -1631,8 +1652,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      epgListingsLengthGreaterThan(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> epgListingsLengthGreaterThan(
     int length, {
     bool include = false,
   }) {
@@ -1647,8 +1668,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      epgListingsLengthBetween(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> epgListingsLengthBetween(
     int lower,
     int upper, {
     bool includeLower = true,
@@ -1665,8 +1686,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition> hashCodeEqualTo(
-      int value) {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> hashCodeEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'hashCode',
@@ -1675,8 +1696,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      hashCodeGreaterThan(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> hashCodeGreaterThan(
     int value, {
     bool include = false,
   }) {
@@ -1689,8 +1710,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      hashCodeLessThan(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> hashCodeLessThan(
     int value, {
     bool include = false,
   }) {
@@ -1703,7 +1724,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition> hashCodeBetween(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> hashCodeBetween(
     int lower,
     int upper, {
     bool includeLower = true,
@@ -1720,8 +1742,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      isAdultIsNull() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> isAdultIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
         property: r'isAdult',
@@ -1729,8 +1751,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      isAdultIsNotNull() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> isAdultIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
         property: r'isAdult',
@@ -1738,8 +1760,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition> isAdultEqualTo(
-      bool? value) {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> isAdultEqualTo(bool? value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'isAdult',
@@ -1748,8 +1770,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      isFavoriteEqualTo(bool value) {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> isFavoriteEqualTo(bool value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'isFavorite',
@@ -1758,8 +1780,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition> isarIdEqualTo(
-      Id value) {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> isarIdEqualTo(Id value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'isarId',
@@ -1768,8 +1790,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      isarIdGreaterThan(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> isarIdGreaterThan(
     Id value, {
     bool include = false,
   }) {
@@ -1782,7 +1804,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition> isarIdLessThan(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> isarIdLessThan(
     Id value, {
     bool include = false,
   }) {
@@ -1795,7 +1818,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition> isarIdBetween(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> isarIdBetween(
     Id lower,
     Id upper, {
     bool includeLower = true,
@@ -1812,7 +1836,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition> nameEqualTo(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> nameEqualTo(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -1825,7 +1850,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition> nameGreaterThan(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> nameGreaterThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -1840,7 +1866,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition> nameLessThan(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> nameLessThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -1855,7 +1882,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition> nameBetween(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> nameBetween(
     String lower,
     String upper, {
     bool includeLower = true,
@@ -1874,7 +1902,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition> nameStartsWith(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> nameStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -1887,7 +1916,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition> nameEndsWith(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> nameEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -1900,9 +1930,9 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition> nameContains(
-      String value,
-      {bool caseSensitive = true}) {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+          QAfterFilterCondition>
+      nameContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
         property: r'name',
@@ -1912,9 +1942,9 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition> nameMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+          QAfterFilterCondition>
+      nameMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
         property: r'name',
@@ -1924,7 +1954,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition> nameIsEmpty() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> nameIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'name',
@@ -1933,8 +1964,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      nameIsNotEmpty() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> nameIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'name',
@@ -1943,8 +1974,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      playlistIdEqualTo(int value) {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> playlistIdEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'playlistId',
@@ -1953,8 +1984,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      playlistIdGreaterThan(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> playlistIdGreaterThan(
     int value, {
     bool include = false,
   }) {
@@ -1967,8 +1998,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      playlistIdLessThan(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> playlistIdLessThan(
     int value, {
     bool include = false,
   }) {
@@ -1981,8 +2012,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      playlistIdBetween(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> playlistIdBetween(
     int lower,
     int upper, {
     bool includeLower = true,
@@ -1999,8 +2030,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      streamIconIsNull() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> streamIconIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
         property: r'streamIcon',
@@ -2008,8 +2039,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      streamIconIsNotNull() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> streamIconIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
         property: r'streamIcon',
@@ -2017,8 +2048,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      streamIconEqualTo(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> streamIconEqualTo(
     String? value, {
     bool caseSensitive = true,
   }) {
@@ -2031,8 +2062,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      streamIconGreaterThan(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> streamIconGreaterThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -2047,8 +2078,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      streamIconLessThan(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> streamIconLessThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -2063,8 +2094,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      streamIconBetween(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> streamIconBetween(
     String? lower,
     String? upper, {
     bool includeLower = true,
@@ -2083,8 +2114,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      streamIconStartsWith(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> streamIconStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -2097,8 +2128,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      streamIconEndsWith(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> streamIconEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -2111,7 +2142,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+          QAfterFilterCondition>
       streamIconContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
@@ -2122,7 +2154,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+          QAfterFilterCondition>
       streamIconMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
@@ -2133,8 +2166,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      streamIconIsEmpty() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> streamIconIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'streamIcon',
@@ -2143,8 +2176,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      streamIconIsNotEmpty() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> streamIconIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'streamIcon',
@@ -2153,8 +2186,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition> streamIdEqualTo(
-      int value) {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> streamIdEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'streamId',
@@ -2163,8 +2196,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      streamIdGreaterThan(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> streamIdGreaterThan(
     int value, {
     bool include = false,
   }) {
@@ -2177,8 +2210,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      streamIdLessThan(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> streamIdLessThan(
     int value, {
     bool include = false,
   }) {
@@ -2191,7 +2224,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition> streamIdBetween(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> streamIdBetween(
     int lower,
     int upper, {
     bool includeLower = true,
@@ -2208,8 +2242,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      streamTypeEqualTo(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> streamTypeEqualTo(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -2222,8 +2256,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      streamTypeGreaterThan(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> streamTypeGreaterThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -2238,8 +2272,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      streamTypeLessThan(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> streamTypeLessThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -2254,8 +2288,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      streamTypeBetween(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> streamTypeBetween(
     String lower,
     String upper, {
     bool includeLower = true,
@@ -2274,8 +2308,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      streamTypeStartsWith(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> streamTypeStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -2288,8 +2322,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      streamTypeEndsWith(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> streamTypeEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -2302,7 +2336,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+          QAfterFilterCondition>
       streamTypeContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
@@ -2313,7 +2348,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+          QAfterFilterCondition>
       streamTypeMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
@@ -2324,8 +2360,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      streamTypeIsEmpty() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> streamTypeIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'streamType',
@@ -2334,8 +2370,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      streamTypeIsNotEmpty() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> streamTypeIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'streamType',
@@ -2344,8 +2380,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      tvArchiveIsNull() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> tvArchiveIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
         property: r'tvArchive',
@@ -2353,8 +2389,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      tvArchiveIsNotNull() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> tvArchiveIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
         property: r'tvArchive',
@@ -2362,8 +2398,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      tvArchiveEqualTo(int? value) {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> tvArchiveEqualTo(int? value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'tvArchive',
@@ -2372,8 +2408,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      tvArchiveGreaterThan(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> tvArchiveGreaterThan(
     int? value, {
     bool include = false,
   }) {
@@ -2386,8 +2422,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      tvArchiveLessThan(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> tvArchiveLessThan(
     int? value, {
     bool include = false,
   }) {
@@ -2400,8 +2436,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      tvArchiveBetween(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> tvArchiveBetween(
     int? lower,
     int? upper, {
     bool includeLower = true,
@@ -2418,8 +2454,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      tvArchiveDurationIsNull() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> tvArchiveDurationIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
         property: r'tvArchiveDuration',
@@ -2427,8 +2463,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      tvArchiveDurationIsNotNull() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> tvArchiveDurationIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
         property: r'tvArchiveDuration',
@@ -2436,8 +2472,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      tvArchiveDurationEqualTo(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> tvArchiveDurationEqualTo(
     String? value, {
     bool caseSensitive = true,
   }) {
@@ -2450,8 +2486,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      tvArchiveDurationGreaterThan(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> tvArchiveDurationGreaterThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -2466,8 +2502,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      tvArchiveDurationLessThan(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> tvArchiveDurationLessThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -2482,8 +2518,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      tvArchiveDurationBetween(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> tvArchiveDurationBetween(
     String? lower,
     String? upper, {
     bool includeLower = true,
@@ -2502,8 +2538,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      tvArchiveDurationStartsWith(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> tvArchiveDurationStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -2516,8 +2552,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      tvArchiveDurationEndsWith(
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> tvArchiveDurationEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -2530,7 +2566,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+          QAfterFilterCondition>
       tvArchiveDurationContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
@@ -2541,7 +2578,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+          QAfterFilterCondition>
       tvArchiveDurationMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
@@ -2552,8 +2590,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      tvArchiveDurationIsEmpty() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> tvArchiveDurationIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'tvArchiveDuration',
@@ -2562,8 +2600,8 @@ extension LiveChannelQueryFilter
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      tvArchiveDurationIsNotEmpty() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> tvArchiveDurationIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'tvArchiveDuration',
@@ -2573,211 +2611,239 @@ extension LiveChannelQueryFilter
   }
 }
 
-extension LiveChannelQueryObject
-    on QueryBuilder<LiveChannel, LiveChannel, QFilterCondition> {
-  QueryBuilder<LiveChannel, LiveChannel, QAfterFilterCondition>
-      epgListingsElement(FilterQuery<EPG> q) {
+extension LiveChannelIsarModelQueryObject on QueryBuilder<LiveChannelIsarModel,
+    LiveChannelIsarModel, QFilterCondition> {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> epgListingsElement(FilterQuery<EPG> q) {
     return QueryBuilder.apply(this, (query) {
       return query.object(q, r'epgListings');
     });
   }
 }
 
-extension LiveChannelQueryLinks
-    on QueryBuilder<LiveChannel, LiveChannel, QFilterCondition> {}
+extension LiveChannelIsarModelQueryLinks on QueryBuilder<LiveChannelIsarModel,
+    LiveChannelIsarModel, QFilterCondition> {}
 
-extension LiveChannelQuerySortBy
-    on QueryBuilder<LiveChannel, LiveChannel, QSortBy> {
-  QueryBuilder<LiveChannel, LiveChannel, QAfterSortBy> sortByAdded() {
+extension LiveChannelIsarModelQuerySortBy
+    on QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QSortBy> {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
+      sortByAdded() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'added', Sort.asc);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterSortBy> sortByAddedDesc() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
+      sortByAddedDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'added', Sort.desc);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterSortBy> sortByCategoryId() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
+      sortByCategoryId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'categoryId', Sort.asc);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterSortBy> sortByCategoryIdDesc() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
+      sortByCategoryIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'categoryId', Sort.desc);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterSortBy> sortByChannelNum() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
+      sortByChannelNum() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'channelNum', Sort.asc);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterSortBy> sortByChannelNumDesc() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
+      sortByChannelNumDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'channelNum', Sort.desc);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterSortBy> sortByCustomSid() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
+      sortByCustomSid() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'customSid', Sort.asc);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterSortBy> sortByCustomSidDesc() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
+      sortByCustomSidDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'customSid', Sort.desc);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterSortBy> sortByDirectSource() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
+      sortByDirectSource() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'directSource', Sort.asc);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterSortBy>
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
       sortByDirectSourceDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'directSource', Sort.desc);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterSortBy> sortByEpgChannelId() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
+      sortByEpgChannelId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'epgChannelId', Sort.asc);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterSortBy>
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
       sortByEpgChannelIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'epgChannelId', Sort.desc);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterSortBy> sortByHashCode() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
+      sortByHashCode() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'hashCode', Sort.asc);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterSortBy> sortByHashCodeDesc() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
+      sortByHashCodeDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'hashCode', Sort.desc);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterSortBy> sortByIsAdult() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
+      sortByIsAdult() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isAdult', Sort.asc);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterSortBy> sortByIsAdultDesc() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
+      sortByIsAdultDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isAdult', Sort.desc);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterSortBy> sortByIsFavorite() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
+      sortByIsFavorite() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isFavorite', Sort.asc);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterSortBy> sortByIsFavoriteDesc() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
+      sortByIsFavoriteDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isFavorite', Sort.desc);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterSortBy> sortByName() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
+      sortByName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.asc);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterSortBy> sortByNameDesc() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
+      sortByNameDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.desc);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterSortBy> sortByPlaylistId() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
+      sortByPlaylistId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'playlistId', Sort.asc);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterSortBy> sortByPlaylistIdDesc() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
+      sortByPlaylistIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'playlistId', Sort.desc);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterSortBy> sortByStreamIcon() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
+      sortByStreamIcon() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'streamIcon', Sort.asc);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterSortBy> sortByStreamIconDesc() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
+      sortByStreamIconDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'streamIcon', Sort.desc);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterSortBy> sortByStreamId() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
+      sortByStreamId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'streamId', Sort.asc);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterSortBy> sortByStreamIdDesc() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
+      sortByStreamIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'streamId', Sort.desc);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterSortBy> sortByStreamType() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
+      sortByStreamType() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'streamType', Sort.asc);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterSortBy> sortByStreamTypeDesc() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
+      sortByStreamTypeDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'streamType', Sort.desc);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterSortBy> sortByTvArchive() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
+      sortByTvArchive() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'tvArchive', Sort.asc);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterSortBy> sortByTvArchiveDesc() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
+      sortByTvArchiveDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'tvArchive', Sort.desc);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterSortBy>
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
       sortByTvArchiveDuration() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'tvArchiveDuration', Sort.asc);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterSortBy>
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
       sortByTvArchiveDurationDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'tvArchiveDuration', Sort.desc);
@@ -2785,210 +2851,240 @@ extension LiveChannelQuerySortBy
   }
 }
 
-extension LiveChannelQuerySortThenBy
-    on QueryBuilder<LiveChannel, LiveChannel, QSortThenBy> {
-  QueryBuilder<LiveChannel, LiveChannel, QAfterSortBy> thenByAdded() {
+extension LiveChannelIsarModelQuerySortThenBy
+    on QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QSortThenBy> {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
+      thenByAdded() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'added', Sort.asc);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterSortBy> thenByAddedDesc() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
+      thenByAddedDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'added', Sort.desc);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterSortBy> thenByCategoryId() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
+      thenByCategoryId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'categoryId', Sort.asc);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterSortBy> thenByCategoryIdDesc() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
+      thenByCategoryIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'categoryId', Sort.desc);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterSortBy> thenByChannelNum() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
+      thenByChannelNum() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'channelNum', Sort.asc);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterSortBy> thenByChannelNumDesc() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
+      thenByChannelNumDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'channelNum', Sort.desc);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterSortBy> thenByCustomSid() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
+      thenByCustomSid() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'customSid', Sort.asc);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterSortBy> thenByCustomSidDesc() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
+      thenByCustomSidDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'customSid', Sort.desc);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterSortBy> thenByDirectSource() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
+      thenByDirectSource() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'directSource', Sort.asc);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterSortBy>
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
       thenByDirectSourceDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'directSource', Sort.desc);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterSortBy> thenByEpgChannelId() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
+      thenByEpgChannelId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'epgChannelId', Sort.asc);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterSortBy>
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
       thenByEpgChannelIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'epgChannelId', Sort.desc);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterSortBy> thenByHashCode() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
+      thenByHashCode() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'hashCode', Sort.asc);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterSortBy> thenByHashCodeDesc() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
+      thenByHashCodeDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'hashCode', Sort.desc);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterSortBy> thenByIsAdult() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
+      thenByIsAdult() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isAdult', Sort.asc);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterSortBy> thenByIsAdultDesc() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
+      thenByIsAdultDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isAdult', Sort.desc);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterSortBy> thenByIsFavorite() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
+      thenByIsFavorite() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isFavorite', Sort.asc);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterSortBy> thenByIsFavoriteDesc() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
+      thenByIsFavoriteDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isFavorite', Sort.desc);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterSortBy> thenByIsarId() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
+      thenByIsarId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isarId', Sort.asc);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterSortBy> thenByIsarIdDesc() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
+      thenByIsarIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isarId', Sort.desc);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterSortBy> thenByName() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
+      thenByName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.asc);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterSortBy> thenByNameDesc() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
+      thenByNameDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.desc);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterSortBy> thenByPlaylistId() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
+      thenByPlaylistId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'playlistId', Sort.asc);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterSortBy> thenByPlaylistIdDesc() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
+      thenByPlaylistIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'playlistId', Sort.desc);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterSortBy> thenByStreamIcon() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
+      thenByStreamIcon() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'streamIcon', Sort.asc);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterSortBy> thenByStreamIconDesc() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
+      thenByStreamIconDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'streamIcon', Sort.desc);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterSortBy> thenByStreamId() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
+      thenByStreamId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'streamId', Sort.asc);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterSortBy> thenByStreamIdDesc() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
+      thenByStreamIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'streamId', Sort.desc);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterSortBy> thenByStreamType() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
+      thenByStreamType() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'streamType', Sort.asc);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterSortBy> thenByStreamTypeDesc() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
+      thenByStreamTypeDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'streamType', Sort.desc);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterSortBy> thenByTvArchive() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
+      thenByTvArchive() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'tvArchive', Sort.asc);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterSortBy> thenByTvArchiveDesc() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
+      thenByTvArchiveDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'tvArchive', Sort.desc);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterSortBy>
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
       thenByTvArchiveDuration() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'tvArchiveDuration', Sort.asc);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QAfterSortBy>
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
       thenByTvArchiveDurationDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'tvArchiveDuration', Sort.desc);
@@ -2996,108 +3092,115 @@ extension LiveChannelQuerySortThenBy
   }
 }
 
-extension LiveChannelQueryWhereDistinct
-    on QueryBuilder<LiveChannel, LiveChannel, QDistinct> {
-  QueryBuilder<LiveChannel, LiveChannel, QDistinct> distinctByAdded(
-      {bool caseSensitive = true}) {
+extension LiveChannelIsarModelQueryWhereDistinct
+    on QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QDistinct> {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QDistinct>
+      distinctByAdded({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'added', caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QDistinct> distinctByCategoryId(
-      {bool caseSensitive = true}) {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QDistinct>
+      distinctByCategoryId({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'categoryId', caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QDistinct> distinctByChannelNum() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QDistinct>
+      distinctByChannelNum() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'channelNum');
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QDistinct> distinctByCustomSid(
-      {bool caseSensitive = true}) {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QDistinct>
+      distinctByCustomSid({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'customSid', caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QDistinct> distinctByDirectSource(
-      {bool caseSensitive = true}) {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QDistinct>
+      distinctByDirectSource({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'directSource', caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QDistinct> distinctByEpgChannelId(
-      {bool caseSensitive = true}) {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QDistinct>
+      distinctByEpgChannelId({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'epgChannelId', caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QDistinct> distinctByHashCode() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QDistinct>
+      distinctByHashCode() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'hashCode');
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QDistinct> distinctByIsAdult() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QDistinct>
+      distinctByIsAdult() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'isAdult');
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QDistinct> distinctByIsFavorite() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QDistinct>
+      distinctByIsFavorite() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'isFavorite');
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QDistinct> distinctByName(
-      {bool caseSensitive = true}) {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QDistinct>
+      distinctByName({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'name', caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QDistinct> distinctByPlaylistId() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QDistinct>
+      distinctByPlaylistId() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'playlistId');
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QDistinct> distinctByStreamIcon(
-      {bool caseSensitive = true}) {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QDistinct>
+      distinctByStreamIcon({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'streamIcon', caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QDistinct> distinctByStreamId() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QDistinct>
+      distinctByStreamId() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'streamId');
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QDistinct> distinctByStreamType(
-      {bool caseSensitive = true}) {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QDistinct>
+      distinctByStreamType({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'streamType', caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QDistinct> distinctByTvArchive() {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QDistinct>
+      distinctByTvArchive() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'tvArchive');
     });
   }
 
-  QueryBuilder<LiveChannel, LiveChannel, QDistinct> distinctByTvArchiveDuration(
-      {bool caseSensitive = true}) {
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QDistinct>
+      distinctByTvArchiveDuration({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'tvArchiveDuration',
           caseSensitive: caseSensitive);
@@ -3105,112 +3208,124 @@ extension LiveChannelQueryWhereDistinct
   }
 }
 
-extension LiveChannelQueryProperty
-    on QueryBuilder<LiveChannel, LiveChannel, QQueryProperty> {
-  QueryBuilder<LiveChannel, int, QQueryOperations> isarIdProperty() {
+extension LiveChannelIsarModelQueryProperty on QueryBuilder<
+    LiveChannelIsarModel, LiveChannelIsarModel, QQueryProperty> {
+  QueryBuilder<LiveChannelIsarModel, int, QQueryOperations> isarIdProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'isarId');
     });
   }
 
-  QueryBuilder<LiveChannel, String?, QQueryOperations> addedProperty() {
+  QueryBuilder<LiveChannelIsarModel, String?, QQueryOperations>
+      addedProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'added');
     });
   }
 
-  QueryBuilder<LiveChannel, String?, QQueryOperations> categoryIdProperty() {
+  QueryBuilder<LiveChannelIsarModel, String?, QQueryOperations>
+      categoryIdProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'categoryId');
     });
   }
 
-  QueryBuilder<LiveChannel, int?, QQueryOperations> channelNumProperty() {
+  QueryBuilder<LiveChannelIsarModel, int?, QQueryOperations>
+      channelNumProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'channelNum');
     });
   }
 
-  QueryBuilder<LiveChannel, String?, QQueryOperations> customSidProperty() {
+  QueryBuilder<LiveChannelIsarModel, String?, QQueryOperations>
+      customSidProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'customSid');
     });
   }
 
-  QueryBuilder<LiveChannel, String?, QQueryOperations> directSourceProperty() {
+  QueryBuilder<LiveChannelIsarModel, String?, QQueryOperations>
+      directSourceProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'directSource');
     });
   }
 
-  QueryBuilder<LiveChannel, String?, QQueryOperations> epgChannelIdProperty() {
+  QueryBuilder<LiveChannelIsarModel, String?, QQueryOperations>
+      epgChannelIdProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'epgChannelId');
     });
   }
 
-  QueryBuilder<LiveChannel, List<EPG>?, QQueryOperations>
+  QueryBuilder<LiveChannelIsarModel, List<EPG>?, QQueryOperations>
       epgListingsProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'epgListings');
     });
   }
 
-  QueryBuilder<LiveChannel, int, QQueryOperations> hashCodeProperty() {
+  QueryBuilder<LiveChannelIsarModel, int, QQueryOperations> hashCodeProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'hashCode');
     });
   }
 
-  QueryBuilder<LiveChannel, bool?, QQueryOperations> isAdultProperty() {
+  QueryBuilder<LiveChannelIsarModel, bool?, QQueryOperations>
+      isAdultProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'isAdult');
     });
   }
 
-  QueryBuilder<LiveChannel, bool, QQueryOperations> isFavoriteProperty() {
+  QueryBuilder<LiveChannelIsarModel, bool, QQueryOperations>
+      isFavoriteProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'isFavorite');
     });
   }
 
-  QueryBuilder<LiveChannel, String, QQueryOperations> nameProperty() {
+  QueryBuilder<LiveChannelIsarModel, String, QQueryOperations> nameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'name');
     });
   }
 
-  QueryBuilder<LiveChannel, int, QQueryOperations> playlistIdProperty() {
+  QueryBuilder<LiveChannelIsarModel, int, QQueryOperations>
+      playlistIdProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'playlistId');
     });
   }
 
-  QueryBuilder<LiveChannel, String?, QQueryOperations> streamIconProperty() {
+  QueryBuilder<LiveChannelIsarModel, String?, QQueryOperations>
+      streamIconProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'streamIcon');
     });
   }
 
-  QueryBuilder<LiveChannel, int, QQueryOperations> streamIdProperty() {
+  QueryBuilder<LiveChannelIsarModel, int, QQueryOperations> streamIdProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'streamId');
     });
   }
 
-  QueryBuilder<LiveChannel, String, QQueryOperations> streamTypeProperty() {
+  QueryBuilder<LiveChannelIsarModel, String, QQueryOperations>
+      streamTypeProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'streamType');
     });
   }
 
-  QueryBuilder<LiveChannel, int?, QQueryOperations> tvArchiveProperty() {
+  QueryBuilder<LiveChannelIsarModel, int?, QQueryOperations>
+      tvArchiveProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'tvArchive');
     });
   }
 
-  QueryBuilder<LiveChannel, String?, QQueryOperations>
+  QueryBuilder<LiveChannelIsarModel, String?, QQueryOperations>
       tvArchiveDurationProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'tvArchiveDuration');

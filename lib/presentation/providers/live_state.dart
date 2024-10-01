@@ -4,8 +4,8 @@ import 'package:collection/collection.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../domain/entities/category.dart';
-import '../../domain/entities/live_channel.dart';
+import '../../domain/entities/category/category.dart';
+import '../../domain/entities/live_channel/live_channel.dart';
 import 'player_state.dart';
 import 'playlist_state.dart';
 

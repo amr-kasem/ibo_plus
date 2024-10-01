@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../domain/entities/category.dart';
-import '../../domain/entities/movie.dart';
+import '../../domain/entities/category/category.dart';
+import '../../domain/entities/movies/movie.dart';
 
 part 'movie_state.freezed.dart';
 

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:ibo_plus/data/dtos/isar/playlist/live_channel/live_channel_metadata.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -25,7 +26,8 @@ class IsarDB {
         UserIsarModelSchema,
         M3uPlaylistIsarModelSchema,
         LanguageSchema,
-        LiveChannelSchema,
+        LiveChannelIsarModelSchema,
+        LiveMetadataIsarModelSchema,
         MovieSchema,
         CategoryIsarModelSchema,
         SettingsIsarModelSchema,

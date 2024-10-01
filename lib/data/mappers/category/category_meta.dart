@@ -1,7 +1,7 @@
 import 'package:get_it/get_it.dart';
 
-import '../../../domain/entities/category.dart';
-import '../../../domain/entities/category_metadata.dart';
+import '../../../domain/entities/category/category.dart';
+import '../../../domain/entities/category/category_metadata.dart';
 import '../../../domain/value_objects/media/category/category_metadata.dart';
 import '../../dtos/isar/playlist/category/category_metadata.dart';
 import 'category.dart';

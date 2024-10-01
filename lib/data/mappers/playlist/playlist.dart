@@ -1,6 +1,6 @@
 import 'package:get_it/get_it.dart';
 
-import '../../../domain/entities/playlist.dart';
+import '../../../domain/entities/playlist/playlist.dart';
 import '../../dtos/ibo/m3u_playlist/m3u_playlist.dart';
 import '../../dtos/isar/playlist/m3u_playlist/m3u_playlist.dart';
 import 'playlist_data.dart';

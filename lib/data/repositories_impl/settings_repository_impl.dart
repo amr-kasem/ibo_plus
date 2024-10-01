@@ -1,8 +1,8 @@
 import 'package:auk_utils/auk_utils.dart';
 import 'package:get_it/get_it.dart';
 
-import '../../domain/entities/device_id.dart';
-import '../../domain/entities/settings.dart';
+import '../../domain/entities/settings/device_id.dart';
+import '../../domain/entities/settings/settings.dart';
 import '../../domain/repositories/settings_repository.dart';
 import '../data_sources/isar_local/settings_datasource.dart';
 import '../mappers/settigs/settings.dart';

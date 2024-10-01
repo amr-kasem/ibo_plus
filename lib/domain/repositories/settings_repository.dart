@@ -1,5 +1,5 @@
-import '../entities/device_id.dart';
-import '../entities/settings.dart';
+import '../entities/settings/device_id.dart';
+import '../entities/settings/settings.dart';
 
 abstract class SettingsRepository {
   Future<bool> isDeviceSettingsInitialized();

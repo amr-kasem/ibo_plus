@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart' as intl;
 
-import '../../../../../../domain/entities/category.dart';
+import '../../../../../../domain/entities/category/category.dart';
 import '../../../../../providers/live_state.dart';
 import '../options/category_options_parent.dart';
 import 'category_tile.dart';

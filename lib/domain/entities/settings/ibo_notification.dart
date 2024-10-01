@@ -1,4 +1,4 @@
-import '../value_objects/ibo/ibo_notification_data.dart';
+import '../../value_objects/ibo/ibo_notification_data.dart';
 
 class IboNotification {
   IboNotificationData data;

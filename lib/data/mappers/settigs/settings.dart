@@ -1,5 +1,5 @@
-import '../../../../domain/entities/device_id.dart';
-import '../../../../domain/entities/settings.dart';
+import '../../../domain/entities/settings/device_id.dart';
+import '../../../domain/entities/settings/settings.dart';
 import '../../dtos/isar/settings/settings.dart';
 
 class SettingsMapper {

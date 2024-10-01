@@ -6,37 +6,37 @@ import 'package:isar/isar.dart';
 import '../../../domain/entities/playlist/playlist.dart';
 import '../../../shared/types/category_type.dart';
 import '../../../shared/types/stream_type.dart';
-import '../../dtos/isar/playlist/category/category.dart';
-import '../../dtos/isar/playlist/category/category_metadata.dart';
+import '../../dtos/isar/playlist/live_channel/live_channel.dart';
+import '../../dtos/isar/playlist/live_channel/live_channel_metadata.dart';
 import 'isar_db.dart';
 
-abstract class CategoryLocalDatasource {
-  Future<List<CategoryIsarModel>> getCategories({
+abstract class LiveLocalDatasource {
+  Future<List<LiveChannelIsarModel>> getCategories({
     required Playlist playlist,
     required CategoryType type,
   });
-  Future<List<CategoryMetadataIsarModel>> getCategoriesMeta({
+  Future<List<LiveMetadataIsarModel>> getCategoriesMeta({
     required Playlist playlist,
     required CategoryType type,
   });
-  Future<CategoryMetadataIsarModel?> getCategoryMeta({
+  Future<LiveMetadataIsarModel?> getLiveMeta({
     required int id,
   });
-  Future<void> updateCategory(CategoryIsarModel category);
+  Future<void> updateLiveChannel(LiveChannelIsarModel category);
   Future<void> storeCategories({
     required Playlist playlist,
-    required List<CategoryIsarModel> categories,
+    required List<LiveChannelIsarModel> categories,
     required CategoryType type,
   });
   Stream<UpdateEvent> get updateStream;
 }
 
-class CategoryLocalDatasourceImpl implements CategoryLocalDatasource {
+class LiveLocalDatasourceImpl implements LiveLocalDatasource {
   final _controller = StreamController<UpdateEvent>();
   final _getIt = GetIt.instance;
   late final _isar = _getIt.get<IsarDB>();
   @override
-  Future<List<CategoryIsarModel>> getCategories({
+  Future<List<LiveChannelIsarModel>> getCategories({
     required Playlist playlist,
     required CategoryType type,
   }) {
@@ -44,17 +44,17 @@ class CategoryLocalDatasourceImpl implements CategoryLocalDatasource {
   }
 
   @override
-  Future<List<CategoryMetadataIsarModel>> getCategoriesMeta({
+  Future<List<LiveMetadataIsarModel>> getCategoriesMeta({
     required Playlist playlist,
     required CategoryType type,
   }) {
-    return _isar.db.categoryMetadataIsarModels.where().findAll();
+    return _isar.db.liveMetadataIsarModels.where().findAll();
   }
 
   @override
   Future<void> storeCategories({
     required Playlist playlist,
-    required List<CategoryIsarModel> categories,
+    required List<LiveChannelIsarModel> categories,
     required CategoryType type,
   }) {
     switch (type) {
@@ -73,15 +73,16 @@ class CategoryLocalDatasourceImpl implements CategoryLocalDatasource {
   }
 
   @override
-  Future<void> updateCategory(CategoryIsarModel category) {
-    throw UnimplementedError();
-  }
-
-  @override
   Stream<UpdateEvent> get updateStream => _controller.stream;
 
   @override
-  Future<CategoryMetadataIsarModel?> getCategoryMeta({required int id}) {
-    return _isar.db.categoryMetadataIsarModels.get(id);
+  Future<LiveMetadataIsarModel?> getLiveMeta({required int id}) {
+    return _isar.db.liveMetadataIsarModels.get(id);
+  }
+
+  @override
+  Future<void> updateLiveChannel(LiveChannelIsarModel category) {
+    // TODO: implement updateLiveChannel
+    throw UnimplementedError();
   }
 }

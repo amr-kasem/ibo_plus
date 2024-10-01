@@ -1,6 +1,6 @@
-import 'package:ibo_plus/domain/entities/playlist_status.dart';
+import 'package:ibo_plus/domain/entities/playlist/playlist_status.dart';
 
-import '../value_objects/media/playlist/playlist_data.dart';
+import '../../value_objects/media/playlist/playlist_data.dart';
 
 class Playlist {
   PlaylistData data;

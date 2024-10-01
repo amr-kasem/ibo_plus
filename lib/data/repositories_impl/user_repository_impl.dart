@@ -1,9 +1,9 @@
 import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
 
-import '../../domain/entities/device_id.dart';
-import '../../domain/entities/ibo_info.dart';
-import '../../domain/entities/user.dart';
+import '../../domain/entities/settings/device_id.dart';
+import '../../domain/entities/settings/ibo_info.dart';
+import '../../domain/entities/settings/user.dart';
 import '../../domain/repositories/user_repository.dart';
 import '../data_sources/ibo_remote/ibo_remote_datasource.dart';
 import '../dtos/ibo/ibo_info/ibo_info.dart';

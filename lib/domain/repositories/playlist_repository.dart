@@ -1,4 +1,4 @@
-import '../entities/playlist.dart';
+import '../entities/playlist/playlist.dart';
 
 abstract class PlaylistRepository {
   Future<void> storePlaylists(List<Playlist> playlists);

@@ -4,7 +4,7 @@ import 'package:logger/logger.dart';
 import '../../bootstrap/bootstrap.dart';
 import '../../shared/types/no_parameters.dart';
 import '../../shared/types/use_case.dart';
-import '../entities/ibo_info.dart';
+import '../entities/settings/ibo_info.dart';
 import '../repositories/playlist_repository.dart';
 import '../repositories/user_repository.dart';
 import 'get_device_settings.dart';

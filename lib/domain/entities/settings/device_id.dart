@@ -2,8 +2,8 @@ import 'dart:math' as math;
 
 import 'package:get_it/get_it.dart';
 
-import '../../bootstrap/config/app_config.dart';
-import '../value_objects/app_settings/device_id/device_id.dart';
+import '../../../bootstrap/config/app_config.dart';
+import '../../value_objects/app_settings/device_id/device_id.dart';
 
 class DeviceId {
   final _getIt = GetIt.instance;

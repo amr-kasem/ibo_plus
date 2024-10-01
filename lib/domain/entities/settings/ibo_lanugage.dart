@@ -1,4 +1,4 @@
-import '../value_objects/ibo/ibo_language_data.dart';
+import '../../value_objects/ibo/ibo_language_data.dart';
 
 class IboLanguage {
   IboLanguageData data;

@@ -1,6 +1,6 @@
 import 'package:get_it/get_it.dart';
 
-import '../../../domain/entities/category.dart';
+import '../../../domain/entities/category/category.dart';
 import '../../dtos/iptv/category/category.dart';
 import '../../dtos/isar/playlist/category/category.dart';
 import 'category_data.dart';

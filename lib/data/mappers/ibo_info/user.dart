@@ -1,5 +1,5 @@
 import 'package:ibo_plus/data/dtos/ibo/user/user.dart';
-import 'package:ibo_plus/domain/entities/user.dart';
+import 'package:ibo_plus/domain/entities/settings/user.dart';
 
 import '../../../domain/value_objects/ibo/user_data.dart';
 

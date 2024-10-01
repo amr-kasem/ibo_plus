@@ -1,4 +1,4 @@
-import '../../../domain/entities/ibo_notification.dart';
+import '../../../domain/entities/settings/ibo_notification.dart';
 import '../../../domain/value_objects/ibo/ibo_notification_data.dart';
 import '../../dtos/ibo/ibo_notification/ibo_notification.dart';
 

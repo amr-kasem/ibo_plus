@@ -1,4 +1,4 @@
-import '../value_objects/media/category/category_metadata.dart';
+import '../../value_objects/media/category/category_metadata.dart';
 
 class CategoryMeta {
   CategoryMetadata data;

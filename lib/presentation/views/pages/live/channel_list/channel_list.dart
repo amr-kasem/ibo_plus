@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../../domain/entities/live_channel.dart';
+import '../../../../../domain/entities/live_channel/live_channel.dart';
 import '../../../../providers/app_state.dart';
 import '../../../../providers/live_state.dart';
 import '../../../widgets/list_highlighter.dart';

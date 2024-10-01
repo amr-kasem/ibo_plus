@@ -3,8 +3,8 @@ import 'package:logger/logger.dart';
 
 import '../../shared/types/no_parameters.dart';
 import '../../shared/types/use_case.dart';
-import '../entities/device_id.dart';
-import '../entities/settings.dart';
+import '../entities/settings/device_id.dart';
+import '../entities/settings/settings.dart';
 import '../repositories/settings_repository.dart';
 
 class GetDeviceSettings implements UseCase<Settings, NoParameters> {

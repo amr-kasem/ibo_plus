@@ -1,6 +1,7 @@
 import '../../shared/types/category_type.dart';
-import '../entities/category.dart';
-import '../entities/playlist.dart';
+import '../../shared/types/stream_type.dart';
+import '../entities/category/category.dart';
+import '../entities/playlist/playlist.dart';
 
 abstract class CategoryRepository {
   void refreshCategories({
@@ -12,5 +13,5 @@ abstract class CategoryRepository {
     required CategoryType type,
   });
   void updateCategory({required Category category});
-  Stream<void> getUpdateEventsStream();
+  Stream<UpdateEvent> getUpdateEventsStream();
 }

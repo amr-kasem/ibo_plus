@@ -1,5 +1,5 @@
 import 'device_id.dart';
-import 'playlist.dart';
+import '../playlist/playlist.dart';
 
 class Settings {
   final DeviceId deviceId;
