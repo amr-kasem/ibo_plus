@@ -5,7 +5,6 @@ part 'category_metadata.freezed.dart';
 @freezed
 class CategoryMetadata with _$CategoryMetadata {
   const factory CategoryMetadata({
-    required int cateogy,
     required int index,
     required DateTime lastUpdated,
     required bool favorite,

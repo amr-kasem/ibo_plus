@@ -14,13 +14,8 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-LiveChannelData _$LiveChannelDataFromJson(Map<String, dynamic> json) {
-  return _LiveChannelData.fromJson(json);
-}
-
 /// @nodoc
 mixin _$LiveChannelData {
-  @JsonKey(name: 'num')
   int? get channelNum => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
   String get streamType => throw _privateConstructorUsedError;
@@ -32,11 +27,8 @@ mixin _$LiveChannelData {
   String? get customSid => throw _privateConstructorUsedError;
   int? get tvArchive => throw _privateConstructorUsedError;
   String? get directSource => throw _privateConstructorUsedError;
-  List<EPGJsonModel>? get epgListings => throw _privateConstructorUsedError;
-  @NullableIntToBoolSerializer()
   bool get isAdult => throw _privateConstructorUsedError;
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
   $LiveChannelDataCopyWith<LiveChannelData> get copyWith =>
       throw _privateConstructorUsedError;
@@ -49,7 +41,7 @@ abstract class $LiveChannelDataCopyWith<$Res> {
       _$LiveChannelDataCopyWithImpl<$Res, LiveChannelData>;
   @useResult
   $Res call(
-      {@JsonKey(name: 'num') int? channelNum,
+      {int? channelNum,
       String name,
       String streamType,
       int streamId,
@@ -60,8 +52,7 @@ abstract class $LiveChannelDataCopyWith<$Res> {
       String? customSid,
       int? tvArchive,
       String? directSource,
-      List<EPGJsonModel>? epgListings,
-      @NullableIntToBoolSerializer() bool isAdult});
+      bool isAdult});
 }
 
 /// @nodoc
@@ -88,7 +79,6 @@ class _$LiveChannelDataCopyWithImpl<$Res, $Val extends LiveChannelData>
     Object? customSid = freezed,
     Object? tvArchive = freezed,
     Object? directSource = freezed,
-    Object? epgListings = freezed,
     Object? isAdult = null,
   }) {
     return _then(_value.copyWith(
@@ -136,10 +126,6 @@ class _$LiveChannelDataCopyWithImpl<$Res, $Val extends LiveChannelData>
           ? _value.directSource
           : directSource // ignore: cast_nullable_to_non_nullable
               as String?,
-      epgListings: freezed == epgListings
-          ? _value.epgListings
-          : epgListings // ignore: cast_nullable_to_non_nullable
-              as List<EPGJsonModel>?,
       isAdult: null == isAdult
           ? _value.isAdult
           : isAdult // ignore: cast_nullable_to_non_nullable
@@ -157,7 +143,7 @@ abstract class _$$LiveChannelDataImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {@JsonKey(name: 'num') int? channelNum,
+      {int? channelNum,
       String name,
       String streamType,
       int streamId,
@@ -168,8 +154,7 @@ abstract class _$$LiveChannelDataImplCopyWith<$Res>
       String? customSid,
       int? tvArchive,
       String? directSource,
-      List<EPGJsonModel>? epgListings,
-      @NullableIntToBoolSerializer() bool isAdult});
+      bool isAdult});
 }
 
 /// @nodoc
@@ -194,7 +179,6 @@ class __$$LiveChannelDataImplCopyWithImpl<$Res>
     Object? customSid = freezed,
     Object? tvArchive = freezed,
     Object? directSource = freezed,
-    Object? epgListings = freezed,
     Object? isAdult = null,
   }) {
     return _then(_$LiveChannelDataImpl(
@@ -242,10 +226,6 @@ class __$$LiveChannelDataImplCopyWithImpl<$Res>
           ? _value.directSource
           : directSource // ignore: cast_nullable_to_non_nullable
               as String?,
-      epgListings: freezed == epgListings
-          ? _value._epgListings
-          : epgListings // ignore: cast_nullable_to_non_nullable
-              as List<EPGJsonModel>?,
       isAdult: null == isAdult
           ? _value.isAdult
           : isAdult // ignore: cast_nullable_to_non_nullable
@@ -256,10 +236,9 @@ class __$$LiveChannelDataImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-@JsonSerializable(fieldRename: FieldRename.snake)
 class _$LiveChannelDataImpl implements _LiveChannelData {
   const _$LiveChannelDataImpl(
-      {@JsonKey(name: 'num') this.channelNum,
+      {this.channelNum,
       required this.name,
       required this.streamType,
       required this.streamId,
@@ -270,15 +249,9 @@ class _$LiveChannelDataImpl implements _LiveChannelData {
       this.customSid,
       this.tvArchive,
       this.directSource,
-      final List<EPGJsonModel>? epgListings,
-      @NullableIntToBoolSerializer() required this.isAdult})
-      : _epgListings = epgListings;
-
-  factory _$LiveChannelDataImpl.fromJson(Map<String, dynamic> json) =>
-      _$$LiveChannelDataImplFromJson(json);
+      required this.isAdult});
 
   @override
-  @JsonKey(name: 'num')
   final int? channelNum;
   @override
   final String name;
@@ -300,23 +273,12 @@ class _$LiveChannelDataImpl implements _LiveChannelData {
   final int? tvArchive;
   @override
   final String? directSource;
-  final List<EPGJsonModel>? _epgListings;
   @override
-  List<EPGJsonModel>? get epgListings {
-    final value = _epgListings;
-    if (value == null) return null;
-    if (_epgListings is EqualUnmodifiableListView) return _epgListings;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(value);
-  }
-
-  @override
-  @NullableIntToBoolSerializer()
   final bool isAdult;
 
   @override
   String toString() {
-    return 'LiveChannelData(channelNum: $channelNum, name: $name, streamType: $streamType, streamId: $streamId, streamIcon: $streamIcon, epgChannelId: $epgChannelId, added: $added, categoryId: $categoryId, customSid: $customSid, tvArchive: $tvArchive, directSource: $directSource, epgListings: $epgListings, isAdult: $isAdult)';
+    return 'LiveChannelData(channelNum: $channelNum, name: $name, streamType: $streamType, streamId: $streamId, streamIcon: $streamIcon, epgChannelId: $epgChannelId, added: $added, categoryId: $categoryId, customSid: $customSid, tvArchive: $tvArchive, directSource: $directSource, isAdult: $isAdult)';
   }
 
   @override
@@ -344,12 +306,9 @@ class _$LiveChannelDataImpl implements _LiveChannelData {
                 other.tvArchive == tvArchive) &&
             (identical(other.directSource, directSource) ||
                 other.directSource == directSource) &&
-            const DeepCollectionEquality()
-                .equals(other._epgListings, _epgListings) &&
             (identical(other.isAdult, isAdult) || other.isAdult == isAdult));
   }
 
-  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -364,7 +323,6 @@ class _$LiveChannelDataImpl implements _LiveChannelData {
       customSid,
       tvArchive,
       directSource,
-      const DeepCollectionEquality().hash(_epgListings),
       isAdult);
 
   @JsonKey(ignore: true)
@@ -373,37 +331,24 @@ class _$LiveChannelDataImpl implements _LiveChannelData {
   _$$LiveChannelDataImplCopyWith<_$LiveChannelDataImpl> get copyWith =>
       __$$LiveChannelDataImplCopyWithImpl<_$LiveChannelDataImpl>(
           this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$LiveChannelDataImplToJson(
-      this,
-    );
-  }
 }
 
 abstract class _LiveChannelData implements LiveChannelData {
   const factory _LiveChannelData(
-          {@JsonKey(name: 'num') final int? channelNum,
-          required final String name,
-          required final String streamType,
-          required final int streamId,
-          final String? streamIcon,
-          final String? epgChannelId,
-          final String? added,
-          final String? categoryId,
-          final String? customSid,
-          final int? tvArchive,
-          final String? directSource,
-          final List<EPGJsonModel>? epgListings,
-          @NullableIntToBoolSerializer() required final bool isAdult}) =
-      _$LiveChannelDataImpl;
-
-  factory _LiveChannelData.fromJson(Map<String, dynamic> json) =
-      _$LiveChannelDataImpl.fromJson;
+      {final int? channelNum,
+      required final String name,
+      required final String streamType,
+      required final int streamId,
+      final String? streamIcon,
+      final String? epgChannelId,
+      final String? added,
+      final String? categoryId,
+      final String? customSid,
+      final int? tvArchive,
+      final String? directSource,
+      required final bool isAdult}) = _$LiveChannelDataImpl;
 
   @override
-  @JsonKey(name: 'num')
   int? get channelNum;
   @override
   String get name;
@@ -426,9 +371,6 @@ abstract class _LiveChannelData implements LiveChannelData {
   @override
   String? get directSource;
   @override
-  List<EPGJsonModel>? get epgListings;
-  @override
-  @NullableIntToBoolSerializer()
   bool get isAdult;
   @override
   @JsonKey(ignore: true)

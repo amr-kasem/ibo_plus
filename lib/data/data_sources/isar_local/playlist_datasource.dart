@@ -7,14 +7,16 @@ import 'isar_db.dart';
 
 abstract class PlaylistLocalDatasource {
   Future<List<M3uPlaylistIsarModel>> getPlaylists();
-  void updatePlaylistStatus(M3uPlaylistMetadataIsarModel data);
-  void storePlaylists(List<M3uPlaylistIsarModel> playlists);
-  void storePlaylistsStatus(List<M3uPlaylistMetadataIsarModel> playlistsStatus);
+  Future<List<M3uPlaylistMetadataIsarModel>> getPlaylistsMeta();
+  Future<void> updatePlaylistStatus(M3uPlaylistMetadataIsarModel data);
+  Future<void> storePlaylists(
+    List<M3uPlaylistIsarModel> playlists,
+  );
 }
 
 class PlaylistLocalDatasourceImpl extends PlaylistLocalDatasource {
-  final _getIt = GetIt.instance;
-  late final _db = _getIt.get<IsarDB>().db;
+  final _locator = GetIt.instance;
+  late final _db = _locator.get<IsarDB>().db;
 
   @override
   Future<List<M3uPlaylistIsarModel>> getPlaylists() async {
@@ -22,28 +24,34 @@ class PlaylistLocalDatasourceImpl extends PlaylistLocalDatasource {
   }
 
   @override
-  void storePlaylists(List<M3uPlaylistIsarModel> playlists) {
-    _db.writeTxn(() async {
-      await _db.m3uPlaylistIsarModels.where().deleteAll();
+  Future<List<M3uPlaylistMetadataIsarModel>> getPlaylistsMeta() async {
+    return _db.m3uPlaylistMetadataIsarModels.where().findAll();
+  }
+
+  @override
+  Future<void> storePlaylists(
+    List<M3uPlaylistIsarModel> playlists,
+  ) async {
+    await _db.writeTxn(() async {
       await _db.m3uPlaylistIsarModels.putAll(playlists);
+      final values = playlists
+          .map((e) => e.meta.value)
+          .where((e) => e != null)
+          .cast<M3uPlaylistMetadataIsarModel>()
+          .toList();
+      //TODO: apply playlists remove
+      await _db.m3uPlaylistMetadataIsarModels.putAll(values);
+      final f = playlists.map((e) async => await e.meta.save());
+      await Future.wait(f);
     });
   }
 
   @override
-  void updatePlaylistStatus(
+  Future<void> updatePlaylistStatus(
     M3uPlaylistMetadataIsarModel data,
-  ) {
-    _db.writeTxn(() async {
+  ) async {
+    await _db.writeTxn(() async {
       await _db.m3uPlaylistMetadataIsarModels.put(data);
-    });
-  }
-
-  @override
-  void storePlaylistsStatus(
-      List<M3uPlaylistMetadataIsarModel> playlistsStatus) {
-    _db.writeTxn(() async {
-      await _db.m3uPlaylistIsarModels.where().deleteAll();
-      await _db.m3uPlaylistMetadataIsarModels.putAll(playlistsStatus);
     });
   }
 }

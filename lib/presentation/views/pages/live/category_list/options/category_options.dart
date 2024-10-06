@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../../providers/live_state.dart';
+import '../../../../../controllers/live_controller.dart';
 import '../../../../../utils/listing_utils.dart';
 
 class CategoryOptions extends ConsumerStatefulWidget {
@@ -75,9 +75,13 @@ class _CategoryOptionsState extends ConsumerState<CategoryOptions> {
       if (widget.showFavoriteButton)
         Consumer(
           builder: (_, WidgetRef r, __) {
-            final x =
-                r.watch(liveControllerProvider).hoverCategory?.isFavorite ??
-                    false;
+            final x = r
+                    .watch(liveControllerProvider)
+                    .hoverCategory
+                    ?.meta
+                    ?.data
+                    .favorite ??
+                false;
 
             return Icon(
               x ? Icons.favorite : Icons.favorite_border,

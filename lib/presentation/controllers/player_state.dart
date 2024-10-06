@@ -20,26 +20,25 @@ class PlayerControllerNotifier extends Notifier<PlayerState> {
     fvp.registerWith(options: {
       'lowLatency': 1, // optional for network streams
     });
-    return PlayerState(
-      player: mdk.Player()
-        ..onEvent(
-          (p0) {
-            print(p0);
-          },
-        )
-        ..onMediaStatus(
-          (oldValue, newValue) {
-            print('$oldValue,$newValue');
+    return PlayerState(player: mdk.Player()
+        // ..onEvent(
+        //   (p0) {
+        //     print(p0);
+        //   },
+        // )
+        // ..onMediaStatus(
+        //   (oldValue, newValue) {
+        //     print('$oldValue,$newValue');
 
-            return false;
-          },
-        )
-        ..onStateChanged(
-          (oldValue, newValue) {
-            print('$oldValue,$newValue');
-          },
-        ),
-    );
+        //     return false;
+        //   },
+        // )
+        // ..onStateChanged(
+        //   (oldValue, newValue) {
+        //     print('$oldValue,$newValue');
+        //   },
+        // ),
+        );
   }
 
   void openMedia(String url) {

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../providers/live_state.dart';
-import '../../../providers/player_state.dart';
+import '../../../controllers/live_controller.dart';
+import '../../../controllers/player_state.dart';
 import '../../widgets/player/player_widget.dart';
+import '../../widgets/refresh_indicator.dart';
 import 'live_info/live_info.dart';
 
 class LiveTabView extends ConsumerStatefulWidget {
@@ -15,22 +15,22 @@ class LiveTabView extends ConsumerStatefulWidget {
 }
 
 class _LiveTabViewState extends ConsumerState<LiveTabView> {
-  late final liveNotifier = ref.read(liveControllerProvider.notifier);
+  late final liveController = ref.read(liveControllerProvider.notifier);
   late final playerNotifier = ref.read(playerControllerProvider.notifier);
 
   @override
   void initState() {
-    Future.delayed(Duration.zero).then((_) {
-      liveNotifier.init();
+    Future.microtask(() async {
+      await liveController.refreshData();
       playerNotifier.play();
     });
+
     super.initState();
   }
 
   @override
   void dispose() {
-    Future.delayed(Duration.zero).then((_) => playerNotifier.stop());
-
+    Future.microtask(playerNotifier.stop);
     super.dispose();
   }
 
@@ -40,13 +40,27 @@ class _LiveTabViewState extends ConsumerState<LiveTabView> {
       children: [
         Positioned.fill(
           child: Consumer(
-            builder: (ctx, ref, _) => PlayerWidget(
-              player: ref.watch(playerControllerProvider).player,
+            builder: (ctx, r, _) => PlayerWidget(
+              player: r.watch(playerControllerProvider).player,
             ),
           ),
         ),
-        const Positioned.fill(
+        Positioned.fill(
           child: LiveInfo(),
+        ),
+        Consumer(
+          builder: (_, WidgetRef r, __) {
+            return r.watch(
+              liveControllerProvider.select(
+                (s) => s.isLoading,
+              ),
+            )
+                ? Align(
+                    alignment: Alignment.bottomCenter,
+                    child: RefreshBar(hint: 'Refreshing content'),
+                  )
+                : SizedBox.shrink();
+          },
         ),
       ],
     );

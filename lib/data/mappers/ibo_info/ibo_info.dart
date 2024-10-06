@@ -11,11 +11,11 @@ import 'ibo_notification.dart';
 import 'user.dart';
 
 class IboInfoMapper {
-  final _getIt = GetIt.instance;
-  late final _userMapper = _getIt.get<UserMapper>();
-  late final _iboLanguageMapper = _getIt.get<IboLanguageMapper>();
-  late final _iboNotificationMapper = _getIt.get<IboNotificationMapper>();
-  late final _playlistMapper = _getIt.get<PlaylistMapper>();
+  final _locator = GetIt.instance;
+  late final _userMapper = _locator.get<UserMapper>();
+  late final _iboLanguageMapper = _locator.get<IboLanguageMapper>();
+  late final _iboNotificationMapper = _locator.get<IboNotificationMapper>();
+  late final _playlistMapper = _locator.get<PlaylistMapper>();
   IboInfoJsonModel toJsonModel(IboInfo iboInfo) {
     return IboInfoJsonModel(
       deviceId: iboInfo.deviceId.toString(),

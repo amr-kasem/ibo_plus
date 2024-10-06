@@ -6,9 +6,11 @@ import 'package:go_router/go_router.dart';
 import 'package:riverpod/riverpod.dart';
 
 // import '../../../../routes/routes.dart';
-import '../../providers/app_state.dart';
-import '../../providers/router_initialization_listenable.dart';
+import '../../controllers/app_state.dart';
+import '../../controllers/router_initialization_listenable.dart';
 import 'router_utils.dart';
+import 'routes/home_routes.dart';
+import 'routes/splash_routes.dart';
 
 class AppRouter {
   GoRouter get router => _goRouter;
@@ -19,8 +21,8 @@ class AppRouter {
   late final GoRouter _goRouter = GoRouter(
     initialLocation: AppPages.home.toPath,
     routes: <GoRoute>[
-      // ...homeRoutes,
-      // ...splashRoutes,
+      ...homeRoutes,
+      ...splashRoutes,
       GoRoute(
         path: '/home',
         builder: (ctx, _) => Scaffold(

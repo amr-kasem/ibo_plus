@@ -4,7 +4,7 @@ import 'package:easy_localization/easy_localization.dart' as e;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../providers/playlist_state.dart';
+import '../../../controllers/playlist_controller.dart';
 import '../../../utils/duration_helper.dart';
 import '../../widgets/loading_indicator.dart';
 
@@ -40,7 +40,7 @@ class SettingsUtils {
       context: context,
       builder: (BuildContext context) => Consumer(
         builder: (context, ref, child) {
-          final playlistState = ref.watch(m3UPlaylistControllerProvider);
+          final playlistState = ref.watch(playlistControllerProvider);
           log(playlistState.toString());
           return SimpleDialog(
             clipBehavior: Clip.antiAlias,
@@ -52,7 +52,7 @@ class SettingsUtils {
                   selectedTileColor: Colors.white10,
                   autofocus: selected,
                   selected: selected,
-                  onTap: playlist.status.activeSubscription
+                  onTap: playlist.status?.data.activeSubscription ?? false
                       ? () async {
                           showDialog(
                               context: context,
@@ -73,14 +73,14 @@ class SettingsUtils {
                   ).tr(),
                   leading: Icon(
                     Icons.circle,
-                    color: playlist.status.activeSubscription
+                    color: playlist.status?.data.activeSubscription ?? false
                         ? Colors.green
                         : Colors.amber,
                     size: 8,
                   ),
                   subtitle: Text(
-                    playlist.status.activeSubscription
-                        ? '${DurationUtils.formatYMD(playlist.status.expirayDuration)} remaining.'
+                    playlist.status?.data.activeSubscription ?? false
+                        ? '${DurationUtils.formatYMD(playlist.status!.data.expirayDuration)} remaining.'
                         : 'Expired',
                   ),
                 );

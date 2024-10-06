@@ -19,6 +19,7 @@ mixin _$CategoryData {
   int get categoryId => throw _privateConstructorUsedError;
   String get categoryName => throw _privateConstructorUsedError;
   int get parentId => throw _privateConstructorUsedError;
+  CategoryType get type => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $CategoryDataCopyWith<CategoryData> get copyWith =>
@@ -31,7 +32,8 @@ abstract class $CategoryDataCopyWith<$Res> {
           CategoryData value, $Res Function(CategoryData) then) =
       _$CategoryDataCopyWithImpl<$Res, CategoryData>;
   @useResult
-  $Res call({int categoryId, String categoryName, int parentId});
+  $Res call(
+      {int categoryId, String categoryName, int parentId, CategoryType type});
 }
 
 /// @nodoc
@@ -50,6 +52,7 @@ class _$CategoryDataCopyWithImpl<$Res, $Val extends CategoryData>
     Object? categoryId = null,
     Object? categoryName = null,
     Object? parentId = null,
+    Object? type = null,
   }) {
     return _then(_value.copyWith(
       categoryId: null == categoryId
@@ -64,6 +67,10 @@ class _$CategoryDataCopyWithImpl<$Res, $Val extends CategoryData>
           ? _value.parentId
           : parentId // ignore: cast_nullable_to_non_nullable
               as int,
+      type: null == type
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as CategoryType,
     ) as $Val);
   }
 }
@@ -76,7 +83,8 @@ abstract class _$$CategoryDataImplCopyWith<$Res>
       __$$CategoryDataImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int categoryId, String categoryName, int parentId});
+  $Res call(
+      {int categoryId, String categoryName, int parentId, CategoryType type});
 }
 
 /// @nodoc
@@ -93,6 +101,7 @@ class __$$CategoryDataImplCopyWithImpl<$Res>
     Object? categoryId = null,
     Object? categoryName = null,
     Object? parentId = null,
+    Object? type = null,
   }) {
     return _then(_$CategoryDataImpl(
       categoryId: null == categoryId
@@ -107,6 +116,10 @@ class __$$CategoryDataImplCopyWithImpl<$Res>
           ? _value.parentId
           : parentId // ignore: cast_nullable_to_non_nullable
               as int,
+      type: null == type
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as CategoryType,
     ));
   }
 }
@@ -117,7 +130,8 @@ class _$CategoryDataImpl implements _CategoryData {
   const _$CategoryDataImpl(
       {required this.categoryId,
       required this.categoryName,
-      required this.parentId});
+      required this.parentId,
+      required this.type});
 
   @override
   final int categoryId;
@@ -125,10 +139,12 @@ class _$CategoryDataImpl implements _CategoryData {
   final String categoryName;
   @override
   final int parentId;
+  @override
+  final CategoryType type;
 
   @override
   String toString() {
-    return 'CategoryData(categoryId: $categoryId, categoryName: $categoryName, parentId: $parentId)';
+    return 'CategoryData(categoryId: $categoryId, categoryName: $categoryName, parentId: $parentId, type: $type)';
   }
 
   @override
@@ -141,12 +157,13 @@ class _$CategoryDataImpl implements _CategoryData {
             (identical(other.categoryName, categoryName) ||
                 other.categoryName == categoryName) &&
             (identical(other.parentId, parentId) ||
-                other.parentId == parentId));
+                other.parentId == parentId) &&
+            (identical(other.type, type) || other.type == type));
   }
 
   @override
   int get hashCode =>
-      Object.hash(runtimeType, categoryId, categoryName, parentId);
+      Object.hash(runtimeType, categoryId, categoryName, parentId, type);
 
   @JsonKey(ignore: true)
   @override
@@ -159,7 +176,8 @@ abstract class _CategoryData implements CategoryData {
   const factory _CategoryData(
       {required final int categoryId,
       required final String categoryName,
-      required final int parentId}) = _$CategoryDataImpl;
+      required final int parentId,
+      required final CategoryType type}) = _$CategoryDataImpl;
 
   @override
   int get categoryId;
@@ -167,6 +185,8 @@ abstract class _CategoryData implements CategoryData {
   String get categoryName;
   @override
   int get parentId;
+  @override
+  CategoryType get type;
   @override
   @JsonKey(ignore: true)
   _$$CategoryDataImplCopyWith<_$CategoryDataImpl> get copyWith =>

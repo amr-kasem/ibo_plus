@@ -1,3 +1,4 @@
+import '../entities/playlist/playlist.dart';
 import '../entities/settings/device_id.dart';
 import '../entities/settings/settings.dart';
 
@@ -6,4 +7,5 @@ abstract class SettingsRepository {
   Future<Settings> getDeviceSettings();
   Future<DeviceId> getRealDeviceId();
   Future<Settings> initializeDeviceSettings(DeviceId deviceId);
+  Future<void> setSelectedPlaylist(Playlist playlist);
 }

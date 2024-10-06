@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-class DynamicToStringSerializer implements JsonConverter<String?, String?> {
+class DynamicToStringSerializer implements JsonConverter<String?, dynamic> {
   const DynamicToStringSerializer();
 
   @override

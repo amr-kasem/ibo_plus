@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../../providers/live_state.dart';
+import '../../../../../controllers/live_controller.dart';
 import '../../../../../utils/listing_utils.dart';
 
 class ChannelOptions extends ConsumerStatefulWidget {
@@ -92,7 +92,10 @@ class _ChannelOptionsState extends ConsumerState<ChannelOptions> {
         builder: (_, WidgetRef r, __) {
           // r.watch(liveControllerProvider.select((s) => s.notify));
           final isFavorite = r.watch(
-              liveControllerProvider.select((s) => s.hoverChannel?.isFavorite));
+            liveControllerProvider.select(
+              (s) => s.hoverChannel?.meta?.data.favorite,
+            ),
+          );
           return Icon(
             isFavorite ?? false ? Icons.favorite : Icons.favorite_border,
             color: isFavorite ?? false ? Colors.red : Colors.white,

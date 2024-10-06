@@ -16,7 +16,6 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$CategoryMetadata {
-  int get cateogy => throw _privateConstructorUsedError;
   int get index => throw _privateConstructorUsedError;
   DateTime get lastUpdated => throw _privateConstructorUsedError;
   bool get favorite => throw _privateConstructorUsedError;
@@ -33,12 +32,7 @@ abstract class $CategoryMetadataCopyWith<$Res> {
           CategoryMetadata value, $Res Function(CategoryMetadata) then) =
       _$CategoryMetadataCopyWithImpl<$Res, CategoryMetadata>;
   @useResult
-  $Res call(
-      {int cateogy,
-      int index,
-      DateTime lastUpdated,
-      bool favorite,
-      bool locked});
+  $Res call({int index, DateTime lastUpdated, bool favorite, bool locked});
 }
 
 /// @nodoc
@@ -54,17 +48,12 @@ class _$CategoryMetadataCopyWithImpl<$Res, $Val extends CategoryMetadata>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? cateogy = null,
     Object? index = null,
     Object? lastUpdated = null,
     Object? favorite = null,
     Object? locked = null,
   }) {
     return _then(_value.copyWith(
-      cateogy: null == cateogy
-          ? _value.cateogy
-          : cateogy // ignore: cast_nullable_to_non_nullable
-              as int,
       index: null == index
           ? _value.index
           : index // ignore: cast_nullable_to_non_nullable
@@ -93,12 +82,7 @@ abstract class _$$CategoryMetadataImplCopyWith<$Res>
       __$$CategoryMetadataImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {int cateogy,
-      int index,
-      DateTime lastUpdated,
-      bool favorite,
-      bool locked});
+  $Res call({int index, DateTime lastUpdated, bool favorite, bool locked});
 }
 
 /// @nodoc
@@ -112,17 +96,12 @@ class __$$CategoryMetadataImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? cateogy = null,
     Object? index = null,
     Object? lastUpdated = null,
     Object? favorite = null,
     Object? locked = null,
   }) {
     return _then(_$CategoryMetadataImpl(
-      cateogy: null == cateogy
-          ? _value.cateogy
-          : cateogy // ignore: cast_nullable_to_non_nullable
-              as int,
       index: null == index
           ? _value.index
           : index // ignore: cast_nullable_to_non_nullable
@@ -147,14 +126,11 @@ class __$$CategoryMetadataImplCopyWithImpl<$Res>
 
 class _$CategoryMetadataImpl implements _CategoryMetadata {
   const _$CategoryMetadataImpl(
-      {required this.cateogy,
-      required this.index,
+      {required this.index,
       required this.lastUpdated,
       required this.favorite,
       required this.locked});
 
-  @override
-  final int cateogy;
   @override
   final int index;
   @override
@@ -166,7 +142,7 @@ class _$CategoryMetadataImpl implements _CategoryMetadata {
 
   @override
   String toString() {
-    return 'CategoryMetadata(cateogy: $cateogy, index: $index, lastUpdated: $lastUpdated, favorite: $favorite, locked: $locked)';
+    return 'CategoryMetadata(index: $index, lastUpdated: $lastUpdated, favorite: $favorite, locked: $locked)';
   }
 
   @override
@@ -174,7 +150,6 @@ class _$CategoryMetadataImpl implements _CategoryMetadata {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$CategoryMetadataImpl &&
-            (identical(other.cateogy, cateogy) || other.cateogy == cateogy) &&
             (identical(other.index, index) || other.index == index) &&
             (identical(other.lastUpdated, lastUpdated) ||
                 other.lastUpdated == lastUpdated) &&
@@ -185,7 +160,7 @@ class _$CategoryMetadataImpl implements _CategoryMetadata {
 
   @override
   int get hashCode =>
-      Object.hash(runtimeType, cateogy, index, lastUpdated, favorite, locked);
+      Object.hash(runtimeType, index, lastUpdated, favorite, locked);
 
   @JsonKey(ignore: true)
   @override
@@ -197,14 +172,11 @@ class _$CategoryMetadataImpl implements _CategoryMetadata {
 
 abstract class _CategoryMetadata implements CategoryMetadata {
   const factory _CategoryMetadata(
-      {required final int cateogy,
-      required final int index,
+      {required final int index,
       required final DateTime lastUpdated,
       required final bool favorite,
       required final bool locked}) = _$CategoryMetadataImpl;
 
-  @override
-  int get cateogy;
   @override
   int get index;
   @override

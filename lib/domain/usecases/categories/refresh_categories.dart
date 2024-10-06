@@ -7,9 +7,9 @@ import '../../repositories/category_repository.dart';
 import '../settings/get_device_settings.dart';
 
 class RefreshCategories implements UseCase<void, CategoryType> {
-  final _getIt = GetIt.instance;
-  late final _categoriesRepository = _getIt.get<CategoryRepository>();
-  late final _getDeviceSettings = _getIt.get<GetDeviceSettings>();
+  final _locator = GetIt.instance;
+  late final _categoriesRepository = _locator.get<CategoryRepository>();
+  late final _getDeviceSettings = _locator.get<GetDeviceSettings>();
 
   @override
   Future<void> call(type) async {

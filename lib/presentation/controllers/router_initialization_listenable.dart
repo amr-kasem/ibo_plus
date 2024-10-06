@@ -4,16 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
 
-import '../../domain/usecases/login.dart';
+import '../../domain/usecases/settings/login.dart';
 import '../../shared/types/no_parameters.dart';
 import 'app_state.dart';
 
 class RouterInitializationListenable with ChangeNotifier {
-  final _getIt = GetIt.instance;
-  late final providerContainer = _getIt.get<ProviderContainer>();
-  late final login = _getIt.get<Login>();
+  final _locator = GetIt.instance;
+  late final providerContainer = _locator.get<ProviderContainer>();
+  late final login = _locator.get<Login>();
   RouterInitializationListenable() {
-    Future.delayed(Duration.zero).then((_) => init());
+    Future.microtask(() => init());
   }
 
   Future<void> init() async {
@@ -24,7 +24,7 @@ class RouterInitializationListenable with ChangeNotifier {
       notifyListeners();
       if (appStateNotifier.state != AppStates.initialized) {
         log('app initialized');
-        login(NoParameters());
+        await login(NoParameters());
         appStateNotifier.update((s) => AppStates.initialized);
         notifyListeners();
       }

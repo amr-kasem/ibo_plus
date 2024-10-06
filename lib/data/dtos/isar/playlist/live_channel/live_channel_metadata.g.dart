@@ -48,9 +48,16 @@ const LiveMetadataIsarModelSchema = CollectionSchema(
   serialize: _liveMetadataIsarModelSerialize,
   deserialize: _liveMetadataIsarModelDeserialize,
   deserializeProp: _liveMetadataIsarModelDeserializeProp,
-  idName: r'channel',
+  idName: r'id',
   indexes: {},
-  links: {},
+  links: {
+    r'channel': LinkSchema(
+      id: -6115282080414988108,
+      name: r'channel',
+      target: r'LiveChannelIsarModel',
+      single: true,
+    )
+  },
   embeddedSchemas: {},
   getId: _liveMetadataIsarModelGetId,
   getLinks: _liveMetadataIsarModelGetLinks,
@@ -87,12 +94,12 @@ LiveMetadataIsarModel _liveMetadataIsarModelDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = LiveMetadataIsarModel(
-    channel: id,
     favorite: reader.readBoolOrNull(offsets[0]) ?? false,
     index: reader.readLong(offsets[2]),
     lastUpdated: reader.readDateTime(offsets[3]),
     locked: reader.readBoolOrNull(offsets[4]) ?? false,
   );
+  object.id = id;
   return object;
 }
 
@@ -119,21 +126,25 @@ P _liveMetadataIsarModelDeserializeProp<P>(
 }
 
 Id _liveMetadataIsarModelGetId(LiveMetadataIsarModel object) {
-  return object.channel;
+  return object.id ?? Isar.autoIncrement;
 }
 
 List<IsarLinkBase<dynamic>> _liveMetadataIsarModelGetLinks(
     LiveMetadataIsarModel object) {
-  return [];
+  return [object.channel];
 }
 
 void _liveMetadataIsarModelAttach(
-    IsarCollection<dynamic> col, Id id, LiveMetadataIsarModel object) {}
+    IsarCollection<dynamic> col, Id id, LiveMetadataIsarModel object) {
+  object.id = id;
+  object.channel
+      .attach(col, col.isar.collection<LiveChannelIsarModel>(), r'channel', id);
+}
 
 extension LiveMetadataIsarModelQueryWhereSort
     on QueryBuilder<LiveMetadataIsarModel, LiveMetadataIsarModel, QWhere> {
   QueryBuilder<LiveMetadataIsarModel, LiveMetadataIsarModel, QAfterWhere>
-      anyChannel() {
+      anyId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
     });
@@ -143,68 +154,68 @@ extension LiveMetadataIsarModelQueryWhereSort
 extension LiveMetadataIsarModelQueryWhere on QueryBuilder<LiveMetadataIsarModel,
     LiveMetadataIsarModel, QWhereClause> {
   QueryBuilder<LiveMetadataIsarModel, LiveMetadataIsarModel, QAfterWhereClause>
-      channelEqualTo(Id channel) {
+      idEqualTo(Id id) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IdWhereClause.between(
-        lower: channel,
-        upper: channel,
+        lower: id,
+        upper: id,
       ));
     });
   }
 
   QueryBuilder<LiveMetadataIsarModel, LiveMetadataIsarModel, QAfterWhereClause>
-      channelNotEqualTo(Id channel) {
+      idNotEqualTo(Id id) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
             .addWhereClause(
-              IdWhereClause.lessThan(upper: channel, includeUpper: false),
+              IdWhereClause.lessThan(upper: id, includeUpper: false),
             )
             .addWhereClause(
-              IdWhereClause.greaterThan(lower: channel, includeLower: false),
+              IdWhereClause.greaterThan(lower: id, includeLower: false),
             );
       } else {
         return query
             .addWhereClause(
-              IdWhereClause.greaterThan(lower: channel, includeLower: false),
+              IdWhereClause.greaterThan(lower: id, includeLower: false),
             )
             .addWhereClause(
-              IdWhereClause.lessThan(upper: channel, includeUpper: false),
+              IdWhereClause.lessThan(upper: id, includeUpper: false),
             );
       }
     });
   }
 
   QueryBuilder<LiveMetadataIsarModel, LiveMetadataIsarModel, QAfterWhereClause>
-      channelGreaterThan(Id channel, {bool include = false}) {
+      idGreaterThan(Id id, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
-        IdWhereClause.greaterThan(lower: channel, includeLower: include),
+        IdWhereClause.greaterThan(lower: id, includeLower: include),
       );
     });
   }
 
   QueryBuilder<LiveMetadataIsarModel, LiveMetadataIsarModel, QAfterWhereClause>
-      channelLessThan(Id channel, {bool include = false}) {
+      idLessThan(Id id, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
-        IdWhereClause.lessThan(upper: channel, includeUpper: include),
+        IdWhereClause.lessThan(upper: id, includeUpper: include),
       );
     });
   }
 
   QueryBuilder<LiveMetadataIsarModel, LiveMetadataIsarModel, QAfterWhereClause>
-      channelBetween(
-    Id lowerChannel,
-    Id upperChannel, {
+      idBetween(
+    Id lowerId,
+    Id upperId, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IdWhereClause.between(
-        lower: lowerChannel,
+        lower: lowerId,
         includeLower: includeLower,
-        upper: upperChannel,
+        upper: upperId,
         includeUpper: includeUpper,
       ));
     });
@@ -213,62 +224,6 @@ extension LiveMetadataIsarModelQueryWhere on QueryBuilder<LiveMetadataIsarModel,
 
 extension LiveMetadataIsarModelQueryFilter on QueryBuilder<
     LiveMetadataIsarModel, LiveMetadataIsarModel, QFilterCondition> {
-  QueryBuilder<LiveMetadataIsarModel, LiveMetadataIsarModel,
-      QAfterFilterCondition> channelEqualTo(Id value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'channel',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<LiveMetadataIsarModel, LiveMetadataIsarModel,
-      QAfterFilterCondition> channelGreaterThan(
-    Id value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'channel',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<LiveMetadataIsarModel, LiveMetadataIsarModel,
-      QAfterFilterCondition> channelLessThan(
-    Id value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'channel',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<LiveMetadataIsarModel, LiveMetadataIsarModel,
-      QAfterFilterCondition> channelBetween(
-    Id lower,
-    Id upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'channel',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
-    });
-  }
-
   QueryBuilder<LiveMetadataIsarModel, LiveMetadataIsarModel,
       QAfterFilterCondition> favoriteEqualTo(bool value) {
     return QueryBuilder.apply(this, (query) {
@@ -327,6 +282,80 @@ extension LiveMetadataIsarModelQueryFilter on QueryBuilder<
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
         property: r'hashCode',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<LiveMetadataIsarModel, LiveMetadataIsarModel,
+      QAfterFilterCondition> idIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'id',
+      ));
+    });
+  }
+
+  QueryBuilder<LiveMetadataIsarModel, LiveMetadataIsarModel,
+      QAfterFilterCondition> idIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'id',
+      ));
+    });
+  }
+
+  QueryBuilder<LiveMetadataIsarModel, LiveMetadataIsarModel,
+      QAfterFilterCondition> idEqualTo(Id? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'id',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<LiveMetadataIsarModel, LiveMetadataIsarModel,
+      QAfterFilterCondition> idGreaterThan(
+    Id? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'id',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<LiveMetadataIsarModel, LiveMetadataIsarModel,
+      QAfterFilterCondition> idLessThan(
+    Id? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'id',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<LiveMetadataIsarModel, LiveMetadataIsarModel,
+      QAfterFilterCondition> idBetween(
+    Id? lower,
+    Id? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'id',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -462,7 +491,21 @@ extension LiveMetadataIsarModelQueryObject on QueryBuilder<
     LiveMetadataIsarModel, LiveMetadataIsarModel, QFilterCondition> {}
 
 extension LiveMetadataIsarModelQueryLinks on QueryBuilder<LiveMetadataIsarModel,
-    LiveMetadataIsarModel, QFilterCondition> {}
+    LiveMetadataIsarModel, QFilterCondition> {
+  QueryBuilder<LiveMetadataIsarModel, LiveMetadataIsarModel,
+      QAfterFilterCondition> channel(FilterQuery<LiveChannelIsarModel> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'channel');
+    });
+  }
+
+  QueryBuilder<LiveMetadataIsarModel, LiveMetadataIsarModel,
+      QAfterFilterCondition> channelIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'channel', 0, true, 0, true);
+    });
+  }
+}
 
 extension LiveMetadataIsarModelQuerySortBy
     on QueryBuilder<LiveMetadataIsarModel, LiveMetadataIsarModel, QSortBy> {
@@ -540,20 +583,6 @@ extension LiveMetadataIsarModelQuerySortBy
 extension LiveMetadataIsarModelQuerySortThenBy
     on QueryBuilder<LiveMetadataIsarModel, LiveMetadataIsarModel, QSortThenBy> {
   QueryBuilder<LiveMetadataIsarModel, LiveMetadataIsarModel, QAfterSortBy>
-      thenByChannel() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'channel', Sort.asc);
-    });
-  }
-
-  QueryBuilder<LiveMetadataIsarModel, LiveMetadataIsarModel, QAfterSortBy>
-      thenByChannelDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'channel', Sort.desc);
-    });
-  }
-
-  QueryBuilder<LiveMetadataIsarModel, LiveMetadataIsarModel, QAfterSortBy>
       thenByFavorite() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'favorite', Sort.asc);
@@ -578,6 +607,20 @@ extension LiveMetadataIsarModelQuerySortThenBy
       thenByHashCodeDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'hashCode', Sort.desc);
+    });
+  }
+
+  QueryBuilder<LiveMetadataIsarModel, LiveMetadataIsarModel, QAfterSortBy>
+      thenById() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'id', Sort.asc);
+    });
+  }
+
+  QueryBuilder<LiveMetadataIsarModel, LiveMetadataIsarModel, QAfterSortBy>
+      thenByIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'id', Sort.desc);
     });
   }
 
@@ -664,9 +707,9 @@ extension LiveMetadataIsarModelQueryWhereDistinct
 
 extension LiveMetadataIsarModelQueryProperty on QueryBuilder<
     LiveMetadataIsarModel, LiveMetadataIsarModel, QQueryProperty> {
-  QueryBuilder<LiveMetadataIsarModel, int, QQueryOperations> channelProperty() {
+  QueryBuilder<LiveMetadataIsarModel, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'channel');
+      return query.addPropertyName(r'id');
     });
   }
 

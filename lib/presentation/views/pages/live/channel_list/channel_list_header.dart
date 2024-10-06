@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../providers/live_state.dart';
+import '../../../../controllers/live_controller.dart';
 
 class ChannelListHeader extends ConsumerWidget {
   const ChannelListHeader({

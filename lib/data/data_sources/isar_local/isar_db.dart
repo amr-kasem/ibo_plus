@@ -1,6 +1,7 @@
 import 'dart:async';
 
-import 'package:ibo_plus/data/dtos/isar/playlist/live_channel/live_channel_metadata.dart';
+import 'package:ibo_plus/data/dtos/isar/playlist/category/category_metadata.dart';
+import 'package:ibo_plus/data/dtos/isar/playlist/m3u_playlist/m3u_playlist_metadata.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -9,6 +10,7 @@ import '../../dtos/isar/ibo/language/language.dart';
 import '../../dtos/isar/ibo/user/user.dart';
 import '../../dtos/isar/playlist/category/category.dart';
 import '../../dtos/isar/playlist/live_channel/live_channel.dart';
+import '../../dtos/isar/playlist/live_channel/live_channel_metadata.dart';
 import '../../dtos/isar/playlist/m3u_playlist/m3u_playlist.dart';
 import '../../dtos/isar/playlist/movie/movie.dart';
 import '../../dtos/isar/settings/settings.dart';
@@ -25,11 +27,13 @@ class IsarDB {
       [
         UserIsarModelSchema,
         M3uPlaylistIsarModelSchema,
+        M3uPlaylistMetadataIsarModelSchema,
         LanguageSchema,
         LiveChannelIsarModelSchema,
         LiveMetadataIsarModelSchema,
         MovieSchema,
         CategoryIsarModelSchema,
+        CategoryMetadataIsarModelSchema,
         SettingsIsarModelSchema,
       ],
       directory: dir.path,

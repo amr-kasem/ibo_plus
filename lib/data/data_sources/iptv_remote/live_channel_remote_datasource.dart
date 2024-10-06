@@ -1,24 +1,32 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 
-import '../../../domain/value_objects/media/playlist/playlist_data.dart';
+import '../../../domain/entities/playlist/playlist.dart';
 import '../../dtos/iptv/live_channel/live_channel.dart';
 
-class LiveChannelRemoteDatasource {
-  final _getIt = GetIt.instance;
-  late final _dio = _getIt.get<Dio>();
-
+abstract class LiveChannelRemoteDatasource {
   Future<List<LiveChannelJsonModel>> getLiveChannels({
-    required PlaylistData playlist,
+    required Playlist playlist,
+    void Function(int, int)? onReceiveProgress,
+  });
+}
+
+class LiveChannelRemoteDatasourceImpl implements LiveChannelRemoteDatasource {
+  final _locator = GetIt.instance;
+  late final _dio = _locator.get<Dio>();
+
+  @override
+  Future<List<LiveChannelJsonModel>> getLiveChannels({
+    required Playlist playlist,
     void Function(int, int)? onReceiveProgress,
   }) async {
     late final Response res;
     try {
       res = await _dio.get(
-        '${playlist.url}player_api.php',
+        '${playlist.data.url}player_api.php',
         queryParameters: {
-          'username': playlist.username,
-          'password': playlist.password,
+          'username': playlist.data.username,
+          'password': playlist.data.password,
           'action': 'get_live_streams',
         },
       );

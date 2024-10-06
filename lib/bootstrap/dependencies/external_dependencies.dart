@@ -8,24 +8,24 @@ import 'package:tmdb_api/tmdb_api.dart' as tmdb;
 import 'dependencies_group.dart';
 
 class ExternalDependencies extends DependenciesGroup {
-  final GetIt _getIt = GetIt.instance;
+  final GetIt _locator = GetIt.instance;
   @override
   Future<void> setupDependencies() async {
-    _getIt.registerSingleton<tmdb.TMDB>(
+    _locator.registerSingleton<tmdb.TMDB>(
       tmdb.TMDB(tmdb.ApiKeys('tmdbApiKey', 'apiReadAccessTokenv4')),
     );
-    _getIt.registerSingleton<ProviderContainer>(ProviderContainer());
+    _locator.registerSingleton<ProviderContainer>(ProviderContainer());
 
-    _getIt.registerSingleton<Dio>(Dio());
+    _locator.registerSingleton<Dio>(Dio());
 
-    _getIt.registerSingleton<AukUtils>(AukUtils());
+    _locator.registerSingleton<AukUtils>(AukUtils());
 
-    _getIt.registerSingleton<Logger>(Logger());
+    _locator.registerSingleton<Logger>(Logger());
   }
 
   void _updateTMDB(String tmdbApiKey) {
-    _getIt.unregister<tmdb.TMDB>();
-    _getIt.registerSingleton<tmdb.TMDB>(
+    _locator.unregister<tmdb.TMDB>();
+    _locator.registerSingleton<tmdb.TMDB>(
       tmdb.TMDB(tmdb.ApiKeys('tmdbApiKey', 'apiReadAccessTokenv4')),
     );
   }

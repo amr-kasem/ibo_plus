@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../providers/app_state.dart';
+import '../../controllers/app_state.dart';
 import '../widgets/custom_tab_bar.dart';
 import '../widgets/ibo_textfield/text_field.dart';
 import 'home/home_tabview.dart';
@@ -108,8 +108,12 @@ class AppLayout extends StatelessWidget {
                               onFocusChange: (v) {},
                               child: AnimatedSwitcher(
                                 duration: Durations.medium1,
-                                child: getBody(
-                                  ref.watch(AppState.homeIndex),
+                                child: SizedBox(
+                                  width: double.infinity,
+                                  height: double.infinity,
+                                  child: getBody(
+                                    ref.watch(AppState.homeIndex),
+                                  ),
                                 ),
                               ),
                             );

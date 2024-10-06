@@ -1,16 +1,19 @@
 import 'package:isar/isar.dart';
 
+import 'category.dart';
+
 part 'category_metadata.g.dart';
 
 @collection
 class CategoryMetadataIsarModel {
-  final Id cateogy;
+  Id? id;
   final int index;
   final DateTime lastUpdated;
   bool favorite;
   bool locked;
+  final category = IsarLink<CategoryIsarModel>();
+
   CategoryMetadataIsarModel({
-    required this.cateogy,
     required this.index,
     required this.lastUpdated,
     this.favorite = false,
@@ -24,5 +27,5 @@ class CategoryMetadataIsarModel {
   }
 
   @override
-  int get hashCode => cateogy.hashCode;
+  int get hashCode => id.hashCode;
 }

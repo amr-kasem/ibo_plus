@@ -1,7 +1,11 @@
+import 'dart:async';
+
 import 'package:get_it/get_it.dart';
 
 import '../../domain/entities/playlist/playlist.dart';
+import '../../domain/entities/playlist/playlist_status.dart';
 import '../../domain/repositories/playlist_repository.dart';
+import '../../domain/value_objects/media/playlist/playlist_status_data.dart';
 import '../data_sources/iptv_remote/playlist_remote_datasource.dart';
 import '../data_sources/isar_local/playlist_datasource.dart';
 import '../dtos/ibo/m3u_playlist/m3u_playlist_status.dart';
@@ -10,11 +14,12 @@ import '../mappers/playlist/playlist.dart';
 import '../mappers/playlist/playlist_status.dart';
 
 class PlaylistRepositoryImpl implements PlaylistRepository {
-  final _getIt = GetIt.instance;
-  late final _playlistRemoteDatasource = _getIt.get<PlaylistRemoteDatasource>();
-  late final _playlistLocalDatasource = _getIt.get<PlaylistLocalDatasource>();
-  late final _playlistStatusMapper = _getIt.get<PlaylistStatusMapper>();
-  late final _playlistMapper = _getIt.get<PlaylistMapper>();
+  final _locator = GetIt.instance;
+  late final _playlistRemoteDatasource =
+      _locator.get<PlaylistRemoteDatasource>();
+  late final _playlistLocalDatasource = _locator.get<PlaylistLocalDatasource>();
+  late final _playlistStatusMapper = _locator.get<PlaylistStatusMapper>();
+  late final _playlistMapper = _locator.get<PlaylistMapper>();
   @override
   Future<List<Playlist>> getAllPlaylists() async {
     final playlists = await _playlistLocalDatasource.getPlaylists();
@@ -24,46 +29,43 @@ class PlaylistRepositoryImpl implements PlaylistRepository {
   }
 
   @override
-  Future<List<Playlist>> initializePlaylists(List<Playlist> playlists) async {
+  Future<void> initializePlaylists(List<Playlist> playlists) async {
     final futures = playlists
         .map(
           (playlist) => Future<Playlist>(
             () async {
-              final statusJsonModel =
-                  await _playlistRemoteDatasource.initPlaylist(playlist.data);
-              final status = _playlistStatusMapper
-                  .toEntity<M3uPlaylistStatusJsonModel>(statusJsonModel);
+              late final PlaylistStatus status;
+              try {
+                final statusJsonModel =
+                    await _playlistRemoteDatasource.initPlaylist(playlist.data);
+                status = _playlistStatusMapper
+                    .toEntity<M3uPlaylistStatusJsonModel>(statusJsonModel);
+              } catch (_) {
+                status = PlaylistStatus(
+                  data: PlaylistStatusData(
+                    activeSubscription: false,
+                    expirayDuration: Duration.zero,
+                  ),
+                );
+              } finally {
+                playlist.status = status;
+              }
 
-              playlist.status = status;
               return playlist;
             },
           ),
         )
         .toList();
     final res = await Future.wait(futures);
-    final isarStatus = res
-        .map((p) => _playlistStatusMapper.toIsarModel(p.data.id, p.status!))
+    final playlistModels = res
+        .map(
+          (p) => _playlistMapper.toIsarModel(p)
+            ..meta.value = _playlistStatusMapper.toIsarModel(p.status!),
+        )
         .toList();
-    _playlistLocalDatasource.storePlaylistsStatus(isarStatus);
-    return res;
-  }
-
-  @override
-  Future<void> storePlaylists(List<Playlist> playlists) async {
-    final playlistModels = playlists.map(_playlistMapper.toIsarModel).toList();
-    _playlistLocalDatasource.storePlaylists(playlistModels);
+    await _playlistLocalDatasource.storePlaylists(playlistModels);
   }
 }
-//   static Future<void> initPlaylistsMetadata() async {
-//     await Future.wait(
-//       (await UserRepository.getPlaylists()).map(
-//         (p) => () async {
-//           IsarDB.instance
-//               .updatePlaylist(await PlaylistRemoteDatasource.initPlaylist(p));
-//         }.call(),
-//       ),
-//     );
-//   }
 
 //   static Future<void> refreshLiveChannels() async {
 //     try {

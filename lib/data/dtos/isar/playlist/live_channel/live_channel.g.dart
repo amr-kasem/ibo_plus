@@ -48,61 +48,45 @@ const LiveChannelIsarModelSchema = CollectionSchema(
       name: r'epgChannelId',
       type: IsarType.string,
     ),
-    r'epgListings': PropertySchema(
-      id: 6,
-      name: r'epgListings',
-      type: IsarType.objectList,
-      target: r'EPG',
-    ),
     r'hashCode': PropertySchema(
-      id: 7,
+      id: 6,
       name: r'hashCode',
       type: IsarType.long,
     ),
     r'isAdult': PropertySchema(
-      id: 8,
+      id: 7,
       name: r'isAdult',
       type: IsarType.bool,
     ),
-    r'isFavorite': PropertySchema(
-      id: 9,
-      name: r'isFavorite',
-      type: IsarType.bool,
-    ),
     r'name': PropertySchema(
-      id: 10,
+      id: 8,
       name: r'name',
       type: IsarType.string,
     ),
     r'playlistId': PropertySchema(
-      id: 11,
+      id: 9,
       name: r'playlistId',
       type: IsarType.long,
     ),
     r'streamIcon': PropertySchema(
-      id: 12,
+      id: 10,
       name: r'streamIcon',
       type: IsarType.string,
     ),
     r'streamId': PropertySchema(
-      id: 13,
+      id: 11,
       name: r'streamId',
       type: IsarType.long,
     ),
     r'streamType': PropertySchema(
-      id: 14,
+      id: 12,
       name: r'streamType',
       type: IsarType.string,
     ),
     r'tvArchive': PropertySchema(
-      id: 15,
+      id: 13,
       name: r'tvArchive',
       type: IsarType.long,
-    ),
-    r'tvArchiveDuration': PropertySchema(
-      id: 16,
-      name: r'tvArchiveDuration',
-      type: IsarType.string,
     )
   },
   estimateSize: _liveChannelIsarModelEstimateSize,
@@ -143,8 +127,16 @@ const LiveChannelIsarModelSchema = CollectionSchema(
       ],
     )
   },
-  links: {},
-  embeddedSchemas: {r'EPG': EPGSchema},
+  links: {
+    r'meta': LinkSchema(
+      id: 8258998259291761486,
+      name: r'meta',
+      target: r'LiveMetadataIsarModel',
+      single: true,
+      linkName: r'channel',
+    )
+  },
+  embeddedSchemas: {},
   getId: _liveChannelIsarModelGetId,
   getLinks: _liveChannelIsarModelGetLinks,
   attach: _liveChannelIsarModelAttach,
@@ -187,19 +179,6 @@ int _liveChannelIsarModelEstimateSize(
       bytesCount += 3 + value.length * 3;
     }
   }
-  {
-    final list = object.epgListings;
-    if (list != null) {
-      bytesCount += 3 + list.length * 3;
-      {
-        final offsets = allOffsets[EPG]!;
-        for (var i = 0; i < list.length; i++) {
-          final value = list[i];
-          bytesCount += EPGSchema.estimateSize(value, offsets, allOffsets);
-        }
-      }
-    }
-  }
   bytesCount += 3 + object.name.length * 3;
   {
     final value = object.streamIcon;
@@ -208,12 +187,6 @@ int _liveChannelIsarModelEstimateSize(
     }
   }
   bytesCount += 3 + object.streamType.length * 3;
-  {
-    final value = object.tvArchiveDuration;
-    if (value != null) {
-      bytesCount += 3 + value.length * 3;
-    }
-  }
   return bytesCount;
 }
 
@@ -229,22 +202,14 @@ void _liveChannelIsarModelSerialize(
   writer.writeString(offsets[3], object.customSid);
   writer.writeString(offsets[4], object.directSource);
   writer.writeString(offsets[5], object.epgChannelId);
-  writer.writeObjectList<EPG>(
-    offsets[6],
-    allOffsets,
-    EPGSchema.serialize,
-    object.epgListings,
-  );
-  writer.writeLong(offsets[7], object.hashCode);
-  writer.writeBool(offsets[8], object.isAdult);
-  writer.writeBool(offsets[9], object.isFavorite);
-  writer.writeString(offsets[10], object.name);
-  writer.writeLong(offsets[11], object.playlistId);
-  writer.writeString(offsets[12], object.streamIcon);
-  writer.writeLong(offsets[13], object.streamId);
-  writer.writeString(offsets[14], object.streamType);
-  writer.writeLong(offsets[15], object.tvArchive);
-  writer.writeString(offsets[16], object.tvArchiveDuration);
+  writer.writeLong(offsets[6], object.hashCode);
+  writer.writeBool(offsets[7], object.isAdult);
+  writer.writeString(offsets[8], object.name);
+  writer.writeLong(offsets[9], object.playlistId);
+  writer.writeString(offsets[10], object.streamIcon);
+  writer.writeLong(offsets[11], object.streamId);
+  writer.writeString(offsets[12], object.streamType);
+  writer.writeLong(offsets[13], object.tvArchive);
 }
 
 LiveChannelIsarModel _liveChannelIsarModelDeserialize(
@@ -260,22 +225,14 @@ LiveChannelIsarModel _liveChannelIsarModelDeserialize(
     customSid: reader.readStringOrNull(offsets[3]),
     directSource: reader.readStringOrNull(offsets[4]),
     epgChannelId: reader.readStringOrNull(offsets[5]),
-    epgListings: reader.readObjectList<EPG>(
-      offsets[6],
-      EPGSchema.deserialize,
-      allOffsets,
-      EPG(),
-    ),
-    isAdult: reader.readBoolOrNull(offsets[8]),
-    isFavorite: reader.readBoolOrNull(offsets[9]) ?? false,
-    name: reader.readString(offsets[10]),
-    streamIcon: reader.readStringOrNull(offsets[12]),
-    streamId: reader.readLong(offsets[13]),
-    streamType: reader.readString(offsets[14]),
-    tvArchive: reader.readLongOrNull(offsets[15]),
-    tvArchiveDuration: reader.readStringOrNull(offsets[16]),
+    isAdult: reader.readBoolOrNull(offsets[7]),
+    name: reader.readString(offsets[8]),
+    streamIcon: reader.readStringOrNull(offsets[10]),
+    streamId: reader.readLong(offsets[11]),
+    streamType: reader.readString(offsets[12]),
+    tvArchive: reader.readLongOrNull(offsets[13]),
   );
-  object.playlistId = reader.readLong(offsets[11]);
+  object.playlistId = reader.readLong(offsets[9]);
   return object;
 }
 
@@ -299,32 +256,21 @@ P _liveChannelIsarModelDeserializeProp<P>(
     case 5:
       return (reader.readStringOrNull(offset)) as P;
     case 6:
-      return (reader.readObjectList<EPG>(
-        offset,
-        EPGSchema.deserialize,
-        allOffsets,
-        EPG(),
-      )) as P;
-    case 7:
       return (reader.readLong(offset)) as P;
-    case 8:
+    case 7:
       return (reader.readBoolOrNull(offset)) as P;
-    case 9:
-      return (reader.readBoolOrNull(offset) ?? false) as P;
-    case 10:
+    case 8:
       return (reader.readString(offset)) as P;
+    case 9:
+      return (reader.readLong(offset)) as P;
+    case 10:
+      return (reader.readStringOrNull(offset)) as P;
     case 11:
       return (reader.readLong(offset)) as P;
     case 12:
-      return (reader.readStringOrNull(offset)) as P;
-    case 13:
-      return (reader.readLong(offset)) as P;
-    case 14:
       return (reader.readString(offset)) as P;
-    case 15:
+    case 13:
       return (reader.readLongOrNull(offset)) as P;
-    case 16:
-      return (reader.readStringOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -336,11 +282,14 @@ Id _liveChannelIsarModelGetId(LiveChannelIsarModel object) {
 
 List<IsarLinkBase<dynamic>> _liveChannelIsarModelGetLinks(
     LiveChannelIsarModel object) {
-  return [];
+  return [object.meta];
 }
 
 void _liveChannelIsarModelAttach(
-    IsarCollection<dynamic> col, Id id, LiveChannelIsarModel object) {}
+    IsarCollection<dynamic> col, Id id, LiveChannelIsarModel object) {
+  object.meta
+      .attach(col, col.isar.collection<LiveMetadataIsarModel>(), r'meta', id);
+}
 
 extension LiveChannelIsarModelQueryWhereSort
     on QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QWhere> {
@@ -1580,113 +1529,6 @@ extension LiveChannelIsarModelQueryFilter on QueryBuilder<LiveChannelIsarModel,
   }
 
   QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
-      QAfterFilterCondition> epgListingsIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'epgListings',
-      ));
-    });
-  }
-
-  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
-      QAfterFilterCondition> epgListingsIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'epgListings',
-      ));
-    });
-  }
-
-  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
-      QAfterFilterCondition> epgListingsLengthEqualTo(int length) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'epgListings',
-        length,
-        true,
-        length,
-        true,
-      );
-    });
-  }
-
-  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
-      QAfterFilterCondition> epgListingsIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'epgListings',
-        0,
-        true,
-        0,
-        true,
-      );
-    });
-  }
-
-  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
-      QAfterFilterCondition> epgListingsIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'epgListings',
-        0,
-        false,
-        999999,
-        true,
-      );
-    });
-  }
-
-  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
-      QAfterFilterCondition> epgListingsLengthLessThan(
-    int length, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'epgListings',
-        0,
-        true,
-        length,
-        include,
-      );
-    });
-  }
-
-  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
-      QAfterFilterCondition> epgListingsLengthGreaterThan(
-    int length, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'epgListings',
-        length,
-        include,
-        999999,
-        true,
-      );
-    });
-  }
-
-  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
-      QAfterFilterCondition> epgListingsLengthBetween(
-    int lower,
-    int upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'epgListings',
-        lower,
-        includeLower,
-        upper,
-        includeUpper,
-      );
-    });
-  }
-
-  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
       QAfterFilterCondition> hashCodeEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -1765,16 +1607,6 @@ extension LiveChannelIsarModelQueryFilter on QueryBuilder<LiveChannelIsarModel,
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'isAdult',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
-      QAfterFilterCondition> isFavoriteEqualTo(bool value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'isFavorite',
         value: value,
       ));
     });
@@ -2453,176 +2285,27 @@ extension LiveChannelIsarModelQueryFilter on QueryBuilder<LiveChannelIsarModel,
       ));
     });
   }
-
-  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
-      QAfterFilterCondition> tvArchiveDurationIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'tvArchiveDuration',
-      ));
-    });
-  }
-
-  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
-      QAfterFilterCondition> tvArchiveDurationIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'tvArchiveDuration',
-      ));
-    });
-  }
-
-  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
-      QAfterFilterCondition> tvArchiveDurationEqualTo(
-    String? value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'tvArchiveDuration',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
-      QAfterFilterCondition> tvArchiveDurationGreaterThan(
-    String? value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'tvArchiveDuration',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
-      QAfterFilterCondition> tvArchiveDurationLessThan(
-    String? value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'tvArchiveDuration',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
-      QAfterFilterCondition> tvArchiveDurationBetween(
-    String? lower,
-    String? upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'tvArchiveDuration',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
-      QAfterFilterCondition> tvArchiveDurationStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'tvArchiveDuration',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
-      QAfterFilterCondition> tvArchiveDurationEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'tvArchiveDuration',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
-          QAfterFilterCondition>
-      tvArchiveDurationContains(String value, {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'tvArchiveDuration',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
-          QAfterFilterCondition>
-      tvArchiveDurationMatches(String pattern, {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'tvArchiveDuration',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
-      QAfterFilterCondition> tvArchiveDurationIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'tvArchiveDuration',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
-      QAfterFilterCondition> tvArchiveDurationIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'tvArchiveDuration',
-        value: '',
-      ));
-    });
-  }
 }
 
 extension LiveChannelIsarModelQueryObject on QueryBuilder<LiveChannelIsarModel,
+    LiveChannelIsarModel, QFilterCondition> {}
+
+extension LiveChannelIsarModelQueryLinks on QueryBuilder<LiveChannelIsarModel,
     LiveChannelIsarModel, QFilterCondition> {
   QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
-      QAfterFilterCondition> epgListingsElement(FilterQuery<EPG> q) {
+      QAfterFilterCondition> meta(FilterQuery<LiveMetadataIsarModel> q) {
     return QueryBuilder.apply(this, (query) {
-      return query.object(q, r'epgListings');
+      return query.link(q, r'meta');
+    });
+  }
+
+  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel,
+      QAfterFilterCondition> metaIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'meta', 0, true, 0, true);
     });
   }
 }
-
-extension LiveChannelIsarModelQueryLinks on QueryBuilder<LiveChannelIsarModel,
-    LiveChannelIsarModel, QFilterCondition> {}
 
 extension LiveChannelIsarModelQuerySortBy
     on QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QSortBy> {
@@ -2739,20 +2422,6 @@ extension LiveChannelIsarModelQuerySortBy
   }
 
   QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
-      sortByIsFavorite() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isFavorite', Sort.asc);
-    });
-  }
-
-  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
-      sortByIsFavoriteDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isFavorite', Sort.desc);
-    });
-  }
-
-  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
       sortByName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.asc);
@@ -2833,20 +2502,6 @@ extension LiveChannelIsarModelQuerySortBy
       sortByTvArchiveDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'tvArchive', Sort.desc);
-    });
-  }
-
-  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
-      sortByTvArchiveDuration() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'tvArchiveDuration', Sort.asc);
-    });
-  }
-
-  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
-      sortByTvArchiveDurationDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'tvArchiveDuration', Sort.desc);
     });
   }
 }
@@ -2966,20 +2621,6 @@ extension LiveChannelIsarModelQuerySortThenBy
   }
 
   QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
-      thenByIsFavorite() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isFavorite', Sort.asc);
-    });
-  }
-
-  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
-      thenByIsFavoriteDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isFavorite', Sort.desc);
-    });
-  }
-
-  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
       thenByIsarId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isarId', Sort.asc);
@@ -3076,20 +2717,6 @@ extension LiveChannelIsarModelQuerySortThenBy
       return query.addSortBy(r'tvArchive', Sort.desc);
     });
   }
-
-  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
-      thenByTvArchiveDuration() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'tvArchiveDuration', Sort.asc);
-    });
-  }
-
-  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QAfterSortBy>
-      thenByTvArchiveDurationDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'tvArchiveDuration', Sort.desc);
-    });
-  }
 }
 
 extension LiveChannelIsarModelQueryWhereDistinct
@@ -3151,13 +2778,6 @@ extension LiveChannelIsarModelQueryWhereDistinct
   }
 
   QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QDistinct>
-      distinctByIsFavorite() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'isFavorite');
-    });
-  }
-
-  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QDistinct>
       distinctByName({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'name', caseSensitive: caseSensitive);
@@ -3196,14 +2816,6 @@ extension LiveChannelIsarModelQueryWhereDistinct
       distinctByTvArchive() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'tvArchive');
-    });
-  }
-
-  QueryBuilder<LiveChannelIsarModel, LiveChannelIsarModel, QDistinct>
-      distinctByTvArchiveDuration({bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'tvArchiveDuration',
-          caseSensitive: caseSensitive);
     });
   }
 }
@@ -3258,13 +2870,6 @@ extension LiveChannelIsarModelQueryProperty on QueryBuilder<
     });
   }
 
-  QueryBuilder<LiveChannelIsarModel, List<EPG>?, QQueryOperations>
-      epgListingsProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'epgListings');
-    });
-  }
-
   QueryBuilder<LiveChannelIsarModel, int, QQueryOperations> hashCodeProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'hashCode');
@@ -3275,13 +2880,6 @@ extension LiveChannelIsarModelQueryProperty on QueryBuilder<
       isAdultProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'isAdult');
-    });
-  }
-
-  QueryBuilder<LiveChannelIsarModel, bool, QQueryOperations>
-      isFavoriteProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'isFavorite');
     });
   }
 
@@ -3322,13 +2920,6 @@ extension LiveChannelIsarModelQueryProperty on QueryBuilder<
       tvArchiveProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'tvArchive');
-    });
-  }
-
-  QueryBuilder<LiveChannelIsarModel, String?, QQueryOperations>
-      tvArchiveDurationProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'tvArchiveDuration');
     });
   }
 }

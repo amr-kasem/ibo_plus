@@ -105,7 +105,15 @@ const CategoryIsarModelSchema = CollectionSchema(
       ],
     )
   },
-  links: {},
+  links: {
+    r'meta': LinkSchema(
+      id: 4091555474598910799,
+      name: r'meta',
+      target: r'CategoryMetadataIsarModel',
+      single: true,
+      linkName: r'category',
+    )
+  },
   embeddedSchemas: {},
   getId: _categoryIsarModelGetId,
   getLinks: _categoryIsarModelGetLinks,
@@ -147,11 +155,11 @@ CategoryIsarModel _categoryIsarModelDeserialize(
     categoryId: reader.readLong(offsets[0]),
     categoryName: reader.readString(offsets[1]),
     parentId: reader.readLong(offsets[3]),
+    type:
+        _CategoryIsarModeltypeValueEnumMap[reader.readByteOrNull(offsets[5])] ??
+            CategoryType.liveChannels,
   );
   object.playlistId = reader.readLong(offsets[4]);
-  object.type =
-      _CategoryIsarModeltypeValueEnumMap[reader.readByteOrNull(offsets[5])] ??
-          CategoryType.liveChannels;
   return object;
 }
 
@@ -198,11 +206,14 @@ Id _categoryIsarModelGetId(CategoryIsarModel object) {
 
 List<IsarLinkBase<dynamic>> _categoryIsarModelGetLinks(
     CategoryIsarModel object) {
-  return [];
+  return [object.meta];
 }
 
 void _categoryIsarModelAttach(
-    IsarCollection<dynamic> col, Id id, CategoryIsarModel object) {}
+    IsarCollection<dynamic> col, Id id, CategoryIsarModel object) {
+  object.meta.attach(
+      col, col.isar.collection<CategoryMetadataIsarModel>(), r'meta', id);
+}
 
 extension CategoryIsarModelQueryWhereSort
     on QueryBuilder<CategoryIsarModel, CategoryIsarModel, QWhere> {
@@ -1260,7 +1271,21 @@ extension CategoryIsarModelQueryObject
     on QueryBuilder<CategoryIsarModel, CategoryIsarModel, QFilterCondition> {}
 
 extension CategoryIsarModelQueryLinks
-    on QueryBuilder<CategoryIsarModel, CategoryIsarModel, QFilterCondition> {}
+    on QueryBuilder<CategoryIsarModel, CategoryIsarModel, QFilterCondition> {
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterFilterCondition>
+      meta(FilterQuery<CategoryMetadataIsarModel> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'meta');
+    });
+  }
+
+  QueryBuilder<CategoryIsarModel, CategoryIsarModel, QAfterFilterCondition>
+      metaIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'meta', 0, true, 0, true);
+    });
+  }
+}
 
 extension CategoryIsarModelQuerySortBy
     on QueryBuilder<CategoryIsarModel, CategoryIsarModel, QSortBy> {

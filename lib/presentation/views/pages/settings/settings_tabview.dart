@@ -2,7 +2,7 @@ import 'package:easy_localization/easy_localization.dart' as e;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../providers/playlist_state.dart';
+import '../../../controllers/playlist_controller.dart';
 import 'settings_tile.dart';
 import 'settings_utils.dart';
 
@@ -39,7 +39,7 @@ class SettingsTabView extends StatelessWidget {
                 size: 96,
               ),
               value: ref
-                      .watch(m3UPlaylistControllerProvider
+                      .watch(playlistControllerProvider
                           .select((s) => s.selectedPlaylist))
                       ?.data
                       .playlistName ??

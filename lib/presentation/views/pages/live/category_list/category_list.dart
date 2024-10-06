@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../../domain/entities/category/category.dart';
-import '../../../../providers/app_state.dart';
-import '../../../../providers/live_state.dart';
+import '../../../../controllers/app_state.dart';
+import '../../../../controllers/live_controller.dart';
 import '../../../widgets/list_highlighter.dart';
 import 'category_list_header.dart';
 import 'list/category_list_remote_control.dart';

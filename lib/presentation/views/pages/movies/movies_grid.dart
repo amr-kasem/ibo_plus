@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../domain/entities/category/category.dart';
 import '../../../../domain/entities/movies/movie.dart';
-import '../../../providers/movie_state.dart';
 import '../../widgets/two_level_list/horizontal_list.dart';
 import '../../widgets/two_level_list/two_level_list_controller.dart';
 import 'movie_tile.dart';
@@ -20,7 +19,7 @@ class MoviesGrid extends ConsumerStatefulWidget {
 class _MoviesGridState extends ConsumerState<MoviesGrid> {
   @override
   void initState() {
-    ref.read(moviesControllerProvider.notifier).init();
+    // ref.read(moviesControllerProvider.notifier).init();
     super.initState();
   }
 
@@ -35,9 +34,10 @@ class _MoviesGridState extends ConsumerState<MoviesGrid> {
       ) {
         return Consumer(
           builder: (_, WidgetRef ___, __) {
-            final categories = ref.watch(
-              moviesControllerProvider.select((s) => s.categories),
-            );
+            final categories = [];
+            //  ref.watch(
+            //     moviesControllerProvider.select((s) => s.categories),
+            //     );
             return ListWheelScrollView.useDelegate(
               clipBehavior: Clip.antiAlias,
               controller: scrollController,
@@ -60,10 +60,11 @@ class _MoviesGridState extends ConsumerState<MoviesGrid> {
       ) {
         return Consumer(
           builder: (_, WidgetRef ref, __) {
-            final controlelr = ref.watch(moviesControllerProvider.notifier);
-            final movies = ref.watch(
-              moviesControllerProvider.select((s) => s.getMovies(category)),
-            );
+            // final controlelr = ref.watch(moviesControllerProvider.notifier);
+            final movies = <Movie>[];
+            //  ref.watch(
+            //   moviesControllerProvider.select((s) => s.getMovies(category)),
+            // );
             final scrollController = FixedExtentScrollController();
             setScrollController(scrollController);
             return HorizontalList<Movie>(
@@ -79,7 +80,7 @@ class _MoviesGridState extends ConsumerState<MoviesGrid> {
               ),
               items: movies,
               itemBuilder: (BuildContext context, Movie movie, bool selected) {
-                controlelr.enrichMovieDetails(movie);
+                // controlelr.enrichMovieDetails(movie);
                 return MovieTile(selected: selected, movie: movie);
               },
             );

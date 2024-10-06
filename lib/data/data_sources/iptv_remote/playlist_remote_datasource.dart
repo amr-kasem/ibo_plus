@@ -21,6 +21,7 @@ class PlaylistRemoteDatasourceImpl implements PlaylistRemoteDatasource {
     return remainingDurationInSeconds * 1000;
   }
 
+  @override
   Future<M3uPlaylistStatusJsonModel> initPlaylist(
     PlaylistData playlist,
   ) async {

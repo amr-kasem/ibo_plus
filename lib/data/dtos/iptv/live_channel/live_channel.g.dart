@@ -21,7 +21,7 @@ _$LiveChannelJsonModelImpl _$$LiveChannelJsonModelImplFromJson(
       tvArchive: (json['tv_archive'] as num?)?.toInt(),
       directSource: json['direct_source'] as String?,
       tvArchiveDuration: const DynamicToStringSerializer()
-          .fromJson(json['tv_archive_duration'] as String?),
+          .fromJson(json['tv_archive_duration']),
       epgListings: (json['epg_listings'] as List<dynamic>?)
           ?.map((e) => EPGJsonModel.fromJson(e as Map<String, dynamic>))
           .toList(),

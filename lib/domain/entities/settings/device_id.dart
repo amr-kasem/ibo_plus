@@ -6,8 +6,8 @@ import '../../../bootstrap/config/app_config.dart';
 import '../../value_objects/app_settings/device_id/device_id.dart';
 
 class DeviceId {
-  final _getIt = GetIt.instance;
-  late final _appConfig = _getIt.get<AppConfig>();
+  final _locator = GetIt.instance;
+  late final _appConfig = _locator.get<AppConfig>();
   DeviceIdData? _data;
   String _generateRandomMac() {
     final random = math.Random();

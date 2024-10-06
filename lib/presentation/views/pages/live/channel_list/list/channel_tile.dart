@@ -5,8 +5,8 @@ import 'package:gradient_borders/gradient_borders.dart';
 import 'package:intl/intl.dart' as intl;
 
 import '../../../../../../domain/entities/live_channel/live_channel.dart';
-import '../../../../../providers/app_state.dart';
-import '../../../../../providers/live_state.dart';
+import '../../../../../controllers/app_state.dart';
+import '../../../../../controllers/live_controller.dart';
 
 class ChannelTile extends StatelessWidget {
   const ChannelTile({

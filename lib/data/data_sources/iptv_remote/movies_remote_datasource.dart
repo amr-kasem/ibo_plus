@@ -6,8 +6,8 @@ import '../../dtos/iptv/movie/movie.dart';
 import '../../dtos/iptv/movie/movie_details.dart';
 
 class MoviesRemoteDatasource {
-  final _getIt = GetIt.instance;
-  late final _dio = _getIt.get<Dio>();
+  final _locator = GetIt.instance;
+  late final _dio = _locator.get<Dio>();
   Future<List<MovieJsonModel>> getMovies({
     int? id,
     required PlaylistData m3uPlaylist,

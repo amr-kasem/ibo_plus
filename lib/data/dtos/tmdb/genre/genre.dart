@@ -1,8 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:json_annotation/json_annotation.dart';
 
-part 'genre.g.dart';
 part 'genre.freezed.dart';
+part 'genre.g.dart';
 
 @freezed
 class Genre with _$Genre {

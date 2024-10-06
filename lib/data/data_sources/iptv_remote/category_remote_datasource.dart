@@ -6,11 +6,19 @@ import '../../../shared/types/category_type.dart';
 import '../../dtos/iptv/category/category.dart';
 import '../../services/playlist_api_helper.dart';
 
-class CategoriesRemoteDatasource {
-  final _getIt = GetIt.instance;
-  late final _dio = _getIt.get<Dio>();
-  late final playlistApiHelper = _getIt.get<PlaylistApiHelper>();
+abstract class CategoriesRemoteDatasource {
+  Future<List<CategoryJsonModel>> getCategories({
+    required CategoryType categoryType,
+    required Playlist playlist,
+  });
+}
 
+class CategoriesRemoteDatasourceImpl implements CategoriesRemoteDatasource {
+  final _locator = GetIt.instance;
+  late final _dio = _locator.get<Dio>();
+  late final playlistApiHelper = _locator.get<PlaylistApiHelper>();
+
+  @override
   Future<List<CategoryJsonModel>> getCategories({
     required CategoryType categoryType,
     required Playlist playlist,
@@ -22,9 +30,9 @@ class CategoriesRemoteDatasource {
         queryParameters: {
           'username': playlist.data.username,
           'password': playlist.data.password,
-          'action': (categoryType),
+          'action': playlistApiHelper.getAction(categoryType),
         },
-      ).timeout(const Duration(seconds: 4));
+      );
     } catch (e) {
       return Future.error(e);
     }

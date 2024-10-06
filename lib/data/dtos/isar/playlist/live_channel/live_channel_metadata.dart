@@ -1,16 +1,20 @@
 import 'package:isar/isar.dart';
 
+import 'live_channel.dart';
+
 part 'live_channel_metadata.g.dart';
 
 @collection
 class LiveMetadataIsarModel {
-  final Id channel;
+  Id? id;
   final int index;
   final DateTime lastUpdated;
   bool favorite;
   bool locked;
+
+  final channel = IsarLink<LiveChannelIsarModel>();
+
   LiveMetadataIsarModel({
-    required this.channel,
     required this.index,
     required this.lastUpdated,
     this.favorite = false,
@@ -24,5 +28,5 @@ class LiveMetadataIsarModel {
   }
 
   @override
-  int get hashCode => channel.hashCode;
+  int get hashCode => id.hashCode;
 }

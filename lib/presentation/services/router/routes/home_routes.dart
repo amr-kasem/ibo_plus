@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../providers/app_state.dart';
+import '../../../controllers/app_state.dart';
 import '../../../views/pages/app_layout.dart';
 import '../router_utils.dart';
 

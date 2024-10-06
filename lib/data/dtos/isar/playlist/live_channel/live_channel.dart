@@ -2,7 +2,7 @@ import 'package:get_it/get_it.dart';
 import 'package:isar/isar.dart';
 
 import '../../../../services/isar_helper.dart';
-import 'epg.dart';
+import 'live_channel_metadata.dart';
 
 part 'live_channel.g.dart';
 
@@ -23,13 +23,11 @@ class LiveChannelIsarModel {
   final String? customSid;
   final int? tvArchive;
   final String? directSource;
-  final String? tvArchiveDuration;
-
-  final List<EPG>? epgListings;
-
   final bool? isAdult;
 
-  bool isFavorite;
+  @Backlink(to: 'channel')
+  final meta = IsarLink<LiveMetadataIsarModel>();
+
   @Index()
   late int playlistId;
 
@@ -45,10 +43,7 @@ class LiveChannelIsarModel {
     required this.customSid,
     required this.tvArchive,
     required this.directSource,
-    required this.tvArchiveDuration,
-    required this.epgListings,
     required this.isAdult,
-    this.isFavorite = false,
   });
 
   Id get isarId => _isarHelper.fastHash('$playlistId$streamId');

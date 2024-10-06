@@ -48,9 +48,16 @@ const CategoryMetadataIsarModelSchema = CollectionSchema(
   serialize: _categoryMetadataIsarModelSerialize,
   deserialize: _categoryMetadataIsarModelDeserialize,
   deserializeProp: _categoryMetadataIsarModelDeserializeProp,
-  idName: r'cateogy',
+  idName: r'id',
   indexes: {},
-  links: {},
+  links: {
+    r'category': LinkSchema(
+      id: -1669282490264125891,
+      name: r'category',
+      target: r'CategoryIsarModel',
+      single: true,
+    )
+  },
   embeddedSchemas: {},
   getId: _categoryMetadataIsarModelGetId,
   getLinks: _categoryMetadataIsarModelGetLinks,
@@ -87,12 +94,12 @@ CategoryMetadataIsarModel _categoryMetadataIsarModelDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = CategoryMetadataIsarModel(
-    cateogy: id,
     favorite: reader.readBoolOrNull(offsets[0]) ?? false,
     index: reader.readLong(offsets[2]),
     lastUpdated: reader.readDateTime(offsets[3]),
     locked: reader.readBoolOrNull(offsets[4]) ?? false,
   );
+  object.id = id;
   return object;
 }
 
@@ -119,21 +126,25 @@ P _categoryMetadataIsarModelDeserializeProp<P>(
 }
 
 Id _categoryMetadataIsarModelGetId(CategoryMetadataIsarModel object) {
-  return object.cateogy;
+  return object.id ?? Isar.autoIncrement;
 }
 
 List<IsarLinkBase<dynamic>> _categoryMetadataIsarModelGetLinks(
     CategoryMetadataIsarModel object) {
-  return [];
+  return [object.category];
 }
 
 void _categoryMetadataIsarModelAttach(
-    IsarCollection<dynamic> col, Id id, CategoryMetadataIsarModel object) {}
+    IsarCollection<dynamic> col, Id id, CategoryMetadataIsarModel object) {
+  object.id = id;
+  object.category
+      .attach(col, col.isar.collection<CategoryIsarModel>(), r'category', id);
+}
 
 extension CategoryMetadataIsarModelQueryWhereSort on QueryBuilder<
     CategoryMetadataIsarModel, CategoryMetadataIsarModel, QWhere> {
   QueryBuilder<CategoryMetadataIsarModel, CategoryMetadataIsarModel,
-      QAfterWhere> anyCateogy() {
+      QAfterWhere> anyId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
     });
@@ -143,69 +154,68 @@ extension CategoryMetadataIsarModelQueryWhereSort on QueryBuilder<
 extension CategoryMetadataIsarModelQueryWhere on QueryBuilder<
     CategoryMetadataIsarModel, CategoryMetadataIsarModel, QWhereClause> {
   QueryBuilder<CategoryMetadataIsarModel, CategoryMetadataIsarModel,
-      QAfterWhereClause> cateogyEqualTo(Id cateogy) {
+      QAfterWhereClause> idEqualTo(Id id) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IdWhereClause.between(
-        lower: cateogy,
-        upper: cateogy,
+        lower: id,
+        upper: id,
       ));
     });
   }
 
   QueryBuilder<CategoryMetadataIsarModel, CategoryMetadataIsarModel,
-      QAfterWhereClause> cateogyNotEqualTo(Id cateogy) {
+      QAfterWhereClause> idNotEqualTo(Id id) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
             .addWhereClause(
-              IdWhereClause.lessThan(upper: cateogy, includeUpper: false),
+              IdWhereClause.lessThan(upper: id, includeUpper: false),
             )
             .addWhereClause(
-              IdWhereClause.greaterThan(lower: cateogy, includeLower: false),
+              IdWhereClause.greaterThan(lower: id, includeLower: false),
             );
       } else {
         return query
             .addWhereClause(
-              IdWhereClause.greaterThan(lower: cateogy, includeLower: false),
+              IdWhereClause.greaterThan(lower: id, includeLower: false),
             )
             .addWhereClause(
-              IdWhereClause.lessThan(upper: cateogy, includeUpper: false),
+              IdWhereClause.lessThan(upper: id, includeUpper: false),
             );
       }
     });
   }
 
   QueryBuilder<CategoryMetadataIsarModel, CategoryMetadataIsarModel,
-          QAfterWhereClause>
-      cateogyGreaterThan(Id cateogy, {bool include = false}) {
+      QAfterWhereClause> idGreaterThan(Id id, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
-        IdWhereClause.greaterThan(lower: cateogy, includeLower: include),
+        IdWhereClause.greaterThan(lower: id, includeLower: include),
       );
     });
   }
 
   QueryBuilder<CategoryMetadataIsarModel, CategoryMetadataIsarModel,
-      QAfterWhereClause> cateogyLessThan(Id cateogy, {bool include = false}) {
+      QAfterWhereClause> idLessThan(Id id, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
-        IdWhereClause.lessThan(upper: cateogy, includeUpper: include),
+        IdWhereClause.lessThan(upper: id, includeUpper: include),
       );
     });
   }
 
   QueryBuilder<CategoryMetadataIsarModel, CategoryMetadataIsarModel,
-      QAfterWhereClause> cateogyBetween(
-    Id lowerCateogy,
-    Id upperCateogy, {
+      QAfterWhereClause> idBetween(
+    Id lowerId,
+    Id upperId, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IdWhereClause.between(
-        lower: lowerCateogy,
+        lower: lowerId,
         includeLower: includeLower,
-        upper: upperCateogy,
+        upper: upperId,
         includeUpper: includeUpper,
       ));
     });
@@ -214,62 +224,6 @@ extension CategoryMetadataIsarModelQueryWhere on QueryBuilder<
 
 extension CategoryMetadataIsarModelQueryFilter on QueryBuilder<
     CategoryMetadataIsarModel, CategoryMetadataIsarModel, QFilterCondition> {
-  QueryBuilder<CategoryMetadataIsarModel, CategoryMetadataIsarModel,
-      QAfterFilterCondition> cateogyEqualTo(Id value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'cateogy',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<CategoryMetadataIsarModel, CategoryMetadataIsarModel,
-      QAfterFilterCondition> cateogyGreaterThan(
-    Id value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'cateogy',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<CategoryMetadataIsarModel, CategoryMetadataIsarModel,
-      QAfterFilterCondition> cateogyLessThan(
-    Id value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'cateogy',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<CategoryMetadataIsarModel, CategoryMetadataIsarModel,
-      QAfterFilterCondition> cateogyBetween(
-    Id lower,
-    Id upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'cateogy',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
-    });
-  }
-
   QueryBuilder<CategoryMetadataIsarModel, CategoryMetadataIsarModel,
       QAfterFilterCondition> favoriteEqualTo(bool value) {
     return QueryBuilder.apply(this, (query) {
@@ -328,6 +282,80 @@ extension CategoryMetadataIsarModelQueryFilter on QueryBuilder<
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
         property: r'hashCode',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<CategoryMetadataIsarModel, CategoryMetadataIsarModel,
+      QAfterFilterCondition> idIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'id',
+      ));
+    });
+  }
+
+  QueryBuilder<CategoryMetadataIsarModel, CategoryMetadataIsarModel,
+      QAfterFilterCondition> idIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'id',
+      ));
+    });
+  }
+
+  QueryBuilder<CategoryMetadataIsarModel, CategoryMetadataIsarModel,
+      QAfterFilterCondition> idEqualTo(Id? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'id',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<CategoryMetadataIsarModel, CategoryMetadataIsarModel,
+      QAfterFilterCondition> idGreaterThan(
+    Id? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'id',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<CategoryMetadataIsarModel, CategoryMetadataIsarModel,
+      QAfterFilterCondition> idLessThan(
+    Id? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'id',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<CategoryMetadataIsarModel, CategoryMetadataIsarModel,
+      QAfterFilterCondition> idBetween(
+    Id? lower,
+    Id? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'id',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -463,7 +491,21 @@ extension CategoryMetadataIsarModelQueryObject on QueryBuilder<
     CategoryMetadataIsarModel, CategoryMetadataIsarModel, QFilterCondition> {}
 
 extension CategoryMetadataIsarModelQueryLinks on QueryBuilder<
-    CategoryMetadataIsarModel, CategoryMetadataIsarModel, QFilterCondition> {}
+    CategoryMetadataIsarModel, CategoryMetadataIsarModel, QFilterCondition> {
+  QueryBuilder<CategoryMetadataIsarModel, CategoryMetadataIsarModel,
+      QAfterFilterCondition> category(FilterQuery<CategoryIsarModel> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'category');
+    });
+  }
+
+  QueryBuilder<CategoryMetadataIsarModel, CategoryMetadataIsarModel,
+      QAfterFilterCondition> categoryIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'category', 0, true, 0, true);
+    });
+  }
+}
 
 extension CategoryMetadataIsarModelQuerySortBy on QueryBuilder<
     CategoryMetadataIsarModel, CategoryMetadataIsarModel, QSortBy> {
@@ -541,20 +583,6 @@ extension CategoryMetadataIsarModelQuerySortBy on QueryBuilder<
 extension CategoryMetadataIsarModelQuerySortThenBy on QueryBuilder<
     CategoryMetadataIsarModel, CategoryMetadataIsarModel, QSortThenBy> {
   QueryBuilder<CategoryMetadataIsarModel, CategoryMetadataIsarModel,
-      QAfterSortBy> thenByCateogy() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'cateogy', Sort.asc);
-    });
-  }
-
-  QueryBuilder<CategoryMetadataIsarModel, CategoryMetadataIsarModel,
-      QAfterSortBy> thenByCateogyDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'cateogy', Sort.desc);
-    });
-  }
-
-  QueryBuilder<CategoryMetadataIsarModel, CategoryMetadataIsarModel,
       QAfterSortBy> thenByFavorite() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'favorite', Sort.asc);
@@ -579,6 +607,20 @@ extension CategoryMetadataIsarModelQuerySortThenBy on QueryBuilder<
       QAfterSortBy> thenByHashCodeDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'hashCode', Sort.desc);
+    });
+  }
+
+  QueryBuilder<CategoryMetadataIsarModel, CategoryMetadataIsarModel,
+      QAfterSortBy> thenById() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'id', Sort.asc);
+    });
+  }
+
+  QueryBuilder<CategoryMetadataIsarModel, CategoryMetadataIsarModel,
+      QAfterSortBy> thenByIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'id', Sort.desc);
     });
   }
 
@@ -665,10 +707,9 @@ extension CategoryMetadataIsarModelQueryWhereDistinct on QueryBuilder<
 
 extension CategoryMetadataIsarModelQueryProperty on QueryBuilder<
     CategoryMetadataIsarModel, CategoryMetadataIsarModel, QQueryProperty> {
-  QueryBuilder<CategoryMetadataIsarModel, int, QQueryOperations>
-      cateogyProperty() {
+  QueryBuilder<CategoryMetadataIsarModel, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'cateogy');
+      return query.addPropertyName(r'id');
     });
   }
 

@@ -11,10 +11,8 @@ class PlaylistStatusMapper {
     );
   }
 
-  M3uPlaylistMetadataIsarModel toIsarModel(
-      String playlistId, PlaylistStatus status) {
+  M3uPlaylistMetadataIsarModel toIsarModel(PlaylistStatus status) {
     return M3uPlaylistMetadataIsarModel(
-      id: playlistId,
       active: status.data.activeSubscription,
     )..expiray = status.data.expirayDuration;
   }

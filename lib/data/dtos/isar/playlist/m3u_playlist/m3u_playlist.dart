@@ -2,6 +2,7 @@ import 'package:get_it/get_it.dart';
 import 'package:isar/isar.dart';
 
 import '../../../../services/isar_helper.dart';
+import 'm3u_playlist_metadata.dart';
 
 part 'm3u_playlist.g.dart';
 
@@ -21,6 +22,8 @@ class M3uPlaylistIsarModel {
   final String playlistType;
   final String originType;
   final String originUrl;
+  @Backlink(to: 'playlist')
+  final meta = IsarLink<M3uPlaylistMetadataIsarModel>();
 
   M3uPlaylistIsarModel({
     required this.isProtected,

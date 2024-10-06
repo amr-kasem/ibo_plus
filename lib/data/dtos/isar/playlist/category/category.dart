@@ -3,6 +3,7 @@ import 'package:isar/isar.dart';
 
 import '../../../../../shared/types/category_type.dart';
 import '../../../../services/isar_helper.dart';
+import 'category_metadata.dart';
 
 part 'category.g.dart';
 
@@ -17,13 +18,18 @@ class CategoryIsarModel {
   final int parentId;
   @enumerated
   @Index()
-  late CategoryType type;
+  CategoryType type;
   @Index(composite: [CompositeIndex('type')])
   late int playlistId;
+
+  @Backlink(to: 'category')
+  final meta = IsarLink<CategoryMetadataIsarModel>();
+
   CategoryIsarModel({
     required this.categoryId,
     required this.categoryName,
     required this.parentId,
+    required this.type,
   });
 
   @override

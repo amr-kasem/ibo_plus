@@ -15,22 +15,22 @@ final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
-mixin _$M3UPlaylistState {
+mixin _$PlaylistState {
   Playlist? get selectedPlaylist => throw _privateConstructorUsedError;
   List<Playlist> get playlists => throw _privateConstructorUsedError;
   bool get isLoading => throw _privateConstructorUsedError;
   String? get error => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
-  $M3UPlaylistStateCopyWith<M3UPlaylistState> get copyWith =>
+  $PlaylistStateCopyWith<PlaylistState> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $M3UPlaylistStateCopyWith<$Res> {
-  factory $M3UPlaylistStateCopyWith(
-          M3UPlaylistState value, $Res Function(M3UPlaylistState) then) =
-      _$M3UPlaylistStateCopyWithImpl<$Res, M3UPlaylistState>;
+abstract class $PlaylistStateCopyWith<$Res> {
+  factory $PlaylistStateCopyWith(
+          PlaylistState value, $Res Function(PlaylistState) then) =
+      _$PlaylistStateCopyWithImpl<$Res, PlaylistState>;
   @useResult
   $Res call(
       {Playlist? selectedPlaylist,
@@ -40,9 +40,9 @@ abstract class $M3UPlaylistStateCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$M3UPlaylistStateCopyWithImpl<$Res, $Val extends M3UPlaylistState>
-    implements $M3UPlaylistStateCopyWith<$Res> {
-  _$M3UPlaylistStateCopyWithImpl(this._value, this._then);
+class _$PlaylistStateCopyWithImpl<$Res, $Val extends PlaylistState>
+    implements $PlaylistStateCopyWith<$Res> {
+  _$PlaylistStateCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -79,11 +79,11 @@ class _$M3UPlaylistStateCopyWithImpl<$Res, $Val extends M3UPlaylistState>
 }
 
 /// @nodoc
-abstract class _$$M3UPlaylistStateImplCopyWith<$Res>
-    implements $M3UPlaylistStateCopyWith<$Res> {
-  factory _$$M3UPlaylistStateImplCopyWith(_$M3UPlaylistStateImpl value,
-          $Res Function(_$M3UPlaylistStateImpl) then) =
-      __$$M3UPlaylistStateImplCopyWithImpl<$Res>;
+abstract class _$$PlaylistStateImplCopyWith<$Res>
+    implements $PlaylistStateCopyWith<$Res> {
+  factory _$$PlaylistStateImplCopyWith(
+          _$PlaylistStateImpl value, $Res Function(_$PlaylistStateImpl) then) =
+      __$$PlaylistStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -94,11 +94,11 @@ abstract class _$$M3UPlaylistStateImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$M3UPlaylistStateImplCopyWithImpl<$Res>
-    extends _$M3UPlaylistStateCopyWithImpl<$Res, _$M3UPlaylistStateImpl>
-    implements _$$M3UPlaylistStateImplCopyWith<$Res> {
-  __$$M3UPlaylistStateImplCopyWithImpl(_$M3UPlaylistStateImpl _value,
-      $Res Function(_$M3UPlaylistStateImpl) _then)
+class __$$PlaylistStateImplCopyWithImpl<$Res>
+    extends _$PlaylistStateCopyWithImpl<$Res, _$PlaylistStateImpl>
+    implements _$$PlaylistStateImplCopyWith<$Res> {
+  __$$PlaylistStateImplCopyWithImpl(
+      _$PlaylistStateImpl _value, $Res Function(_$PlaylistStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -109,7 +109,7 @@ class __$$M3UPlaylistStateImplCopyWithImpl<$Res>
     Object? isLoading = null,
     Object? error = freezed,
   }) {
-    return _then(_$M3UPlaylistStateImpl(
+    return _then(_$PlaylistStateImpl(
       selectedPlaylist: freezed == selectedPlaylist
           ? _value.selectedPlaylist
           : selectedPlaylist // ignore: cast_nullable_to_non_nullable
@@ -132,8 +132,8 @@ class __$$M3UPlaylistStateImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$M3UPlaylistStateImpl extends _M3UPlaylistState {
-  const _$M3UPlaylistStateImpl(
+class _$PlaylistStateImpl extends _PlaylistState {
+  const _$PlaylistStateImpl(
       {this.selectedPlaylist,
       final List<Playlist> playlists = const [],
       this.isLoading = false,
@@ -160,14 +160,14 @@ class _$M3UPlaylistStateImpl extends _M3UPlaylistState {
 
   @override
   String toString() {
-    return 'M3UPlaylistState(selectedPlaylist: $selectedPlaylist, playlists: $playlists, isLoading: $isLoading, error: $error)';
+    return 'PlaylistState(selectedPlaylist: $selectedPlaylist, playlists: $playlists, isLoading: $isLoading, error: $error)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$M3UPlaylistStateImpl &&
+            other is _$PlaylistStateImpl &&
             (identical(other.selectedPlaylist, selectedPlaylist) ||
                 other.selectedPlaylist == selectedPlaylist) &&
             const DeepCollectionEquality()
@@ -184,18 +184,17 @@ class _$M3UPlaylistStateImpl extends _M3UPlaylistState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$M3UPlaylistStateImplCopyWith<_$M3UPlaylistStateImpl> get copyWith =>
-      __$$M3UPlaylistStateImplCopyWithImpl<_$M3UPlaylistStateImpl>(
-          this, _$identity);
+  _$$PlaylistStateImplCopyWith<_$PlaylistStateImpl> get copyWith =>
+      __$$PlaylistStateImplCopyWithImpl<_$PlaylistStateImpl>(this, _$identity);
 }
 
-abstract class _M3UPlaylistState extends M3UPlaylistState {
-  const factory _M3UPlaylistState(
+abstract class _PlaylistState extends PlaylistState {
+  const factory _PlaylistState(
       {final Playlist? selectedPlaylist,
       final List<Playlist> playlists,
       final bool isLoading,
-      final String? error}) = _$M3UPlaylistStateImpl;
-  const _M3UPlaylistState._() : super._();
+      final String? error}) = _$PlaylistStateImpl;
+  const _PlaylistState._() : super._();
 
   @override
   Playlist? get selectedPlaylist;
@@ -207,6 +206,6 @@ abstract class _M3UPlaylistState extends M3UPlaylistState {
   String? get error;
   @override
   @JsonKey(ignore: true)
-  _$$M3UPlaylistStateImplCopyWith<_$M3UPlaylistStateImpl> get copyWith =>
+  _$$PlaylistStateImplCopyWith<_$PlaylistStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

@@ -2,10 +2,12 @@ import 'package:collection/collection.dart';
 import 'package:fading_edge_scrollview/fading_edge_scrollview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart' as intl;
+import 'package:logger/logger.dart';
 
 import '../../../../../../domain/entities/live_channel/live_channel.dart';
-import '../../../../../providers/live_state.dart';
+import '../../../../../controllers/live_controller.dart';
 import '../options/channel_options_parent.dart';
 import 'channel_tile.dart';
 
@@ -28,6 +30,8 @@ class ChannelListWidget extends ConsumerStatefulWidget {
 }
 
 class _ChannelListWidgetState extends ConsumerState<ChannelListWidget> {
+  final _locator = GetIt.instance;
+  late final _logger = _locator.get<Logger>();
   late intl.NumberFormat formatter;
   bool initialized = false;
   @override
@@ -57,6 +61,9 @@ class _ChannelListWidgetState extends ConsumerState<ChannelListWidget> {
         widget.verticalScrollController.jumpToItem(i);
       }
     });
+    _logger
+        .i("final channel list count is ${widget.channelList.length} channels");
+
     return Row(
       children: [
         Expanded(

@@ -5,8 +5,8 @@ import 'package:get_it/get_it.dart';
 import 'services/router/router.dart';
 
 class IboApp extends StatelessWidget {
-  final _getIt = GetIt.instance;
-  late final appRouter = _getIt.get<AppRouter>();
+  final _locator = GetIt.instance;
+  late final appRouter = _locator.get<AppRouter>();
   IboApp({
     super.key,
   });

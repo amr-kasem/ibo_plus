@@ -80,7 +80,15 @@ const M3uPlaylistIsarModelSchema = CollectionSchema(
   deserializeProp: _m3uPlaylistIsarModelDeserializeProp,
   idName: r'isarId',
   indexes: {},
-  links: {},
+  links: {
+    r'meta': LinkSchema(
+      id: 5577212840079034927,
+      name: r'meta',
+      target: r'M3uPlaylistMetadataIsarModel',
+      single: true,
+      linkName: r'playlist',
+    )
+  },
   embeddedSchemas: {},
   getId: _m3uPlaylistIsarModelGetId,
   getLinks: _m3uPlaylistIsarModelGetLinks,
@@ -186,11 +194,14 @@ Id _m3uPlaylistIsarModelGetId(M3uPlaylistIsarModel object) {
 
 List<IsarLinkBase<dynamic>> _m3uPlaylistIsarModelGetLinks(
     M3uPlaylistIsarModel object) {
-  return [];
+  return [object.meta];
 }
 
 void _m3uPlaylistIsarModelAttach(
-    IsarCollection<dynamic> col, Id id, M3uPlaylistIsarModel object) {}
+    IsarCollection<dynamic> col, Id id, M3uPlaylistIsarModel object) {
+  object.meta.attach(
+      col, col.isar.collection<M3uPlaylistMetadataIsarModel>(), r'meta', id);
+}
 
 extension M3uPlaylistIsarModelQueryWhereSort
     on QueryBuilder<M3uPlaylistIsarModel, M3uPlaylistIsarModel, QWhere> {
@@ -1644,7 +1655,21 @@ extension M3uPlaylistIsarModelQueryObject on QueryBuilder<M3uPlaylistIsarModel,
     M3uPlaylistIsarModel, QFilterCondition> {}
 
 extension M3uPlaylistIsarModelQueryLinks on QueryBuilder<M3uPlaylistIsarModel,
-    M3uPlaylistIsarModel, QFilterCondition> {}
+    M3uPlaylistIsarModel, QFilterCondition> {
+  QueryBuilder<M3uPlaylistIsarModel, M3uPlaylistIsarModel,
+      QAfterFilterCondition> meta(FilterQuery<M3uPlaylistMetadataIsarModel> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'meta');
+    });
+  }
+
+  QueryBuilder<M3uPlaylistIsarModel, M3uPlaylistIsarModel,
+      QAfterFilterCondition> metaIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'meta', 0, true, 0, true);
+    });
+  }
+}
 
 extension M3uPlaylistIsarModelQuerySortBy
     on QueryBuilder<M3uPlaylistIsarModel, M3uPlaylistIsarModel, QSortBy> {

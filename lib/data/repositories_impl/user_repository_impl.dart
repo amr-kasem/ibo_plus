@@ -10,10 +10,10 @@ import '../dtos/ibo/ibo_info/ibo_info.dart';
 import '../mappers/ibo_info/ibo_info.dart';
 
 class UserRepositoryImpl implements UserRepository {
-  final _getIt = GetIt.instance;
-  late final _logger = _getIt.get<Logger>();
-  late final _iboDataSource = _getIt.get<IboRemoteDatasource>();
-  late final _iboInfoMapper = _getIt.get<IboInfoMapper>();
+  final _locator = GetIt.instance;
+  late final _logger = _locator.get<Logger>();
+  late final _iboDataSource = _locator.get<IboRemoteDatasource>();
+  late final _iboInfoMapper = _locator.get<IboInfoMapper>();
   @override
   Future<User> getUser() {
     // TODO: implement getUser
