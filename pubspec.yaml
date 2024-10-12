@@ -61,7 +61,7 @@ dependencies:
   fading_edge_scrollview: ^4.1.1
   flutter_custom_clippers: ^2.1.0
   gradient_borders: ^1.0.1
-  fvp: ^0.26.1
+  fvp: ^0.27.0
   logging: ^1.2.0
   freezed_annotation: ^2.4.4
   collection: ^1.18.0
@@ -71,6 +71,7 @@ dependencies:
   flutter_dotenv: ^5.1.0
   riverpod: ^2.5.1
   logger: ^2.4.0
+  shimmer: ^3.0.0
  
 dev_dependencies:
   flutter_test:

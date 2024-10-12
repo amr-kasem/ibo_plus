@@ -1,99 +1,62 @@
-import 'package:collection/collection.dart';
 import 'package:fading_edge_scrollview/fading_edge_scrollview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get_it/get_it.dart';
+import 'package:ibo_plus/presentation/controllers/category_controller.dart';
 import 'package:intl/intl.dart' as intl;
 
-import '../../../../../../domain/entities/category/category.dart';
-import '../../../../../controllers/live_controller.dart';
-import '../options/category_options_parent.dart';
+import '../../../../../models/presentation_models/category.dart';
 import 'category_tile.dart';
 
-class CategoryListWidget extends ConsumerStatefulWidget {
+class CategoryListWidget extends StatefulWidget {
   const CategoryListWidget({
     super.key,
     required this.verticalScrollController,
     required this.categoryList,
     required this.scrollKey,
-    required this.showSettings,
   });
 
   final FixedExtentScrollController verticalScrollController;
-  final List<Category> categoryList;
+  final List<CategoryPresentaionModel> categoryList;
   final PageStorageKey scrollKey;
-  final bool showSettings;
+
   @override
-  ConsumerState<CategoryListWidget> createState() => _CategoryListWidgetState();
+  State<CategoryListWidget> createState() => _CategoryListWidgetState();
 }
 
-class _CategoryListWidgetState extends ConsumerState<CategoryListWidget> {
-  late intl.NumberFormat formatter;
-  bool initialized = false;
-  @override
-  void initState() {
-    super.initState();
-    formatter = intl.NumberFormat(
-        List.filled(widget.categoryList.length.toString().length, '0').join());
-  }
-
+class _CategoryListWidgetState extends State<CategoryListWidget> {
+  late final categories =
+      widget.categoryList.map((c) => StateProvider((_) => c)).toList();
+  final _locator = GetIt.instance;
+  late final _categoryController = _locator.get<CategoryController>();
   @override
   Widget build(BuildContext context) {
-    ref.listen(liveControllerProvider.select((s) => s.categories), (a, b) {
-      final same = const ListEquality().equals(a, b);
-      if (!same || !initialized) {
-        initialized = true;
-        int i = 0;
-        final currentCategory = ref
-            .read(liveControllerProvider.notifier)
-            .stateSnapshot
-            .selectedCategory;
-        if (currentCategory != null) {
-          i = b.indexOf(currentCategory);
-          if (i == -1) {
-            i = 0;
-          }
-        }
-        widget.verticalScrollController.jumpToItem(i);
-      }
-    });
-
-    return Row(
-      children: [
-        Expanded(
-          child: FadingEdgeScrollView.fromListWheelScrollView(
-            gradientFractionOnEnd: 0.5,
-            gradientFractionOnStart: 0.5,
-            child: ListWheelScrollView.useDelegate(
-              controller: widget.verticalScrollController,
-              key: widget.scrollKey,
-              diameterRatio: 8,
-              squeeze: 0.8,
-              offAxisFraction: 1.5,
-              itemExtent: 40,
-              onSelectedItemChanged: (value) {
-                ref
-                    .read(liveControllerProvider.notifier)
-                    .selectCategory(widget.categoryList[value]);
-              },
-              childDelegate: ListWheelChildBuilderDelegate(
-                builder: (context, index) {
-                  return CategoryTile(
-                    formatter: formatter,
-                    category: widget.categoryList[index],
-                    index: index,
-                  );
-                },
-                childCount: widget.categoryList.length,
-              ),
-            ),
-          ),
+    final formatter = intl.NumberFormat(
+        List.filled(widget.categoryList.length.toString().length, '0').join());
+    return FadingEdgeScrollView.fromListWheelScrollView(
+      gradientFractionOnEnd: 0.5,
+      gradientFractionOnStart: 0.5,
+      child: ListWheelScrollView.useDelegate(
+        controller: widget.verticalScrollController,
+        key: widget.scrollKey,
+        diameterRatio: 8,
+        squeeze: 0.8,
+        offAxisFraction: 1.5,
+        itemExtent: 40,
+        onSelectedItemChanged: (value) {
+          _categoryController.hoverCategory(categories[value]);
+        },
+        childDelegate: ListWheelChildBuilderDelegate(
+          builder: (context, index) {
+            return CategoryTile(
+              formatter: formatter,
+              categoryProvider: categories[index],
+              index: index,
+            );
+          },
+          childCount: categories.length,
         ),
-        Expanded(
-          child: widget.showSettings
-              ? const CategoryOptionsParent()
-              : const SizedBox.shrink(),
-        ),
-      ],
+      ),
     );
   }
 }

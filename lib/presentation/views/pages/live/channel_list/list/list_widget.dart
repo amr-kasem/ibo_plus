@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:fading_edge_scrollview/fading_edge_scrollview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,7 +6,6 @@ import 'package:intl/intl.dart' as intl;
 import 'package:logger/logger.dart';
 
 import '../../../../../../domain/entities/live_channel/live_channel.dart';
-import '../../../../../controllers/live_controller.dart';
 import '../options/channel_options_parent.dart';
 import 'channel_tile.dart';
 
@@ -43,24 +41,24 @@ class _ChannelListWidgetState extends ConsumerState<ChannelListWidget> {
 
   @override
   Widget build(BuildContext context) {
-    ref.listen(liveControllerProvider.select((s) => s.channels), (a, b) {
-      final same = const ListEquality().equals(a, b);
-      if (!same || !initialized) {
-        initialized = true;
-        int i = 0;
-        final currentChannel = ref
-            .read(liveControllerProvider.notifier)
-            .stateSnapshot
-            .selectedChannel;
-        if (currentChannel != null) {
-          i = b.indexOf(currentChannel);
-          if (i == -1) {
-            i = 0;
-          }
-        }
-        widget.verticalScrollController.jumpToItem(i);
-      }
-    });
+    // ref.listen(liveControllerProvider.select((s) => s.channels), (a, b) {
+    //   final same = const ListEquality().equals(a, b);
+    //   if (!same || !initialized) {
+    //     initialized = true;
+    //     int i = 0;
+    //     // final currentChannel = ref
+    //     //     .read(liveControllerProvider.notifier)
+    //     //     .stateSnapshot
+    //     //     .selectedChannel;
+    //     // if (currentChannel != null) {
+    //     //   i = b.indexOf(currentChannel);
+    //     //   if (i == -1) {
+    //     //     i = 0;
+    //     //   }
+    //     // }
+    //     widget.verticalScrollController.jumpToItem(i);
+    //   }
+    // });
     _logger
         .i("final channel list count is ${widget.channelList.length} channels");
 
@@ -78,9 +76,9 @@ class _ChannelListWidgetState extends ConsumerState<ChannelListWidget> {
               offAxisFraction: 1.5,
               itemExtent: 40,
               onSelectedItemChanged: (value) {
-                ref
-                    .read(liveControllerProvider.notifier)
-                    .selectHoverChannel(widget.channelList[value]);
+                // ref
+                //     .read(liveControllerProvider.notifier)
+                //     .selectHoverChannel(widget.channelList[value]);
               },
               childDelegate: ListWheelChildBuilderDelegate(
                 builder: (context, index) {

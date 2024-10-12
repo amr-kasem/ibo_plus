@@ -26,7 +26,7 @@ class Login implements UseCase<IboInfo, NoParameters> {
     await _playlistRepository.initializePlaylists(iboInfo.playlists);
     final playlists = await _getPlaylists(NoParameters());
     // if (deviceSettings.selectedPlaylist == null) {
-    await _setSelectedPlaylist(playlists[1]);
+    await _setSelectedPlaylist(playlists[4]);
     // }
     return iboInfo;
   }

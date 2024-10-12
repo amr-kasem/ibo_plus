@@ -1,4 +1,5 @@
 import 'package:get_it/get_it.dart';
+import 'package:logger/logger.dart';
 
 import '../../domain/entities/live_channel/live_channel.dart';
 import '../../domain/entities/playlist/playlist.dart';
@@ -15,8 +16,8 @@ class LiveRepositoryImpl implements LiveRepository {
   late final _remoteDatasource = _locator.get<LiveChannelRemoteDatasource>();
   late final _localDatasource = _locator.get<LiveLocalDatasource>();
   late final _liveChannelMapper = _locator.get<LiveChannelMapper>();
-  // late final _liveChannelMetaMapper = _locator.get<LiveMetaMapper>();
   late final _playlistMapper = _locator.get<PlaylistMapper>();
+  late final _logger = _locator.get<Logger>();
 
   @override
   Future<List<LiveChannel>> readChannels({
@@ -25,32 +26,25 @@ class LiveRepositoryImpl implements LiveRepository {
     final isarModels = await _localDatasource.getLiveChannels(
       playlist: _playlistMapper.toIsarModel(playlist),
     );
+    _logger.i('Fetched ${isarModels.length} channels from local storage');
     final liveChannelsFuture = isarModels.asMap().entries.map(
-          (iC) async => await _mapLiveChannel(
-            dto: iC.value,
-            index: iC.key,
-          ),
+          (iC) async => await _mapLiveChannel(dto: iC.value, index: iC.key),
         );
 
     final liveChannels = await Future.wait(liveChannelsFuture);
+    _logger.i('mapped ${isarModels.length} channels to domain');
     return liveChannels
       ..sort((LiveChannel c1, LiveChannel c2) =>
           (c1.meta?.data.index ?? 0) - (c2.meta?.data.index ?? 0));
   }
 
-  Future<LiveChannel> _mapLiveChannel(
-      {required LiveChannelIsarModel dto, required int index}) async {
+  Future<LiveChannel> _mapLiveChannel({
+    required LiveChannelIsarModel dto,
+    required int index,
+  }) async {
+    // await _localDatasource.initLiveChannelMetadata(channel: dto, index: index);
     final liveChannel = _liveChannelMapper.toEntity(dto);
-    // final channelMetaIsarModel = dto.meta.value;
-    // late final LiveChannelMeta channelMeta;
-    // if (channelMetaIsarModel != null) {
-    //   channelMeta = _liveChannelMetaMapper.toEntity(channelMetaIsarModel);
-    // } else {
-    //   await _localDatasource.initLiveChannelMetadata(
-    //     category: dto,
-    //     index: index,
-    //   );
-    // }
+
     return liveChannel;
   }
 

@@ -2,8 +2,11 @@ import 'package:fading_edge_scrollview/fading_edge_scrollview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get_it/get_it.dart';
 
-import '../../../../../controllers/live_controller.dart';
+import '../../../../../../shared/types/category_type.dart';
+import '../../../../../controllers/category_controller.dart';
+import '../../../../../state_providers/live_states.dart';
 import '../../../../../utils/listing_utils.dart';
 
 class CategoryOptions extends ConsumerStatefulWidget {
@@ -21,11 +24,10 @@ class CategoryOptions extends ConsumerStatefulWidget {
 }
 
 class _CategoryOptionsState extends ConsumerState<CategoryOptions> {
-  late final toggleFavorite =
-      ref.read(liveControllerProvider.notifier).toggleFavoriteCategory;
-  late final toggleOnlyFavorite = ref
-      .read(liveControllerProvider.notifier)
-      .toggleShowOnlyFavoriteCategories;
+  final _locator = GetIt.instance;
+  late final _liveStates = _locator.get<LiveStates>();
+  // late final _logger = _locator.get<Logger>();
+  late final _categoryController = _locator.get<CategoryController>();
   final horizontalController = FixedExtentScrollController(initialItem: 1);
   final fn = FocusNode();
   bool moving = false;
@@ -75,26 +77,30 @@ class _CategoryOptionsState extends ConsumerState<CategoryOptions> {
       if (widget.showFavoriteButton)
         Consumer(
           builder: (_, WidgetRef r, __) {
-            final x = r
-                    .watch(liveControllerProvider)
-                    .hoverCategory
-                    ?.meta
-                    ?.data
-                    .favorite ??
-                false;
+            final provider = r.watch(_liveStates.hoveredCategoryProvider);
 
-            return Icon(
-              x ? Icons.favorite : Icons.favorite_border,
-              color: x ? Colors.red : Colors.white,
-            );
+            return provider == null
+                ? SizedBox.shrink()
+                : Consumer(
+                    builder: (_, WidgetRef r2, __) {
+                      final x = r2.watch(
+                        provider.select(
+                          (s) => s.object.meta!.data.favorite,
+                        ),
+                      );
+                      return Icon(
+                        x ? Icons.favorite : Icons.favorite_border,
+                        color: x ? Colors.red : Colors.white,
+                      );
+                    },
+                  );
           },
         ),
       const Icon(Icons.settings),
       Consumer(
         builder: (_, WidgetRef r, __) {
           return Icon(
-            ref.watch(liveControllerProvider
-                    .select((s) => s.onlyFavoriteCategories))
+            ref.watch(_liveStates.showFavoriteOnly)
                 ? Icons.local_activity_sharp
                 : Icons.local_activity_outlined,
           );
@@ -167,11 +173,13 @@ class _CategoryOptionsState extends ConsumerState<CategoryOptions> {
             case LogicalKeyboardKey.space:
               if (event is KeyDownEvent) {
                 if (horizontalController.selectedItem == 1) {
-                  toggleFavorite();
+                  _categoryController.toggleFavorite();
                   return KeyEventResult.handled;
                 }
                 if (horizontalController.selectedItem == 3) {
-                  toggleOnlyFavorite();
+                  _categoryController.toggleFavoriteOnly(
+                    CategoryType.liveChannels,
+                  );
                   return KeyEventResult.handled;
                 }
                 widget.updateViewIndex(horizontalController.selectedItem);

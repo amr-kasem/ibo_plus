@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../controllers/app_state.dart';
+import '../../../../controllers/app_controller.dart';
 import 'live_info_remote_control.dart';
 import 'live_info_widget.dart';
 

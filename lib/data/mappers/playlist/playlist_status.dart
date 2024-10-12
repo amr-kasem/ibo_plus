@@ -1,3 +1,5 @@
+import 'package:ibo_plus/domain/entities/playlist/playlist.dart';
+
 import '../../../domain/entities/playlist/playlist_status.dart';
 import '../../../domain/value_objects/media/playlist/playlist_status_data.dart';
 import '../../dtos/ibo/m3u_playlist/m3u_playlist_status.dart';
@@ -11,10 +13,11 @@ class PlaylistStatusMapper {
     );
   }
 
-  M3uPlaylistMetadataIsarModel toIsarModel(PlaylistStatus status) {
+  M3uPlaylistMetadataIsarModel toIsarModel(Playlist playlist) {
     return M3uPlaylistMetadataIsarModel(
-      active: status.data.activeSubscription,
-    )..expiray = status.data.expirayDuration;
+      playlistId: playlist.data.id,
+      active: playlist.status!.data.activeSubscription,
+    )..expiray = playlist.status!.data.expirayDuration;
   }
 
   PlaylistStatus toEntity<T>(T playlistJsonModel) {

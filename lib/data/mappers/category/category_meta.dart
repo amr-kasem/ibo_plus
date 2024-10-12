@@ -6,10 +6,13 @@ import '../../dtos/isar/playlist/category/category_metadata.dart';
 class CategoryMetaMapper {
   CategoryMetadataIsarModel toIsar(Category category) {
     return CategoryMetadataIsarModel(
+      categoryName: category.meta!.data.categoryName,
       index: category.meta!.data.index,
       lastUpdated: category.meta!.data.lastUpdated,
-      favorite: category.meta?.data.favorite ?? false,
-      locked: category.meta?.data.locked ?? false,
+      favorite: category.meta!.data.favorite,
+      locked: category.meta!.data.locked,
+      type: category.meta!.data.type,
+      categoryId: category.meta!.data.categoryId,
     );
   }
 
@@ -20,6 +23,9 @@ class CategoryMetaMapper {
         lastUpdated: model.lastUpdated,
         favorite: model.favorite,
         locked: model.locked,
+        type: model.type,
+        categoryId: model.categoryId,
+        categoryName: model.categoryName,
       ),
     );
   }

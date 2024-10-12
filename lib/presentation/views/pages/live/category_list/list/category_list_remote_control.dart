@@ -3,7 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../../../../../domain/entities/category/category.dart';
+import '../../../../../models/presentation_models/category.dart';
+import '../options/category_options_parent.dart';
 import 'category_list_widget.dart';
 
 class CategoryListRemoteControl extends StatefulWidget {
@@ -15,10 +16,10 @@ class CategoryListRemoteControl extends StatefulWidget {
     required this.onSelect,
   });
 
-  final List<Category> categoryList;
+  final List<CategoryPresentaionModel> categoryList;
   final PageStorageKey scrollKey;
   final bool visible;
-  final void Function(Category) onSelect;
+  final void Function(CategoryPresentaionModel) onSelect;
 
   @override
   State<CategoryListRemoteControl> createState() =>
@@ -107,16 +108,27 @@ class _CategoryListRemoteControlState extends State<CategoryListRemoteControl> {
         }
         return KeyEventResult.ignored;
       },
-      child: CategoryListWidget(
-        showSettings: showSettings,
-        scrollKey: widget.scrollKey,
-        verticalScrollController: verticalScrollController,
-        categoryList: widget.categoryList,
+      child: Row(
+        children: [
+          Expanded(
+            child: CategoryListWidget(
+              scrollKey: widget.scrollKey,
+              verticalScrollController: verticalScrollController,
+              categoryList: widget.categoryList,
+            ),
+          ),
+          Expanded(
+            child: showSettings
+                ? const CategoryOptionsParent()
+                : const SizedBox.shrink(),
+          ),
+        ],
       ),
     );
   }
 
-  void moveCursor(int itemIndex, List<Category> categoryList) async {
+  void moveCursor(
+      int itemIndex, List<CategoryPresentaionModel> categoryList) async {
     if (!moving) verticalScrollController.jumpToItem(itemIndex);
     moving = true;
     await Future.delayed(Durations.short3);

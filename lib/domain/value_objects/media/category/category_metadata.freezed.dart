@@ -20,6 +20,9 @@ mixin _$CategoryMetadata {
   DateTime get lastUpdated => throw _privateConstructorUsedError;
   bool get favorite => throw _privateConstructorUsedError;
   bool get locked => throw _privateConstructorUsedError;
+  CategoryType get type => throw _privateConstructorUsedError;
+  int get categoryId => throw _privateConstructorUsedError;
+  String get categoryName => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $CategoryMetadataCopyWith<CategoryMetadata> get copyWith =>
@@ -32,7 +35,14 @@ abstract class $CategoryMetadataCopyWith<$Res> {
           CategoryMetadata value, $Res Function(CategoryMetadata) then) =
       _$CategoryMetadataCopyWithImpl<$Res, CategoryMetadata>;
   @useResult
-  $Res call({int index, DateTime lastUpdated, bool favorite, bool locked});
+  $Res call(
+      {int index,
+      DateTime lastUpdated,
+      bool favorite,
+      bool locked,
+      CategoryType type,
+      int categoryId,
+      String categoryName});
 }
 
 /// @nodoc
@@ -52,6 +62,9 @@ class _$CategoryMetadataCopyWithImpl<$Res, $Val extends CategoryMetadata>
     Object? lastUpdated = null,
     Object? favorite = null,
     Object? locked = null,
+    Object? type = null,
+    Object? categoryId = null,
+    Object? categoryName = null,
   }) {
     return _then(_value.copyWith(
       index: null == index
@@ -70,6 +83,18 @@ class _$CategoryMetadataCopyWithImpl<$Res, $Val extends CategoryMetadata>
           ? _value.locked
           : locked // ignore: cast_nullable_to_non_nullable
               as bool,
+      type: null == type
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as CategoryType,
+      categoryId: null == categoryId
+          ? _value.categoryId
+          : categoryId // ignore: cast_nullable_to_non_nullable
+              as int,
+      categoryName: null == categoryName
+          ? _value.categoryName
+          : categoryName // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 }
@@ -82,7 +107,14 @@ abstract class _$$CategoryMetadataImplCopyWith<$Res>
       __$$CategoryMetadataImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int index, DateTime lastUpdated, bool favorite, bool locked});
+  $Res call(
+      {int index,
+      DateTime lastUpdated,
+      bool favorite,
+      bool locked,
+      CategoryType type,
+      int categoryId,
+      String categoryName});
 }
 
 /// @nodoc
@@ -100,6 +132,9 @@ class __$$CategoryMetadataImplCopyWithImpl<$Res>
     Object? lastUpdated = null,
     Object? favorite = null,
     Object? locked = null,
+    Object? type = null,
+    Object? categoryId = null,
+    Object? categoryName = null,
   }) {
     return _then(_$CategoryMetadataImpl(
       index: null == index
@@ -118,6 +153,18 @@ class __$$CategoryMetadataImplCopyWithImpl<$Res>
           ? _value.locked
           : locked // ignore: cast_nullable_to_non_nullable
               as bool,
+      type: null == type
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as CategoryType,
+      categoryId: null == categoryId
+          ? _value.categoryId
+          : categoryId // ignore: cast_nullable_to_non_nullable
+              as int,
+      categoryName: null == categoryName
+          ? _value.categoryName
+          : categoryName // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -129,7 +176,10 @@ class _$CategoryMetadataImpl implements _CategoryMetadata {
       {required this.index,
       required this.lastUpdated,
       required this.favorite,
-      required this.locked});
+      required this.locked,
+      required this.type,
+      required this.categoryId,
+      required this.categoryName});
 
   @override
   final int index;
@@ -139,10 +189,16 @@ class _$CategoryMetadataImpl implements _CategoryMetadata {
   final bool favorite;
   @override
   final bool locked;
+  @override
+  final CategoryType type;
+  @override
+  final int categoryId;
+  @override
+  final String categoryName;
 
   @override
   String toString() {
-    return 'CategoryMetadata(index: $index, lastUpdated: $lastUpdated, favorite: $favorite, locked: $locked)';
+    return 'CategoryMetadata(index: $index, lastUpdated: $lastUpdated, favorite: $favorite, locked: $locked, type: $type, categoryId: $categoryId, categoryName: $categoryName)';
   }
 
   @override
@@ -155,12 +211,17 @@ class _$CategoryMetadataImpl implements _CategoryMetadata {
                 other.lastUpdated == lastUpdated) &&
             (identical(other.favorite, favorite) ||
                 other.favorite == favorite) &&
-            (identical(other.locked, locked) || other.locked == locked));
+            (identical(other.locked, locked) || other.locked == locked) &&
+            (identical(other.type, type) || other.type == type) &&
+            (identical(other.categoryId, categoryId) ||
+                other.categoryId == categoryId) &&
+            (identical(other.categoryName, categoryName) ||
+                other.categoryName == categoryName));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, index, lastUpdated, favorite, locked);
+  int get hashCode => Object.hash(runtimeType, index, lastUpdated, favorite,
+      locked, type, categoryId, categoryName);
 
   @JsonKey(ignore: true)
   @override
@@ -175,7 +236,10 @@ abstract class _CategoryMetadata implements CategoryMetadata {
       {required final int index,
       required final DateTime lastUpdated,
       required final bool favorite,
-      required final bool locked}) = _$CategoryMetadataImpl;
+      required final bool locked,
+      required final CategoryType type,
+      required final int categoryId,
+      required final String categoryName}) = _$CategoryMetadataImpl;
 
   @override
   int get index;
@@ -185,6 +249,12 @@ abstract class _CategoryMetadata implements CategoryMetadata {
   bool get favorite;
   @override
   bool get locked;
+  @override
+  CategoryType get type;
+  @override
+  int get categoryId;
+  @override
+  String get categoryName;
   @override
   @JsonKey(ignore: true)
   _$$CategoryMetadataImplCopyWith<_$CategoryMetadataImpl> get copyWith =>

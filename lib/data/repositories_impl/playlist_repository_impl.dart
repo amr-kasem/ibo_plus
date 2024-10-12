@@ -57,10 +57,11 @@ class PlaylistRepositoryImpl implements PlaylistRepository {
         )
         .toList();
     final res = await Future.wait(futures);
+
     final playlistModels = res
         .map(
           (p) => _playlistMapper.toIsarModel(p)
-            ..meta.value = _playlistStatusMapper.toIsarModel(p.status!),
+            ..meta.value = _playlistStatusMapper.toIsarModel(p),
         )
         .toList();
     await _playlistLocalDatasource.storePlaylists(playlistModels);

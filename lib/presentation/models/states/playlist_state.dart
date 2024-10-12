@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../domain/entities/playlist/playlist.dart';
+import '../../../domain/entities/playlist/playlist.dart';
 
 part 'playlist_state.freezed.dart';
 

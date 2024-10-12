@@ -22,7 +22,7 @@ abstract class LiveLocalDatasource {
   });
 
   initLiveChannelMetadata({
-    required LiveChannelIsarModel category,
+    required LiveChannelIsarModel channel,
     required int index,
   });
 }
@@ -64,17 +64,22 @@ class LiveLocalDatasourceImpl implements LiveLocalDatasource {
 
   @override
   initLiveChannelMetadata({
-    required LiveChannelIsarModel category,
+    required LiveChannelIsarModel channel,
     required int index,
   }) async {
-    final meta = LiveMetadataIsarModel(
-      index: index,
-      lastUpdated: DateTime.now(),
-      favorite: false,
-      locked: false,
-    );
-    category.meta.value = meta;
-    await category.meta.save();
-    return meta;
+    await channel.meta.load();
+    var meta = channel.meta.value;
+    if (meta != null) return;
+    await _isar.db.writeTxn(() async {
+      meta = LiveMetadataIsarModel(
+        index: index,
+        lastUpdated: DateTime.now(),
+        favorite: false,
+        locked: false,
+      );
+      await _isar.db.liveMetadataIsarModels.put(meta!);
+      channel.meta.value = meta;
+      await channel.meta.save();
+    });
   }
 }

@@ -43,6 +43,7 @@ class _CategoryOptionsState extends State<CategoryOptionsParent> {
           if (event.logicalKey == LogicalKeyboardKey.goBack ||
               event.logicalKey == LogicalKeyboardKey.escape) {
             if (index == 1) return KeyEventResult.ignored;
+
             setState(() {
               index = 1;
             });

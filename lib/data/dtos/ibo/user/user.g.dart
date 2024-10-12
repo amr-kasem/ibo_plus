@@ -13,7 +13,7 @@ _$UserDataImpl _$$UserDataImplFromJson(Map<String, dynamic> json) =>
       trialDays: (json['trial_days'] as num).toInt(),
       pin: json['parent_pin'] as String,
       isTrial: const NullableIntToBoolSerializer()
-          .fromJson((json['is_trial'] as num).toInt()),
+          .fromJson((json['is_trial'] as num?)?.toInt()),
       expirayDate: DateTime.parse(json['expiray_date'] as String),
     );
 

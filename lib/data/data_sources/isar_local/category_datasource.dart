@@ -10,7 +10,7 @@ import '../../dtos/isar/playlist/m3u_playlist/m3u_playlist.dart';
 import 'isar_db.dart';
 
 abstract class CategoryLocalDatasource {
-  Future<List<CategoryIsarModel>> getCategories({
+  Future<List<CategoryMetadataIsarModel>> getCategories({
     required M3uPlaylistIsarModel playlist,
     required CategoryType type,
   });
@@ -19,12 +19,9 @@ abstract class CategoryLocalDatasource {
   Future<void> storeCategories({
     required M3uPlaylistIsarModel playlist,
     required List<CategoryIsarModel> categories,
+    required CategoryType type,
   });
-
-  Future<CategoryMetadataIsarModel> initCategoryMetadata({
-    required CategoryIsarModel category,
-    required int index,
-  });
+  Future<CategoryIsarModel> getData(CategoryMetadataIsarModel category);
 }
 
 class CategoryLocalDatasourceImpl implements CategoryLocalDatasource {
@@ -32,26 +29,51 @@ class CategoryLocalDatasourceImpl implements CategoryLocalDatasource {
   late final _isar = _locator.get<IsarDB>();
 
   @override
-  Future<List<CategoryIsarModel>> getCategories({
+  Future<List<CategoryMetadataIsarModel>> getCategories({
     required M3uPlaylistIsarModel playlist,
     required CategoryType type,
   }) async {
-    return await _isar.db.categoryIsarModels
+    final categories = await _isar.db.categoryMetadataIsarModels
         .where()
         .playlistIdTypeEqualTo(playlist.isarId, type)
+        .sortByIndex()
         .findAll();
+    return categories;
   }
 
   @override
   Future<void> storeCategories({
     required M3uPlaylistIsarModel playlist,
     required List<CategoryIsarModel> categories,
+    required CategoryType type,
   }) async {
     await _isar.db.writeTxn(() async {
       for (var e in categories) {
         e.playlistId = playlist.isarId;
       }
       await _isar.db.categoryIsarModels.putAll(categories);
+      final meta = categories
+          .asMap()
+          .map(
+            (i, c) => MapEntry(
+              i,
+              CategoryMetadataIsarModel(
+                categoryName: c.categoryName,
+                categoryId: c.categoryId,
+                index: i,
+                lastUpdated: DateTime.now(),
+                type: type,
+              )
+                ..category.value = c
+                ..playlistId = playlist.isarId,
+            ),
+          )
+          .values
+          .toList();
+      await _isar.db.categoryMetadataIsarModels.putAll(meta);
+      for (final m in meta) {
+        m.category.save();
+      }
     });
   }
 
@@ -63,21 +85,8 @@ class CategoryLocalDatasourceImpl implements CategoryLocalDatasource {
   }
 
   @override
-  Future<CategoryMetadataIsarModel> initCategoryMetadata({
-    required CategoryIsarModel category,
-    required int index,
-  }) async {
-    return await _isar.db.writeTxn(() async {
-      final categoryMetadata = CategoryMetadataIsarModel(
-        index: index,
-        lastUpdated: DateTime.now(),
-        favorite: false,
-        locked: false,
-      );
-      categoryMetadata.category.value = category;
-      await _isar.db.categoryMetadataIsarModels.put(categoryMetadata);
-      categoryMetadata.category.save();
-      return categoryMetadata;
-    });
+  Future<CategoryIsarModel> getData(CategoryMetadataIsarModel meta) async {
+    final dto = await _isar.db.categoryIsarModels.get(meta.isarId);
+    return dto!;
   }
 }

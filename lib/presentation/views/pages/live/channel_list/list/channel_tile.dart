@@ -5,8 +5,7 @@ import 'package:gradient_borders/gradient_borders.dart';
 import 'package:intl/intl.dart' as intl;
 
 import '../../../../../../domain/entities/live_channel/live_channel.dart';
-import '../../../../../controllers/app_state.dart';
-import '../../../../../controllers/live_controller.dart';
+import '../../../../../controllers/app_controller.dart';
 
 class ChannelTile extends StatelessWidget {
   const ChannelTile({
@@ -23,9 +22,9 @@ class ChannelTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer(
       builder: (_, WidgetRef ref, child) {
-        bool selected = ref.watch(
-                liveControllerProvider.select((s) => s.selectedChannelIndex)) ==
-            index;
+        bool selected = false;
+        // ref.watch(liveControllerProvider.select((s) => s.selectedChannelIndex)) ==
+        index;
         bool highlight = ref.watch(AppState.hideBar);
         return Container(
           margin: const EdgeInsetsDirectional.only(start: 20),

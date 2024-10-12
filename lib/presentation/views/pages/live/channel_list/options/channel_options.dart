@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../../controllers/live_controller.dart';
 import '../../../../../utils/listing_utils.dart';
 
 class ChannelOptions extends ConsumerStatefulWidget {
@@ -22,8 +21,8 @@ class _ChannelOptionsState extends ConsumerState<ChannelOptions> {
   final horizontalController = FixedExtentScrollController(initialItem: 1);
   final fn = FocusNode();
   bool moving = false;
-  late final toggleFavorite =
-      ref.read(liveControllerProvider.notifier).toggleFavoriteChannel;
+  // late final toggleFavorite =
+  //     ref.read(liveControllerProvider.notifier).toggleFavoriteChannel;
 
   @override
   void dispose() {
@@ -91,11 +90,12 @@ class _ChannelOptionsState extends ConsumerState<ChannelOptions> {
       Consumer(
         builder: (_, WidgetRef r, __) {
           // r.watch(liveControllerProvider.select((s) => s.notify));
-          final isFavorite = r.watch(
-            liveControllerProvider.select(
-              (s) => s.hoverChannel?.meta?.data.favorite,
-            ),
-          );
+          // final isFavorite = r.watch(
+          //   liveControllerProvider.select(
+          //     (s) => s.hoverChannel?.meta?.data.favorite,
+          //   ),
+          // );
+          final isFavorite = false;
           return Icon(
             isFavorite ?? false ? Icons.favorite : Icons.favorite_border,
             color: isFavorite ?? false ? Colors.red : Colors.white,
@@ -171,7 +171,7 @@ class _ChannelOptionsState extends ConsumerState<ChannelOptions> {
             case LogicalKeyboardKey.space:
               if (event is KeyDownEvent) {
                 if (horizontalController.selectedItem == 1) {
-                  toggleFavorite();
+                  // toggleFavorite();
                   return KeyEventResult.handled;
                 }
                 widget.updateViewIndex(horizontalController.selectedItem);

@@ -10,7 +10,7 @@ _$MuUPlaylistJsonModelImpl _$$MuUPlaylistJsonModelImplFromJson(
         Map<String, dynamic> json) =>
     _$MuUPlaylistJsonModelImpl(
       isProtected: const NullableIntToBoolSerializer()
-          .fromJson((json['is_protected'] as num).toInt()),
+          .fromJson((json['is_protected'] as num?)?.toInt()),
       id: json['id'] as String,
       url: json['url'] as String,
       playlistName: json['playlist_name'] as String,

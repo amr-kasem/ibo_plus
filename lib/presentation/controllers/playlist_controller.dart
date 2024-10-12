@@ -6,7 +6,7 @@ import 'package:ibo_plus/domain/usecases/playlist/get_playlists.dart';
 import 'package:ibo_plus/shared/types/no_parameters.dart';
 
 import '../../domain/entities/playlist/playlist.dart';
-import '../models/playlist_state.dart';
+import '../models/states/playlist_state.dart';
 
 class PlaylistControllerNotifier extends Notifier<PlaylistState> {
   final _locator = GetIt.instance;

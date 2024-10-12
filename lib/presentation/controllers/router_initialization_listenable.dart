@@ -6,7 +6,7 @@ import 'package:get_it/get_it.dart';
 
 import '../../domain/usecases/settings/login.dart';
 import '../../shared/types/no_parameters.dart';
-import 'app_state.dart';
+import 'app_controller.dart';
 
 class RouterInitializationListenable with ChangeNotifier {
   final _locator = GetIt.instance;

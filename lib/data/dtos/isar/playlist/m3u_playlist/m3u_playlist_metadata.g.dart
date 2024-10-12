@@ -32,13 +32,18 @@ const M3uPlaylistMetadataIsarModelSchema = CollectionSchema(
       id: 2,
       name: r'isarExpiary',
       type: IsarType.long,
+    ),
+    r'playlistId': PropertySchema(
+      id: 3,
+      name: r'playlistId',
+      type: IsarType.string,
     )
   },
   estimateSize: _m3uPlaylistMetadataIsarModelEstimateSize,
   serialize: _m3uPlaylistMetadataIsarModelSerialize,
   deserialize: _m3uPlaylistMetadataIsarModelDeserialize,
   deserializeProp: _m3uPlaylistMetadataIsarModelDeserializeProp,
-  idName: r'id',
+  idName: r'isarId',
   indexes: {},
   links: {
     r'playlist': LinkSchema(
@@ -61,6 +66,7 @@ int _m3uPlaylistMetadataIsarModelEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
+  bytesCount += 3 + object.playlistId.length * 3;
   return bytesCount;
 }
 
@@ -73,6 +79,7 @@ void _m3uPlaylistMetadataIsarModelSerialize(
   writer.writeBool(offsets[0], object.active);
   writer.writeLong(offsets[1], object.hashCode);
   writer.writeLong(offsets[2], object.isarExpiary);
+  writer.writeString(offsets[3], object.playlistId);
 }
 
 M3uPlaylistMetadataIsarModel _m3uPlaylistMetadataIsarModelDeserialize(
@@ -83,8 +90,8 @@ M3uPlaylistMetadataIsarModel _m3uPlaylistMetadataIsarModelDeserialize(
 ) {
   final object = M3uPlaylistMetadataIsarModel(
     active: reader.readBool(offsets[0]),
+    playlistId: reader.readString(offsets[3]),
   );
-  object.id = id;
   object.isarExpiary = reader.readLong(offsets[2]);
   return object;
 }
@@ -102,13 +109,15 @@ P _m3uPlaylistMetadataIsarModelDeserializeProp<P>(
       return (reader.readLong(offset)) as P;
     case 2:
       return (reader.readLong(offset)) as P;
+    case 3:
+      return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
 }
 
 Id _m3uPlaylistMetadataIsarModelGetId(M3uPlaylistMetadataIsarModel object) {
-  return object.id ?? Isar.autoIncrement;
+  return object.isarId;
 }
 
 List<IsarLinkBase<dynamic>> _m3uPlaylistMetadataIsarModelGetLinks(
@@ -118,7 +127,6 @@ List<IsarLinkBase<dynamic>> _m3uPlaylistMetadataIsarModelGetLinks(
 
 void _m3uPlaylistMetadataIsarModelAttach(
     IsarCollection<dynamic> col, Id id, M3uPlaylistMetadataIsarModel object) {
-  object.id = id;
   object.playlist.attach(
       col, col.isar.collection<M3uPlaylistIsarModel>(), r'playlist', id);
 }
@@ -126,7 +134,7 @@ void _m3uPlaylistMetadataIsarModelAttach(
 extension M3uPlaylistMetadataIsarModelQueryWhereSort on QueryBuilder<
     M3uPlaylistMetadataIsarModel, M3uPlaylistMetadataIsarModel, QWhere> {
   QueryBuilder<M3uPlaylistMetadataIsarModel, M3uPlaylistMetadataIsarModel,
-      QAfterWhere> anyId() {
+      QAfterWhere> anyIsarId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
     });
@@ -136,68 +144,68 @@ extension M3uPlaylistMetadataIsarModelQueryWhereSort on QueryBuilder<
 extension M3uPlaylistMetadataIsarModelQueryWhere on QueryBuilder<
     M3uPlaylistMetadataIsarModel, M3uPlaylistMetadataIsarModel, QWhereClause> {
   QueryBuilder<M3uPlaylistMetadataIsarModel, M3uPlaylistMetadataIsarModel,
-      QAfterWhereClause> idEqualTo(Id id) {
+      QAfterWhereClause> isarIdEqualTo(Id isarId) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IdWhereClause.between(
-        lower: id,
-        upper: id,
+        lower: isarId,
+        upper: isarId,
       ));
     });
   }
 
   QueryBuilder<M3uPlaylistMetadataIsarModel, M3uPlaylistMetadataIsarModel,
-      QAfterWhereClause> idNotEqualTo(Id id) {
+      QAfterWhereClause> isarIdNotEqualTo(Id isarId) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
             .addWhereClause(
-              IdWhereClause.lessThan(upper: id, includeUpper: false),
+              IdWhereClause.lessThan(upper: isarId, includeUpper: false),
             )
             .addWhereClause(
-              IdWhereClause.greaterThan(lower: id, includeLower: false),
+              IdWhereClause.greaterThan(lower: isarId, includeLower: false),
             );
       } else {
         return query
             .addWhereClause(
-              IdWhereClause.greaterThan(lower: id, includeLower: false),
+              IdWhereClause.greaterThan(lower: isarId, includeLower: false),
             )
             .addWhereClause(
-              IdWhereClause.lessThan(upper: id, includeUpper: false),
+              IdWhereClause.lessThan(upper: isarId, includeUpper: false),
             );
       }
     });
   }
 
   QueryBuilder<M3uPlaylistMetadataIsarModel, M3uPlaylistMetadataIsarModel,
-      QAfterWhereClause> idGreaterThan(Id id, {bool include = false}) {
+      QAfterWhereClause> isarIdGreaterThan(Id isarId, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
-        IdWhereClause.greaterThan(lower: id, includeLower: include),
+        IdWhereClause.greaterThan(lower: isarId, includeLower: include),
       );
     });
   }
 
   QueryBuilder<M3uPlaylistMetadataIsarModel, M3uPlaylistMetadataIsarModel,
-      QAfterWhereClause> idLessThan(Id id, {bool include = false}) {
+      QAfterWhereClause> isarIdLessThan(Id isarId, {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
-        IdWhereClause.lessThan(upper: id, includeUpper: include),
+        IdWhereClause.lessThan(upper: isarId, includeUpper: include),
       );
     });
   }
 
   QueryBuilder<M3uPlaylistMetadataIsarModel, M3uPlaylistMetadataIsarModel,
-      QAfterWhereClause> idBetween(
-    Id lowerId,
-    Id upperId, {
+      QAfterWhereClause> isarIdBetween(
+    Id lowerIsarId,
+    Id upperIsarId, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IdWhereClause.between(
-        lower: lowerId,
+        lower: lowerIsarId,
         includeLower: includeLower,
-        upper: upperId,
+        upper: upperIsarId,
         includeUpper: includeUpper,
       ));
     });
@@ -275,80 +283,6 @@ extension M3uPlaylistMetadataIsarModelQueryFilter on QueryBuilder<
   }
 
   QueryBuilder<M3uPlaylistMetadataIsarModel, M3uPlaylistMetadataIsarModel,
-      QAfterFilterCondition> idIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'id',
-      ));
-    });
-  }
-
-  QueryBuilder<M3uPlaylistMetadataIsarModel, M3uPlaylistMetadataIsarModel,
-      QAfterFilterCondition> idIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'id',
-      ));
-    });
-  }
-
-  QueryBuilder<M3uPlaylistMetadataIsarModel, M3uPlaylistMetadataIsarModel,
-      QAfterFilterCondition> idEqualTo(Id? value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'id',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<M3uPlaylistMetadataIsarModel, M3uPlaylistMetadataIsarModel,
-      QAfterFilterCondition> idGreaterThan(
-    Id? value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'id',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<M3uPlaylistMetadataIsarModel, M3uPlaylistMetadataIsarModel,
-      QAfterFilterCondition> idLessThan(
-    Id? value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'id',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<M3uPlaylistMetadataIsarModel, M3uPlaylistMetadataIsarModel,
-      QAfterFilterCondition> idBetween(
-    Id? lower,
-    Id? upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'id',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
-    });
-  }
-
-  QueryBuilder<M3uPlaylistMetadataIsarModel, M3uPlaylistMetadataIsarModel,
       QAfterFilterCondition> isarExpiaryEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -400,6 +334,200 @@ extension M3uPlaylistMetadataIsarModelQueryFilter on QueryBuilder<
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<M3uPlaylistMetadataIsarModel, M3uPlaylistMetadataIsarModel,
+      QAfterFilterCondition> isarIdEqualTo(Id value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'isarId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<M3uPlaylistMetadataIsarModel, M3uPlaylistMetadataIsarModel,
+      QAfterFilterCondition> isarIdGreaterThan(
+    Id value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'isarId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<M3uPlaylistMetadataIsarModel, M3uPlaylistMetadataIsarModel,
+      QAfterFilterCondition> isarIdLessThan(
+    Id value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'isarId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<M3uPlaylistMetadataIsarModel, M3uPlaylistMetadataIsarModel,
+      QAfterFilterCondition> isarIdBetween(
+    Id lower,
+    Id upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'isarId',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<M3uPlaylistMetadataIsarModel, M3uPlaylistMetadataIsarModel,
+      QAfterFilterCondition> playlistIdEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'playlistId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<M3uPlaylistMetadataIsarModel, M3uPlaylistMetadataIsarModel,
+      QAfterFilterCondition> playlistIdGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'playlistId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<M3uPlaylistMetadataIsarModel, M3uPlaylistMetadataIsarModel,
+      QAfterFilterCondition> playlistIdLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'playlistId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<M3uPlaylistMetadataIsarModel, M3uPlaylistMetadataIsarModel,
+      QAfterFilterCondition> playlistIdBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'playlistId',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<M3uPlaylistMetadataIsarModel, M3uPlaylistMetadataIsarModel,
+      QAfterFilterCondition> playlistIdStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'playlistId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<M3uPlaylistMetadataIsarModel, M3uPlaylistMetadataIsarModel,
+      QAfterFilterCondition> playlistIdEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'playlistId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<M3uPlaylistMetadataIsarModel, M3uPlaylistMetadataIsarModel,
+          QAfterFilterCondition>
+      playlistIdContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'playlistId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<M3uPlaylistMetadataIsarModel, M3uPlaylistMetadataIsarModel,
+          QAfterFilterCondition>
+      playlistIdMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'playlistId',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<M3uPlaylistMetadataIsarModel, M3uPlaylistMetadataIsarModel,
+      QAfterFilterCondition> playlistIdIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'playlistId',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<M3uPlaylistMetadataIsarModel, M3uPlaylistMetadataIsarModel,
+      QAfterFilterCondition> playlistIdIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'playlistId',
+        value: '',
       ));
     });
   }
@@ -472,6 +600,20 @@ extension M3uPlaylistMetadataIsarModelQuerySortBy on QueryBuilder<
       return query.addSortBy(r'isarExpiary', Sort.desc);
     });
   }
+
+  QueryBuilder<M3uPlaylistMetadataIsarModel, M3uPlaylistMetadataIsarModel,
+      QAfterSortBy> sortByPlaylistId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'playlistId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<M3uPlaylistMetadataIsarModel, M3uPlaylistMetadataIsarModel,
+      QAfterSortBy> sortByPlaylistIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'playlistId', Sort.desc);
+    });
+  }
 }
 
 extension M3uPlaylistMetadataIsarModelQuerySortThenBy on QueryBuilder<
@@ -505,20 +647,6 @@ extension M3uPlaylistMetadataIsarModelQuerySortThenBy on QueryBuilder<
   }
 
   QueryBuilder<M3uPlaylistMetadataIsarModel, M3uPlaylistMetadataIsarModel,
-      QAfterSortBy> thenById() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'id', Sort.asc);
-    });
-  }
-
-  QueryBuilder<M3uPlaylistMetadataIsarModel, M3uPlaylistMetadataIsarModel,
-      QAfterSortBy> thenByIdDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'id', Sort.desc);
-    });
-  }
-
-  QueryBuilder<M3uPlaylistMetadataIsarModel, M3uPlaylistMetadataIsarModel,
       QAfterSortBy> thenByIsarExpiary() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isarExpiary', Sort.asc);
@@ -529,6 +657,34 @@ extension M3uPlaylistMetadataIsarModelQuerySortThenBy on QueryBuilder<
       QAfterSortBy> thenByIsarExpiaryDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isarExpiary', Sort.desc);
+    });
+  }
+
+  QueryBuilder<M3uPlaylistMetadataIsarModel, M3uPlaylistMetadataIsarModel,
+      QAfterSortBy> thenByIsarId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isarId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<M3uPlaylistMetadataIsarModel, M3uPlaylistMetadataIsarModel,
+      QAfterSortBy> thenByIsarIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isarId', Sort.desc);
+    });
+  }
+
+  QueryBuilder<M3uPlaylistMetadataIsarModel, M3uPlaylistMetadataIsarModel,
+      QAfterSortBy> thenByPlaylistId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'playlistId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<M3uPlaylistMetadataIsarModel, M3uPlaylistMetadataIsarModel,
+      QAfterSortBy> thenByPlaylistIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'playlistId', Sort.desc);
     });
   }
 }
@@ -555,6 +711,13 @@ extension M3uPlaylistMetadataIsarModelQueryWhereDistinct on QueryBuilder<
       return query.addDistinctBy(r'isarExpiary');
     });
   }
+
+  QueryBuilder<M3uPlaylistMetadataIsarModel, M3uPlaylistMetadataIsarModel,
+      QDistinct> distinctByPlaylistId({bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'playlistId', caseSensitive: caseSensitive);
+    });
+  }
 }
 
 extension M3uPlaylistMetadataIsarModelQueryProperty on QueryBuilder<
@@ -562,9 +725,9 @@ extension M3uPlaylistMetadataIsarModelQueryProperty on QueryBuilder<
     M3uPlaylistMetadataIsarModel,
     QQueryProperty> {
   QueryBuilder<M3uPlaylistMetadataIsarModel, int, QQueryOperations>
-      idProperty() {
+      isarIdProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'id');
+      return query.addPropertyName(r'isarId');
     });
   }
 
@@ -586,6 +749,13 @@ extension M3uPlaylistMetadataIsarModelQueryProperty on QueryBuilder<
       isarExpiaryProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'isarExpiary');
+    });
+  }
+
+  QueryBuilder<M3uPlaylistMetadataIsarModel, String, QQueryOperations>
+      playlistIdProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'playlistId');
     });
   }
 }

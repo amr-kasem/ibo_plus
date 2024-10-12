@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../controllers/app_state.dart';
+import '../../controllers/app_controller.dart';
 import '../widgets/custom_tab_bar.dart';
 import '../widgets/ibo_textfield/text_field.dart';
 import 'home/home_tabview.dart';

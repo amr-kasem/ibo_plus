@@ -1,9 +1,14 @@
+import 'package:get_it/get_it.dart';
+
 import '../../../domain/entities/live_channel/live_channel.dart';
 import '../../../domain/value_objects/media/live_channel/live_channel_data.dart';
 import '../../dtos/iptv/live_channel/live_channel.dart';
 import '../../dtos/isar/playlist/live_channel/live_channel.dart';
+import 'live_meta.dart';
 
 class LiveChannelMapper {
+  final _locator = GetIt.instance;
+  late final _metaMapper = _locator.get<LiveMetaMapper>();
   LiveChannelIsarModel toIsarModel(LiveChannel channel) {
     return LiveChannelIsarModel(
       categoryId: channel.data.categoryId,
@@ -21,9 +26,15 @@ class LiveChannelMapper {
     );
   }
 
-  LiveChannel toEntity<T>(T channelIsarModel) {
-    final data = _toData<T>(channelIsarModel);
-    return LiveChannel(data: data);
+  LiveChannel toEntity<T>(T dto) {
+    final data = _toData<T>(dto);
+    final channel = LiveChannel(data: data);
+    if (dto is LiveChannelIsarModel) {
+      if (dto.meta.value != null) {
+        channel.meta = _metaMapper.toEntity(dto.meta.value!);
+      }
+    }
+    return channel;
   }
 
   LiveChannelData _toData<T>(T channelJsonModel) {

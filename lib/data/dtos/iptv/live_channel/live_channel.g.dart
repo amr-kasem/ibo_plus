@@ -26,7 +26,7 @@ _$LiveChannelJsonModelImpl _$$LiveChannelJsonModelImplFromJson(
           ?.map((e) => EPGJsonModel.fromJson(e as Map<String, dynamic>))
           .toList(),
       isAdult: const NullableIntToBoolSerializer()
-          .fromJson((json['is_adult'] as num).toInt()),
+          .fromJson((json['is_adult'] as num?)?.toInt()),
     );
 
 Map<String, dynamic> _$$LiveChannelJsonModelImplToJson(

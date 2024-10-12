@@ -1,12 +1,16 @@
+import 'package:get_it/get_it.dart';
 import 'package:isar/isar.dart';
 
+import '../../../../services/isar_helper.dart';
 import 'm3u_playlist.dart';
 
 part 'm3u_playlist_metadata.g.dart';
 
 @collection
 class M3uPlaylistMetadataIsarModel {
-  Id? id;
+  @ignore
+  final _isarHelper = GetIt.instance.get<IsarHelper>();
+  String playlistId;
 
   @ignore
   late Duration expiray;
@@ -17,13 +21,16 @@ class M3uPlaylistMetadataIsarModel {
   final playlist = IsarLink<M3uPlaylistIsarModel>();
 
   M3uPlaylistMetadataIsarModel({
+    required this.playlistId,
     required this.active,
   }) {
     expiray = Duration.zero;
   }
 
+  Id get isarId => _isarHelper.fastHash(playlistId);
+
   @override
-  int get hashCode => id.hashCode;
+  int get hashCode => isarId.hashCode;
 
   @override
   bool operator ==(Object other) {

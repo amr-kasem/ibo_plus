@@ -68,13 +68,13 @@ class _MoviesGridState extends ConsumerState<MoviesGrid> {
             final scrollController = FixedExtentScrollController();
             setScrollController(scrollController);
             return HorizontalList<Movie>(
-              id: category.data.categoryId,
+              id: category.data?.categoryId ?? 0,
               focused: focused,
               horizontalController: scrollController,
               header: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Text(
-                  category.data.categoryName,
+                  category.data?.categoryName ?? '',
                   style: const TextStyle(color: Colors.white, fontSize: 20),
                 ),
               ),

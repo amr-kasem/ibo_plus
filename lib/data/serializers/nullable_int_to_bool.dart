@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-class NullableIntToBoolSerializer implements JsonConverter<bool, int> {
+class NullableIntToBoolSerializer implements JsonConverter<bool, int?> {
   const NullableIntToBoolSerializer();
 
   @override
